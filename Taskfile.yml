@@ -1,0 +1,14 @@
+version: '3'
+
+tasks:
+
+  default: |- 
+    if test -z "{{.P}}"
+    then echo "plese specify prefix with P="
+    else
+      NOW=$(date +%s)
+      TAG="{{.P}}-$NOW"
+      git commit -m $TAG -a
+      git tag $TAG
+      git push origin main --tags
+    fi
