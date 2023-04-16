@@ -23,6 +23,10 @@ on:
     - 'kind-*'
     branches-ignore: '*'
 
+env:
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+  NGROK_PASSWORD: ${{ secrets.NGROK_PASSWORD }}
+
 jobs:
   kind:
     runs-on: ubuntu-22.04
