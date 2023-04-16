@@ -29,6 +29,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Debug Action (if requested)
+        run:  ./debugAction.sh
+      - name: Wait for Debug (if requested)
+        run: ./waitIfDebug.sh
       - name: 1 Deploy
         run: ./1-deploy.sh
       - name: 2 SSL
