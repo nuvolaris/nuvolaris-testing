@@ -1,7 +1,7 @@
 version: '3'
 
 tasks:
-
+  setup: {silent:true}
   default:
     silent: true
     cmds:

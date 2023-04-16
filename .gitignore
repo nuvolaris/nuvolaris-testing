@@ -1,3 +1,4 @@
 .vscode/
 .git-hooks/
 *.deb
+output.txt
