@@ -8,7 +8,7 @@ tasks:
     else
       NOW=$(date +%s)
       TAG="{{.P}}-$NOW"
-      git commit -m $TAG -a
+      git commit -m $TAG -a || true
       git tag $TAG
       git push origin main --tags
     fi
