@@ -27,11 +27,13 @@ jobs:
   kind:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Deploy
         run: ./1-deploy.sh
       - name: SSL
         run: ./2-ssl.sh
-      - name: SyRedis
+      - name: SysRedis
         run: ./3-sys-redis.sh
       - name: SysMongo
         run: ./4-sys-mongo.sh
