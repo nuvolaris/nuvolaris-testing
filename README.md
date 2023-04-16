@@ -1,13 +1,10 @@
-# Nuvolaris 0.3 "Morpheus"  
+# Nuvolaris 0.3 "Morpheus" Testing
 
-<div style="float:right; border: 1px solid black; padding: 10px; width: 300px;">
-<img height="180"src="morpheus.png">
-</div>
+<img height="180" src="morpheus.png">
 
 Welcome to the Nuvolaris "Morpheus" release challenge! 
 
 The goal of the challenge is to pass all the tests in the grid, using GitHub Actions.
-
 
 ## Acceptance Test Grid
 
