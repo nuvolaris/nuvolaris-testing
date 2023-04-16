@@ -29,27 +29,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Deploy
+      - name: 1 Deploy
         run: ./1-deploy.sh
-      - name: SSL
+      - name: 2 SSL
         run: ./2-ssl.sh
-      - name: SysRedis
+      - name: 3 SysRedis
         run: ./3-sys-redis.sh
-      - name: SysMongo
+      - name: 4 SysMongo
         run: ./4-sys-mongo.sh
-      - name: SysMinio
+      - name: 5 SysMinio
         run: ./5-sys-minio.sh
-      - name: Login
+      - name: 6 Login
         run: ./6-login.sh
-      - name: Statics
+      - name: 7 Statics
         run: ./7-statics.sh
-      - name: UserRedis
+      - name: 8 UserRedis
         run: ./8-user-redis.sh
-      - name: UserMongo
+      - name: 9 UserMongo
         run: ./9-user-mongo.sh
-      - name: UserMinio
+      - name: 10 UserMinio
         run: ./10-user-minio.sh
-      - name: NuvWin
+      - name: 11 NuvWin
         run: ./11-nuv-win.sh
-      - name: NuvMac
+      - name: 12 NuvMac
         run: ./12-nuv-mac.sh
