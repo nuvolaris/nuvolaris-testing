@@ -18,34 +18,36 @@
 name: Kind
 
 on:
-  tags:
+  push:
+    tags:
     - 'kind-*'
+    branches-ignore: '*'
 
 jobs:
-    kind:
-        runs-on: ubuntu-22.04
-        steps:
-            - name: Deploy
-              run: ./1-deploy.sh
-            - name: SSL
-              run: ./2-ssl.sh
-            - name: SyRedis
-              run: 3-sys-redis.sh
-            - name: SysMongo
-              run: 4-sys-mongo.sh
-            - name: SysMinio
-              run: 5-sys-minio.sh
-            - name: Login
-              run: 6-login.sh
-            - name: Statics
-              run: 7-statics.sh
-            - name: UserRedis
-              run: 8-user-redis.sh
-            - name: UserMongo
-              run: 9-user-mongo.sh
-            - name: UserMinio
-              run: 10-user-minio.sh
-            - name: NuvWin
-              run: 11-nuv-win.sh
-            - name: NuvMac
-              run: 12-nuv-mac.sh
+  kind:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Deploy
+        run: ./1-deploy.sh
+      - name: SSL
+        run: ./2-ssl.sh
+      - name: SyRedis
+        run: ./3-sys-redis.sh
+      - name: SysMongo
+        run: ./4-sys-mongo.sh
+      - name: SysMinio
+        run: ./5-sys-minio.sh
+      - name: Login
+        run: ./6-login.sh
+      - name: Statics
+        run: ./7-statics.sh
+      - name: UserRedis
+        run: ./8-user-redis.sh
+      - name: UserMongo
+        run: ./9-user-mongo.sh
+      - name: UserMinio
+        run: ./10-user-minio.sh
+      - name: NuvWin
+        run: ./11-nuv-win.sh
+      - name: NuvMac
+        run: ./12-nuv-mac.sh
