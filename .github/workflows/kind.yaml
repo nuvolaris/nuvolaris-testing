@@ -1,0 +1,51 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+name: Kind
+
+on:
+  tag:
+    - 'kind-*'
+
+jobs:
+    kind:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Deploy
+              run: ./1-deploy.sh
+            - name: SSL
+              run: ./2-ssl.sh
+            - name: SyRedis
+              run: 3-sys-redis.sh
+            - name: SysMongo
+              run: 4-sys-mongo.sh
+            - name: SysMinio
+              run: 5-sys-minio.sh
+            - name: Login
+              run: 6-login.sh
+            - name: Statics
+              run: 7-statics.sh
+            - name: UserRedis
+              run: 8-user-redis.sh
+            - name: UserMongo
+              run: 9-user-mongo.sh
+            - name: UserMinio
+              run: 10-user-minio.sh
+            - name: NuvWin
+              run: 11-nuv-win.sh
+            - name: NuvMac
+              run: 12-nuv-mac.sh
