@@ -9,7 +9,7 @@ tasks:
       if test -z "{{.P}}"
       then echo "plese specify prefix with P="
       else
-        NOW=$(date +%s)
+        NOW=$(date +%Y-%m-%d_%H:%M)
         TAG="{{.P}}-$NOW"
         git commit -m $TAG -a || true
         git tag $TAG
