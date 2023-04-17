@@ -27,13 +27,13 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 ### Franztt
 
-![](franztt.jpeg)
+![](img/franztt.jpeg)
 
 ### Giusdp
 
-![](giusdp.png)
+![](img/giusdp.png)
 
 ### Msciab
-![](msciab.jpg)
+![](img/msciab.jpg)
 
 Do you want to join us? Send a PR to pass more tests!

@@ -1,4 +1,7 @@
 .vscode/
 .git-hooks/
 *.deb
-output.txt
+output.txt 
+env.src
+id_rsa
+id_rsa.pub

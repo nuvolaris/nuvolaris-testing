@@ -1,0 +1,6 @@
+nuv -wsk action create hello actions/hello.js
+nuv -wsk action invoke hello -p name Nuvolaris -r | tee output.txt
+if grep Nuvolaris output.txt
+then echo SUCCESS ; exit 0
+else echo FAIL ; exit 1
+fi

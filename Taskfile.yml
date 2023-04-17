@@ -1,17 +1,26 @@
 version: '3'
+env:
+  NOW:
+    sh: date +%Y-%m%d-%H%M
 
 tasks:
+  default: task -l
   setup: {silent:true}
-  default:
-    silent: true
+
+  1:
+   desc: tag for kind
+   cmds:
+   - git tag kind-$NOW
+
+  2:
+    desc: tag for microk8s
     cmds:
-    - |- 
-      if test -z "{{.P}}"
-      then echo "plese specify prefix with P="
-      else
-        NOW=$(date +%Y-%m%d-%H%M)
-        TAG="{{.P}}-$NOW"
-        git commit -m $TAG -a || true
-        git tag $TAG
-        git push origin main --tags
-      fi
+    - git tag m8s-$NOW
+
+
+  go:
+    desc: push tags to trigger build
+    cmds:
+    - git commit -m $NOW -a || true
+    - git push origin main --tags
+  
