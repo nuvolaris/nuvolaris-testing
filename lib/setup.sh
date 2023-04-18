@@ -18,6 +18,8 @@
 
 
 TYPE="${1:?test type}"
+TYPE="$(echo $TYPE | awk -F- '{print $1}')"
+
 
 ## install task
 sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin

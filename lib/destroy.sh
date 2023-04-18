@@ -18,6 +18,7 @@
 
 
 TYPE="${1:?test type}"
+TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # deploy by type
 case "$TYPE" in

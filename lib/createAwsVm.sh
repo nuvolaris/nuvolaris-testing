@@ -17,6 +17,8 @@
 #
 
 TYPE=${1:?type}
+TYPE="$(echo $TYPE | awk -F- '{print $1}')"
+
 STACK=nuvolaris-testing-$TYPE
 CONF=$TYPE.cf
 
