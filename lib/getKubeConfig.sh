@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,28 +16,31 @@
 # specific language governing permissions and limitations
 # under the License.
 
-version: '3'
-env:
-  NOW:
-    sh: date +%Y-%m%d-%H%M
+IP="${1:?ip}"
 
-tasks:
-  default: task -l
-  setup: {silent:true}
+# rest of the setup
+mkdir -p ~/.ssh
+if test -n "$ID_RSA_B64"
+then echo $ID_RSA_B64 | base64 -d - > id_rsa 
+     chmod 0600 id_rsa
+else echo "*** Missing ID_RSA_B64"
+fi
+mkdir -p ~/.kube
+# setup 
+N=1
+while ! ssh -i id_rsa -o "StrictHostKeyChecking=no" ubuntu@$IP sudo cloud-init status --wait
+do sleep 1 ; echo "retry $N"
+   N=$((N+1))
+   if [[ "$N" == 10 ]]
+   then exit 1
+   fi
+done
+ssh -i id_rsa -o "StrictHostKeyChecking=no" ubuntu@$IP cat /etc/kubeconfig  >~/.kube/config
 
-  1:
-   desc: tag for kind
-   cmds:
-   - git tag kind-$NOW
-
-  2:
-    desc: tag for microk8s
-    cmds:
-    - git tag m8s-$NOW
-
-  go:
-    desc: push tags to trigger build
-    cmds:
-    - git commit -m $NOW -a || true
-    - git push origin main --tags
-  
+echo waiting for node ready
+ST=""
+while [[ "$ST" != "Ready" ]]
+do ST="$(kubectl get nodes | awk 'NR==2 { print $2}')"
+   sleep 1
+done
+kubectl get nodes

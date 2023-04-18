@@ -5,3 +5,5 @@ output.txt
 env.src
 id_rsa
 id_rsa.pub
+instance.json
+ip.txt

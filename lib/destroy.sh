@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,28 +16,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-version: '3'
-env:
-  NOW:
-    sh: date +%Y-%m%d-%H%M
 
-tasks:
-  default: task -l
-  setup: {silent:true}
+TYPE="${1:?test type}"
 
-  1:
-   desc: tag for kind
-   cmds:
-   - git tag kind-$NOW
-
-  2:
-    desc: tag for microk8s
-    cmds:
-    - git tag m8s-$NOW
-
-  go:
-    desc: push tags to trigger build
-    cmds:
-    - git commit -m $NOW -a || true
-    - git push origin main --tags
-  
+# deploy by type
+case "$TYPE" of
+    (mk8s) 
+        lib/destroyAwsVm.sh mk8s
+    ;;
+esac

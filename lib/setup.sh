@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,28 +16,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
-version: '3'
-env:
-  NOW:
-    sh: date +%Y-%m%d-%H%M
 
-tasks:
-  default: task -l
-  setup: {silent:true}
+TYPE="${1:?test type}"
 
-  1:
-   desc: tag for kind
-   cmds:
-   - git tag kind-$NOW
+## install task
+sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 
-  2:
-    desc: tag for microk8s
-    cmds:
-    - git tag m8s-$NOW
+## install nuv
+VER=0.3.0-morpheus.23041622
+URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
+wget --no-verbose $URL -O nuv.deb
+sudo dpkg -i nuv.deb
+nuv -update 2>/dev/null
+nuv -info
 
-  go:
-    desc: push tags to trigger build
-    cmds:
-    - git commit -m $NOW -a || true
-    - git push origin main --tags
-  
+# deploy by type
+case "$TYPE" of
+    (mk8s) 
+        lib/createAwsVm.sh mk8s
+        lib/getKubeConfig.sh "$(cat ip.txt)"
+    ;;
+esac

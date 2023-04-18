@@ -15,49 +15,59 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-name: Kind
+name: Test
 
 on:
   push:
     tags:
-    - 'kind-*'
+    - '*-*'
     branches-ignore: '*'
 
 env:
+  TYPE: ${{ split(github.ref_name, "-")[0] }}
   NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
   NGROK_PASSWORD: ${{ secrets.NGROK_PASSWORD }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  ID_RSA_B64: ${{ secrets.ID_RSA_B64 }}
 
 jobs:
-  kind:
+  test:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup
+        run: lib/setup.sh $TYPE
       - name: Debug Action (if requested)
         run:  lib/debugAction.sh
       - name: Wait for Debug (if requested)
         run: lib/waitIfDebug.sh
       - name: 1 Deploy
-        run: ./1-deploy.sh
+        run: ./1-deploy.sh $TYPE
       - name: 2 SSL
-        run: ./2-ssl.sh
+        run: ./2-ssl.sh $TYPE
       - name: 3 SysRedis
-        run: ./3-sys-redis.sh
+        run: ./3-sys-redis.sh $TYPE
       - name: 4 SysMongo
-        run: ./4-sys-mongo.sh
+        run: ./4-sys-mongo.sh $TYPE
       - name: 5 SysMinio
-        run: ./5-sys-minio.sh
+        run: ./5-sys-minio.sh $TYPE
       - name: 6 Login
-        run: ./6-login.sh
+        run: ./6-login.sh $TYPE
       - name: 7 Statics
-        run: ./7-statics.sh
+        run: ./7-statics.sh $TYPE
       - name: 8 UserRedis
-        run: ./8-user-redis.sh
+        run: ./8-user-redis.sh $TYPE
       - name: 9 UserMongo
-        run: ./9-user-mongo.sh
+        run: ./9-user-mongo.sh $TYPE
       - name: 10 UserMinio
-        run: ./10-user-minio.sh
+        run: ./10-user-minio.sh $TYPE
       - name: 11 NuvWin
-        run: ./11-nuv-win.sh
+        run: ./11-nuv-win.sh $TYPE
       - name: 12 NuvMac
-        run: ./12-nuv-mac.sh
+        run: ./12-nuv-mac.sh $TYPE
+      - name: Destroy
+        if: always()
+        run: ./lib/destroy.sh $TYPE
