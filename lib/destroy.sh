@@ -20,8 +20,7 @@
 TYPE="${1:?test type}"
 
 # deploy by type
-case "$TYPE" of
-    (mk8s) 
-        lib/destroyAwsVm.sh mk8s
-    ;;
+case "$TYPE" in
+    (kind) nuv setup docker delete ;;
+    (mk8s) lib/destroyAwsVm.sh mk8s ;;
 esac

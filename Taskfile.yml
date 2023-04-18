@@ -40,3 +40,5 @@ tasks:
     - git commit -m $NOW -a || true
     - git push origin main --tags
   
+
+  watch: watch kubectl -n nuvolaris get po,sts

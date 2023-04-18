@@ -31,7 +31,7 @@ nuv -update 2>/dev/null
 nuv -info
 
 # deploy by type
-case "$TYPE" of
+case "$TYPE" in
     (mk8s) 
         lib/createAwsVm.sh mk8s
         lib/getKubeConfig.sh "$(cat ip.txt)"

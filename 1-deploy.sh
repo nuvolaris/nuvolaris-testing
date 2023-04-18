@@ -18,9 +18,9 @@
 TYPE="${1:?test type}"
 
 # deploy by type
-case "$TYPE" of
+case "$TYPE" in
     (kind) SETUP_ARGS="--devcluster" ;;
-    (mk8s) SETUP_ARGS="" ;;
+    (mk8s) SETUP_ARGS="--current" ;;
 esac
 
 # hello world testh
