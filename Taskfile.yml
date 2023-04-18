@@ -32,7 +32,7 @@ tasks:
   2:
     desc: tag for microk8s
     cmds:
-    - git tag m8s-$NOW
+    - git tag mk8s-$NOW
 
   go:
     desc: push tags to trigger build
