@@ -39,13 +39,13 @@ Resources:
             apt update
             apt install -y snapd
             snap install microk8s --classic
-            microk8s enable hostpath-storage dns ingress cert-manager
             while microk8s kubectl get nodes | grep NotReady
             do sleep 5
             done
+            microk8s enable hostpath-storage dns ingress cert-manager
             sudo microk8s stop
             sed -i "/DNS.5/a DNS.6 = $DNS" /var/snap/microk8s/current/certs/csr.conf.template
-            sudo microk8s start
+            sudo microk8s start  
             microk8s config | sed -e "s/server: .*/server: https:\/\/$DNS:16443/" >/etc/kubeconfig
 
   MySecurityGroup:
