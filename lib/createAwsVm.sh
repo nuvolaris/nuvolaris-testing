@@ -28,7 +28,7 @@ aws cloudformation wait stack-create-complete --stack-name $STACK
 
 aws ec2 describe-instances  --output json \
     --filters Name=tag:Name,Values=$STACK Name=instance-state-name,Values=running \
-    | tee instance.json
+    >instance.json
 
 IP=$(cat instance.json | jq -r '.Reservations[].Instances[].PublicIpAddress')
 echo $IP >ip.txt

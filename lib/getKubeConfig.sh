@@ -29,7 +29,7 @@ mkdir -p ~/.kube
 # setup 
 N=1
 while ! ssh -i id_rsa -o "StrictHostKeyChecking=no" ubuntu@$IP sudo cloud-init status --wait
-do sleep 1 ; echo "retry $N"
+do sleep 5 ; echo "retry $N"
    N=$((N+1))
    if [[ "$N" == 10 ]]
    then exit 1
@@ -41,6 +41,6 @@ echo waiting for node ready
 ST=""
 while [[ "$ST" != "Ready" ]]
 do ST="$(kubectl get nodes | awk 'NR==2 { print $2}')"
-   sleep 1
+   sleep 5
 done
 kubectl get nodes
