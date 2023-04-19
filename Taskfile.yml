@@ -39,6 +39,8 @@ tasks:
     cmds:
     - git commit -m $NOW -a || true
     - git push origin main --tags
+
+  enter: ssh -o "StrictHostKeyChecking=no" "ubuntu@$(cat ip.txt)"
   
 
   watch: watch kubectl -n nuvolaris get po,sts

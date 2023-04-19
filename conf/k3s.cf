@@ -31,27 +31,12 @@ Resources:
             DeleteOnTermination: true        
       Tags:
         - Key: Name
-          Value: nuvolaris-testing-mk8s 
-      UserData:
-        Fn::Base64: !Sub |
-            #!/bin/bash
-            DNS="$(curl -s checkip.amazonaws.com).nip.io"
-            apt update
-            apt install -y snapd
-            snap install microk8s --classic
-            sudo microk8s stop
-            sed -i "/DNS.5/a DNS.6 = $DNS" /var/snap/microk8s/current/certs/csr.conf.template
-            sudo microk8s start
-            while microk8s kubectl get nodes | grep NotReady
-            do echo Waiting for Ready ; sleep 5
-            done
-            microk8s enable hostpath-storage dns ingress cert-manager
-            microk8s config | sed -e "s/server: .*/server: https:\/\/$DNS:16443/" >/etc/kubeconfig
+          Value: nuvolaris-testing-k3s 
 
   MySecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: nuvolaris-testing-mk8s
+      GroupName: nuvolaris-testing-k3s
       GroupDescription: "Allow HTTP/HTTPS and SSH inbound and outbound traffic"
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -69,4 +54,8 @@ Resources:
         - IpProtocol: tcp
           FromPort: 16443
           ToPort: 16443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 6443
+          ToPort: 6443
           CidrIp: 0.0.0.0/0

@@ -18,13 +18,7 @@
 
 IP="${1:?ip}"
 
-# rest of the setup
-mkdir -p ~/.ssh
-if test -n "$ID_RSA_B64"
-then echo $ID_RSA_B64 | base64 -d - > id_rsa 
-     chmod 0600 id_rsa
-else echo "*** Missing ID_RSA_B64"
-fi
+
 mkdir -p ~/.kube
 # setup 
 N=1

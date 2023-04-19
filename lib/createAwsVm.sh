@@ -25,11 +25,10 @@ CONF=$TYPE.cf
 aws cloudformation create-stack --stack-name  $STACK --template-body file://conf/$CONF
 echo waiting the creation is complete
 aws cloudformation wait stack-create-complete --stack-name $STACK
-
-aws ec2 describe-instances  --output json \
-    --filters Name=tag:Name,Values=$STACK Name=instance-state-name,Values=running \
-    >instance.json
+aws ec2 describe-instances  --output json >instance.json \
+    --filters Name=tag:Name,Values=$STACK Name=instance-state-name,Values=running
 
 IP=$(cat instance.json | jq -r '.Reservations[].Instances[].PublicIpAddress')
 echo $IP >ip.txt
+echo the IP of your VM is $IP, saved in ip.txt
 

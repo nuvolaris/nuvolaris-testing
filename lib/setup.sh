@@ -23,6 +23,20 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 ## install task
 sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 
+
+# deploy the ssh key
+if test -e env.src
+then echo "Sourcing env.src"
+     source env.src
+fi
+mkdir -p ~/.ssh
+if test -n "$ID_RSA_B64"
+then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa 
+     chmod 0600 ~/.ssh/id_rsa
+     ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
+else echo "*** Missing ID_RSA_B64 ***"
+fi
+
 ## install nuv
 VER=0.3.0-morpheus.23041622
 URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
@@ -36,5 +50,8 @@ case "$TYPE" in
     (mk8s) 
         lib/createAwsVm.sh mk8s
         lib/getKubeConfig.sh "$(cat ip.txt)"
+    ;;
+    (k3s)
+        lib/createAwsVm.sh k3s
     ;;
 esac
