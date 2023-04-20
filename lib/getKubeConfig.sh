@@ -18,18 +18,17 @@
 
 IP="${1:?ip}"
 
-
 mkdir -p ~/.kube
 # setup 
 N=1
-while ! ssh -i id_rsa -o "StrictHostKeyChecking=no" ubuntu@$IP sudo cloud-init status --wait
+while ! ssh -o "StrictHostKeyChecking=no" ubuntu@$IP sudo cloud-init status --wait
 do sleep 5 ; echo "retry $N"
    N=$((N+1))
    if [[ "$N" == 10 ]]
    then exit 1
    fi
 done
-ssh -i id_rsa -o "StrictHostKeyChecking=no" ubuntu@$IP cat /etc/kubeconfig  >~/.kube/config
+ssh  -o "StrictHostKeyChecking=no" ubuntu@$IP cat /etc/kubeconfig  >~/.kube/config
 
 echo waiting for node ready
 ST=""

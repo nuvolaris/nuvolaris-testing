@@ -18,14 +18,15 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-# deploy by type
+
+# actual setup
 case "$TYPE" in
     (kind) SETUP_ARGS="--devcluster" ;;
     (mk8s) SETUP_ARGS="--current" ;;
 esac
-
-# hello world testh
 nuv setup $SETUP_ARGS
+
+# hello world test
 nuv -wsk action create hello actions/hello.js
 nuv -wsk action invoke hello -p name Nuvolaris -r | tee output.txt
 if grep Nuvolaris output.txt
