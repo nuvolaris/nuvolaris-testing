@@ -21,14 +21,13 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 # actual setup
 case "$TYPE" in
     (kind) 
-       nuv setup local
+        nuv setup local
     ;;
-    (mk8s) 
-       nuv setup apihost mk8s-nuv-test.duckdns.org
-       nuv setup cluster
+    (mk8s)
+        nuv setup apihost mk8s-nuv-test.duckdns.org
+        nuv setup cluster
     ;;
     (k3s) 
-       nuv setup apihost k3s-nuv-test.duckdns.org
-       nuv setup server k3s-nuv-test.duckdns.org ubuntu
+        nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac
