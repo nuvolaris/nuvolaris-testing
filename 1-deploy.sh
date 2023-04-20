@@ -22,19 +22,15 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 case "$TYPE" in
     (kind) 
        export SETUP_ARGS="local"
-       export WSK_ARGS="" 
     ;;
     (mk8s) 
        export SETUP_ARGS="cluster"
-       export WSK_ARG="-i" 
     ;;
 esac
 nuv setup $SETUP_ARGS
 
 # hello world test
-nuv -wsk $WSK_ARGS action create hello actions/hello.js
-nuv -wsk $WSK_ARGS action invoke hello -p name Nuvolaris -r | tee output.txt
-if grep Nuvolaris output.txt
+if nuv setup nuvolaris hello 
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1
 fi
