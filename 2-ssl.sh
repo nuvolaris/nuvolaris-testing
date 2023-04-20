@@ -18,4 +18,12 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-echo "$TYPE: TODO! "
+if ! nuv status | grep "https://"
+then echo FAIL ; exit 1
+fi
+
+# hello world test
+if nuv setup nuvolaris hello 
+then echo SUCCESS ; exit 0
+else echo FAIL ; exit 1
+fi

@@ -29,12 +29,6 @@ case "$TYPE" in
     ;;
     (k3s) 
        nuv setup apihost k3s-nuv-test.duckdns.org
-       nuv setup cluster
+       nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac
-
-# hello world test
-if nuv setup nuvolaris hello 
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1
-fi

@@ -34,6 +34,11 @@ tasks:
     cmds:
     - git tag mk8s-$NOW
 
+  3:
+    desc: tag for k3ss
+    cmds:
+    - git tag k3s-$NOW
+
   go:
     desc: push tags to trigger build
     cmds:
@@ -42,5 +47,4 @@ tasks:
 
   enter: ssh -o "StrictHostKeyChecking=no" "ubuntu@$(cat ip.txt)"
   
-
   watch: watch kubectl -n nuvolaris get po,sts

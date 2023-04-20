@@ -37,6 +37,7 @@ echo $IP > ip.txt
 # assign dyndns
 echo Assigning $DNS=$IP
 curl "https://www.duckdns.org/update?domains=$HOST&token=$DUCKDNS_TOKEN&ip=$IP"
+echo ""
 while true
 do  if host -a $DNS | grep $IP
     then break
