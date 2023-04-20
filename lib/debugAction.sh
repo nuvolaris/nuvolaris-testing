@@ -17,7 +17,7 @@
 #
 
 if ! test -e debug
-then exit 0
+then echo no debug ; exit 0
 fi
 
 if [[ -z "$NGROK_TOKEN" ]]
