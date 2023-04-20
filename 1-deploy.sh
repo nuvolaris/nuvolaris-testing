@@ -21,8 +21,8 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # actual setup
 case "$TYPE" in
-    (kind) SETUP_ARGS="--devcluster" ; WSK_ARGS="" ;;
-    (mk8s) SETUP_ARGS="--current" ; WSK_ARG="-i" ;;
+    (kind) SETUP_ARGS="local" ; WSK_ARGS="" ;;
+    (mk8s) SETUP_ARGS="cluster" ; WSK_ARG="-i" ;;
 esac
 nuv setup $SETUP_ARGS
 
