@@ -21,13 +21,17 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 # actual setup
 case "$TYPE" in
     (kind) 
-       export SETUP_ARGS="local"
+       nuv setup local
     ;;
     (mk8s) 
-       export SETUP_ARGS="cluster"
+       nuv setup apihost mk8s-nuv-test.duckdns.org
+       nuv setup cluster
+    ;;
+    (k3s) 
+       nuv setup apihost k3s-nuv-test.duckdns.org
+       nuv setup cluster
     ;;
 esac
-nuv setup $SETUP_ARGS
 
 # hello world test
 if nuv setup nuvolaris hello 

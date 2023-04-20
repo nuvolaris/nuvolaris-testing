@@ -49,7 +49,7 @@ nuv -info
 case "$TYPE" in
     (mk8s) 
         lib/createAwsVm.sh mk8s
-        lib/getKubeConfig.sh "$(cat ip.txt)"
+        lib/getKubeConfig.sh $(cat ip.txt)
     ;;
     (k3s)
         lib/createAwsVm.sh k3s

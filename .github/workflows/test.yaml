@@ -31,6 +31,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   ID_RSA_B64: ${{ secrets.ID_RSA_B64 }}
+  DUCKDNS_TOKEN: ${{ secrets.DUCKDNS_TOKEN }}
 
 jobs:
   test:
