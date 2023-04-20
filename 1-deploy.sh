@@ -20,14 +20,20 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # actual setup
 case "$TYPE" in
-    (kind) SETUP_ARGS="local" ; WSK_ARGS="" ;;
-    (mk8s) SETUP_ARGS="cluster" ; WSK_ARG="-i" ;;
+    (kind) 
+       export SETUP_ARGS="local"
+       export WSK_ARGS="" 
+    ;;
+    (mk8s) 
+       export SETUP_ARGS="cluster"
+       export WSK_ARG="-i" 
+    ;;
 esac
 nuv setup $SETUP_ARGS
 
 # hello world test
-nuv -wsk action $WSK_ARGS create hello actions/hello.js
-nuv -wsk action $WSK_ARGS invoke hello -p name Nuvolaris -r | tee output.txt
+nuv -wsk $WSK_ARGS action create hello actions/hello.js
+nuv -wsk $WSK_ARGS action invoke hello -p name Nuvolaris -r | tee output.txt
 if grep Nuvolaris output.txt
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1
