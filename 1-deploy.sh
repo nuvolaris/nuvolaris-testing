@@ -18,7 +18,6 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-
 # actual setup
 case "$TYPE" in
     (kind) SETUP_ARGS="local" ; WSK_ARGS="" ;;
