@@ -29,7 +29,7 @@ case "$TYPE" in
     ;;
     (k3s)
         # looks like there is some caching aroung and confuses k3sup
-        rm ~/.kube/config
+        rm -f ~/.kube/config
         nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac
