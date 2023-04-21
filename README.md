@@ -6,7 +6,10 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 # Nuvolaris 0.3 "Morpheus" Testing
 
-## Acceptance Test Status: 2/83 
+## Acceptance Test Status: 5/83 
+```
+[#####------------------------------------------------------------------------------]
+```
 
 |#|-|Kind|M8S|K3S|EKS|AKS|GKE|OpenShift|
 |-|-|-|-|-|-|-|-|-|
