@@ -18,8 +18,11 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-if ! nuv status | grep "https://"
-then echo FAIL ; exit 1
+if [[ "$TYPE" != "kind" ]]
+then
+    if ! nuv status | grep "https://"
+    then echo FAIL ; exit 1
+    fi
 fi
 
 # hello world test

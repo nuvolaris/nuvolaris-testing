@@ -27,7 +27,7 @@ case "$TYPE" in
         nuv setup apihost mk8s-nuv-test.duckdns.org
         nuv setup cluster
     ;;
-    (k3s) 
+    (k3s)
         nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac
