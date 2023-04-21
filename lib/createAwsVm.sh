@@ -38,6 +38,19 @@ echo $IP > ip.txt
 echo Assigning $DNS=$IP
 curl "https://www.duckdns.org/update?domains=$HOST&token=$DUCKDNS_TOKEN&ip=$IP"
 echo ""
+
+
+# wait vm ready
+N=1
+while ! ssh -o "StrictHostKeyChecking=no" ubuntu@$IP sudo cloud-init status --wait
+do sleep 10 ; echo "retry $N"
+   N=$((N+1))
+   if [[ "$N" == 100 ]]
+   then exit 1
+   fi
+done
+
+# wait dns ready
 while true
 do  if host -a $DNS | grep $IP
     then break
@@ -46,3 +59,4 @@ do  if host -a $DNS | grep $IP
 done
 
 echo IP: $IP, DNS: $DNS
+
