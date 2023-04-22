@@ -39,9 +39,18 @@ tasks:
     cmds:
     - git tag k3s-$NOW
 
+  debug:
+    desc: debug
+    cmds:
+      - touch debug
+      - git add debug
+      - git commit -m $NOW -a || true
+      - git push origin main --tags
+
   go:
     desc: push tags to trigger build
     cmds:
+    - if test -e debug ; then git rm debug ; fi
     - git commit -m $NOW -a || true
     - git push origin main --tags
 
