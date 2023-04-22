@@ -8,10 +8,10 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 ## Acceptance Test Status: 5/83 
 ```
-[#####------------------------------------------------------------------------------]
-```
+[##----------------------------------------]
+````
 
-|#|-|Kind|M8S|K3S|EKS|AKS|GKE|OpenShift|
+| | |Kind|M8S|K3S|EKS|AKS|GKE|OpenShift|
 |-|-|-|-|-|-|-|-|-|
 |1|Deploy| ✅| ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
 |2|SSL| N/A | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 

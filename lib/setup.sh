@@ -29,6 +29,7 @@ if test -e env.src
 then echo "Sourcing env.src"
      source env.src
 fi
+
 mkdir -p ~/.ssh
 if test -n "$ID_RSA_B64"
 then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa 
@@ -38,7 +39,7 @@ else echo "*** Missing ID_RSA_B64 ***"
 fi
 
 ## install nuv
-VER=0.3.0-morpheus.23042011
+VER=0.3.0-morpheus.23042210
 URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
 wget --no-verbose $URL -O nuv.deb
 sudo dpkg -i nuv.deb
@@ -49,7 +50,7 @@ nuv -info
 case "$TYPE" in
     (mk8s) 
         lib/createAwsVm.sh mk8s
-        lib/getKubeConfig.sh $(cat ip.txt)
+        lib/getKubeConfig.sh mk8s-nuv-test.duckdns.org
     ;;
     (k3s)
         lib/createAwsVm.sh k3s
