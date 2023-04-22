@@ -48,3 +48,10 @@ tasks:
   enter: ssh -o "StrictHostKeyChecking=no" "ubuntu@$(cat ip.txt)"
   
   watch: watch kubectl -n nuvolaris get po,sts
+
+  progress: 
+    - |
+      if test -z "{{.N}}"
+      then echo use task progress N=value
+      else curl -L "https://geps.dev/progress/{{.N}}?dangerColor=006600&warningColor=006600&successColor=006600" >progress.svg
+      fi
