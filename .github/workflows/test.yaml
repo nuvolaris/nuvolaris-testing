@@ -45,6 +45,8 @@ jobs:
         run:  lib/debugAction.sh
       - name: Wait for Debug (if requested)
         run: lib/waitIfDebug.sh
+      - name: 0 Unit
+        run: ./0-unit.sh
       - name: 1 Deploy
         run: ./1-deploy.sh $TYPE
       - name: 2 SSL

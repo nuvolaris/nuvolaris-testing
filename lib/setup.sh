@@ -15,14 +15,24 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
+NUV_VER=0.3.0-dev.2305061626
 
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-## install task
-sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+## install nuv
+# cleanup, just in case
+sudo dpkg -r nuv
+sudo rm -f /usr/local/bin/nuv /usr/bin/nuv
+URL="https://github.com/nuvolaris/nuv/releases/download/$NUV_VER/nuv_${NUV_VER}_amd64.deb"
+wget --no-verbose $URL -O nuv.deb
+sudo dpkg -i nuv.deb
+nuv -update 2>/dev/null
+nuv -info
 
+## install task and cram
+sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+pip install cram --user
 
 # deploy the ssh key
 if test -e env.src
@@ -37,14 +47,6 @@ then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa
      ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
 else echo "*** Missing ID_RSA_B64 ***"
 fi
-
-## install nuv
-VER=0.3.0-morpheus.23042210
-URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
-wget --no-verbose $URL -O nuv.deb
-sudo dpkg -i nuv.deb
-nuv -update 2>/dev/null
-nuv -info
 
 # deploy by type
 case "$TYPE" in

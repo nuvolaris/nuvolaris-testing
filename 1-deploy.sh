@@ -17,19 +17,20 @@
 # under the License.
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
+EMAIL=vacaxo8186@soombo.com
 
 # actual setup
 case "$TYPE" in
     (kind) 
-        nuv setup local
+        nuv setup devcluster
     ;;
     (mk8s)
-        nuv setup apihost mk8s-nuv-test.duckdns.org
+        nuv setup configure mk8s-nuv-test.duckdns.org --tls=$EMAIL
         nuv setup cluster
     ;;
     (k3s)
         # looks like there is some caching aroung and confuses k3sup
-        rm -f ~/.kube/config
+        nuv setup configure mk8s-nuv-test.duckdns.org --tls=$EMAIL
         nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac
