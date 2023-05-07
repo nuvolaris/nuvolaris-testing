@@ -3,6 +3,9 @@ Context:
   $ nuv setup kubernetes context
   Using current context
   RUN: kubectl config get-contexts
+  $ nuv setup kubernetes context CONTEXT=
+  Using current context
+  RUN: kubectl config get-contexts
   $ nuv setup kubernetes context CONTEXT=test
   RUN: kubectl config use-context test
   RUN: kubectl config get-contexts
@@ -15,6 +18,7 @@ Info
   RUN: kubectl -n nuvolaris get sts,po,svc
 Create
   $ nuv setup kubernetes create | grep RUN:
+  RUN: kubectl config get-contexts
   RUN: kubectl apply -f common -f roles -f crds
   RUN: kubectl apply -f _operator.yaml
   RUN: kubectl -n nuvolaris get pod/nuvolaris-operator
@@ -24,6 +28,11 @@ Create
   RUN: kubectl -n nuvolaris wait --for=condition=ready pod/couchdb-0 --timeout=10s
   RUN: kubectl -n nuvolaris get pod/controller-0
   RUN: kubectl -n nuvolaris wait --for=condition=ready pod/controller-0 --timeout=10s
+  $ nuv setup kubernetes create CONTEXT= | grep "kubectl config"
+  RUN: kubectl config get-contexts
+  $ nuv setup kubernetes create CONTEXT=demo | grep "kubectl config"
+  RUN: kubectl config use-context demo
+  RUN: kubectl config get-contexts
 Delete
   $ nuv setup kubernetes delete
   RUN: kubectl -n nuvolaris delete wsk/controller
