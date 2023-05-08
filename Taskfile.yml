@@ -37,7 +37,7 @@ tasks:
     - git push origin main --tags
 
   3:
-    desc: tag for k3ss
+    desc: tag for k3s
     cmds:
     - git tag k3s-$NOW
     - git push origin main --tags
