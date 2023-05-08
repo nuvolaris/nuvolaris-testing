@@ -15,7 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-NUV_VER=0.3.0-dev.2305061626
+NUV_VER=0.3.0-dev.2305070734
 
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
@@ -24,10 +24,11 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 # cleanup, just in case
 sudo dpkg -r nuv
 sudo rm -f /usr/local/bin/nuv /usr/bin/nuv
+sudo rm -Rf ~/.nuv/
 URL="https://github.com/nuvolaris/nuv/releases/download/$NUV_VER/nuv_${NUV_VER}_amd64.deb"
 wget --no-verbose $URL -O nuv.deb
 sudo dpkg -i nuv.deb
-nuv -update 2>/dev/null
+nuv -update 
 nuv -info
 
 ## install task and cram

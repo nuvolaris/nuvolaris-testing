@@ -1,5 +1,5 @@
   $ export EXTRA=D=1
-StStatus 
+Status 
   $ nuv setup docker status
   Cluster Nuvolaris not found
 Create
