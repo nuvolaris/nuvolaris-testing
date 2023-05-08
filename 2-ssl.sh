@@ -20,7 +20,7 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 if [[ "$TYPE" != "kind" ]]
 then
-    if ! nuv status | grep "https://"
+    if ! nuv -wsk property get | grep "https://"
     then echo FAIL ; exit 1
     fi
 fi

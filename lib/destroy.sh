@@ -22,7 +22,7 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # deploy by type
 case "$TYPE" in
-    (kind) nuv setup docker delete ;;
+    (kind) nuv setup uninstall ;;
     (k3s) lib/destroyAwsVm.sh k3s ;;
     (mk8s) lib/destroyAwsVm.sh mk8s ;;
 esac

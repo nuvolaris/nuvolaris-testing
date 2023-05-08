@@ -17,7 +17,7 @@
 # under the License.
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
-EMAIL=vacaxo8186@soombo.com
+EMAIL=msciabarra@apache.org
 
 # actual setup
 case "$TYPE" in
@@ -25,12 +25,13 @@ case "$TYPE" in
         nuv setup devcluster
     ;;
     (mk8s)
-        nuv setup configure mk8s-nuv-test.duckdns.org --tls=$EMAIL
-        nuv setup cluster
+        nuv setup config apihost mk8s-nuv-test.duckdns.org
+        nuv setup config tls $EMAIL
+        nuv setup cluster microk8s
     ;;
     (k3s)
         # looks like there is some caching aroung and confuses k3sup
-        nuv setup configure mk8s-nuv-test.duckdns.org --tls=$EMAIL
+        nuv setup config tls $EMAIL
         nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac
