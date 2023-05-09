@@ -10,3 +10,4 @@ ip.txt
 .latestcheck
 nuv
 olaris
+conf/*.kubeconfig

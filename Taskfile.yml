@@ -42,6 +42,10 @@ tasks:
     - git tag k3s-$NOW
     - git push origin main --tags
 
+  4:
+    desc: tag for eks
+
+
   debug:
     desc: debug
     cmds:
