@@ -18,8 +18,12 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
+echo ">> ls ~/.kube/"
 ls ~/.kube/
+echo "ls ~/.nuv/tmp"
 ls ~/.nuv/tmp
+ 
+nuv setup nuvolaris info
 
 if nuv setup nuvolaris redis
 then echo SUCCESS ; exit 0
