@@ -22,15 +22,18 @@ EMAIL=msciabarra@apache.org
 # actual setup
 case "$TYPE" in
     (kind) 
+        nuv config enable --redis --mongodb --minio
         nuv setup devcluster
     ;;
     (mk8s)
-        nuv setup config apihost mk8s-nuv-test.duckdns.org
-        nuv setup config tls $EMAIL
+        nuv config enable --redis --mongodb --minio
+        nuv config apihost mk8s-nuv-test.duckdns.org
+        nuv config tls $EMAIL
         nuv setup cluster microk8s
     ;;
     (k3s)
         # looks like there is some caching aroung and confuses k3sup
+        nuv config enable --redis --mongodb --minio
         nuv setup config tls $EMAIL
         nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;

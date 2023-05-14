@@ -18,4 +18,4 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-echo "$TYPE: TODO! "
+nuv setup nuvolaris redis

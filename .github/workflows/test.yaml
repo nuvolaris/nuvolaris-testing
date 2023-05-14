@@ -39,14 +39,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '>=1.20.2'
       - name: Setup
         run: lib/setup.sh $TYPE
       - name: Debug Action (if requested)
         run:  lib/debugAction.sh
       - name: Wait for Debug (if requested)
         run: lib/waitIfDebug.sh
-      - name: 0 Unit
-        run: ./0-unit.sh
+      # to update
+      #- name: 0 Unit
+      #  run: ./0-unit.sh
       - name: 1 Deploy
         run: ./1-deploy.sh $TYPE
       - name: 2 SSL

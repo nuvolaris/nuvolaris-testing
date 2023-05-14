@@ -15,21 +15,21 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-NUV_VER=0.3.0-dev.2305101253
-
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-## install nuv
+## install the latest version of nuv
 # cleanup, just in case
+VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
+URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
 sudo dpkg -r nuv
 sudo rm -f /usr/local/bin/nuv /usr/bin/nuv
 sudo rm -Rf ~/.nuv/
-URL="https://github.com/nuvolaris/nuv/releases/download/$NUV_VER/nuv_${NUV_VER}_amd64.deb"
 wget --no-verbose $URL -O nuv.deb
 sudo dpkg -i nuv.deb
-nuv -update 
+nuv -update
 nuv -info
+nuv config reset
 
 ## install task and cram
 sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
@@ -48,6 +48,8 @@ then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa
      ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
 else echo "*** Missing ID_RSA_B64 ***"
 fi
+
+go install github.com/rhelmke/urlenc@0.1.0
 
 # deploy by type
 case "$TYPE" in
