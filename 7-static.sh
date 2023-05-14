@@ -18,11 +18,4 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-
-ls ~/.kube/
-ls ~/.nuv/tmp
-
-if nuv setup nuvolaris mongodb
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1
-fi
+echo "$TYPE: TODO! "

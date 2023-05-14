@@ -18,6 +18,7 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
+
 ## install the latest version of nuv
 # cleanup, just in case
 VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
@@ -49,7 +50,8 @@ then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa
 else echo "*** Missing ID_RSA_B64 ***"
 fi
 
-go install github.com/rhelmke/urlenc@0.1.0
+# docker clean
+docker ps -qa | xargs docker rm -f
 
 # deploy by type
 case "$TYPE" in
