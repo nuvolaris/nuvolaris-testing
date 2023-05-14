@@ -63,8 +63,8 @@ jobs:
         run: ./5-sys-minio.sh $TYPE
       - name: 6 Login
         run: ./6-login.sh $TYPE
-      - name: 7 Statics
-        run: ./7-statics.sh $TYPE
+      - name: 7 Static
+        run: ./7-static.sh $TYPE
       - name: 8 UserRedis
         run: ./8-user-redis.sh $TYPE
       - name: 9 UserMongo
