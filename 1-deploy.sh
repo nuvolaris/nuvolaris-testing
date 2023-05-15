@@ -27,14 +27,14 @@ case "$TYPE" in
         nuv setup devcluster
     ;;
     (mk8s)
-        nuv config enable --redis --mongodb --minio
+        nuv config enable --redis --mongodb
         #nuv config apihost mk8s-nuv-test2.duckdns.org
-        #nuv config tls $EMAIL
+        nuv config tls $EMAIL
         nuv setup cluster microk8s
     ;;
     (k3s)
         # looks like there is some caching aroung and confuses k3sup
-        nuv config enable --redis --mongodb --minio
+        nuv config enable --redis --mongodb
         #nuv config tls $EMAIL
         nuv setup server k3s-nuv-test2.duckdns.org ubuntu
     ;;
