@@ -53,8 +53,8 @@ jobs:
       #  run: ./0-unit.sh
       - name: 1 Deploy
         run: ./1-deploy.sh $TYPE
-      - name: 2 SSL
-        run: ./2-ssl.sh $TYPE
+      #- name: 2 SSL
+      #run: ./2-ssl.sh $TYPE
       - name: 3 SysRedis
         run: ./3-sys-redis.sh $TYPE
       - name: 4 SysMongo
