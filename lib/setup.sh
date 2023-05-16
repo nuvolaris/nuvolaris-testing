@@ -55,7 +55,10 @@ fi
 # deploy by type
 case "$TYPE" in
     (kind)
-        docker ps -qa | xargs docker rm -f
+	# remove containers if any
+	if docker ps -qa | wc -l | grep -v -x 0
+	then docker ps -qa | xargs docker rm -f
+        fi
     ;;
     (mk8s) 
         lib/createAwsVm.sh mk8s
