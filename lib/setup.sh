@@ -51,13 +51,15 @@ else echo "*** Missing ID_RSA_B64 ***"
 fi
 
 # docker clean
-docker ps -qa | xargs docker rm -f
 
 # deploy by type
 case "$TYPE" in
+    (kind)
+        docker ps -qa | xargs docker rm -f
+    ;;
     (mk8s) 
         lib/createAwsVm.sh mk8s
-        lib/getKubeConfig.sh mk8s-nuv-test.duckdns.org
+        lib/getKubeConfig.sh mk8s-nuv-test2.duckdns.org
     ;;
     (k3s)
         lib/createAwsVm.sh k3s

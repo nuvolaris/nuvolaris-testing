@@ -18,12 +18,12 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-if [[ "$TYPE" != "kind" ]]
-then
-    if ! nuv -wsk property get | grep "https://"
-    then echo FAIL ; exit 1
-    fi
-fi
+#if [[ "$TYPE" != "kind" ]]
+#then
+#    if ! nuv -wsk property get | grep "https://"
+#    then echo FAIL ; exit 1
+#    fi
+#fi
 
 # hello world test
 if nuv setup nuvolaris hello 

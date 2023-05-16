@@ -70,3 +70,7 @@ Resources:
           FromPort: 16443
           ToPort: 16443
           CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 6443
+          ToPort: 6443
+          CidrIp: 0.0.0.0/0
