@@ -23,6 +23,9 @@ env:
 tasks:
   default: task -l
   setup: {silent:true}
+  origin:
+    - git fetch --all
+    - git checkout origin/main -B main
 
   1:
     desc: tag for kind
