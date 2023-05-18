@@ -11,3 +11,7 @@ ip.txt
 nuv
 olaris
 conf/*.kubeconfig
+playground.txt
+TODO.txt
+tests/*.err
+env-adm.src
