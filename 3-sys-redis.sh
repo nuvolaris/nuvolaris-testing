@@ -15,13 +15,11 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-TYPE="${1:?test type}"
-TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-nuv setup nuvolaris info
-
-if nuv setup nuvolaris redis
+if ! nuv config status | grep NUVOLARIS_REDIS=true
+then echo SKIPPING ; exit 0
+elif nuv setup nuvolaris redis | grep hello
 then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1
+else echo FAIL ; exit 1 
 fi
 

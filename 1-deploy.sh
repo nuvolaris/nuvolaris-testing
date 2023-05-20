@@ -19,25 +19,19 @@ TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 EMAIL=msciabarra@apache.org
 nuv config reset
+nuv config enable --redis --mongodb --minio
 
 # actual setup
 case "$TYPE" in
     (kind) 
-        nuv config enable --redis --mongodb --minio
         nuv setup devcluster
     ;;
     (mk8s)
-        nuv config enable --redis --mongodb
-        nuv config apihost mk8s-nuv-test2.duckdns.org
-        nuv -config -d | grep TLS
-        #nuv config tls $EMAIL
+        nuv config apihost mk8s-nuv-test.duckdns.org
         nuv setup cluster microk8s
     ;;
     (k3s)
-        # looks like there is some caching aroung and confuses k3sup
-        nuv config enable --redis --mongodb
-        #nuv config tls $EMAIL
-        nuv -config -d | grep TLS
-        nuv setup server k3s-nuv-test2.duckdns.org ubuntu
+        nuv config tls $EMAIL
+        nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
 esac

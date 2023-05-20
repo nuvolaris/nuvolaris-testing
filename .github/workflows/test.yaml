@@ -53,28 +53,28 @@ jobs:
       #  run: ./0-unit.sh
       - name: 1 Deploy
         run: ./1-deploy.sh $TYPE
-      #- name: 2 SSL
-      #run: ./2-ssl.sh $TYPE
+      - name: 2 SSL
+      run: ./2-ssl.sh
       - name: 3 SysRedis
-        run: ./3-sys-redis.sh $TYPE
+        run: ./3-sys-redis.sh
       - name: 4 SysMongo
-        run: ./4-sys-mongo.sh $TYPE
+        run: ./4-sys-mongo.sh
       - name: 5 SysMinio
-        run: ./5-sys-minio.sh $TYPE
+        run: ./5-sys-minio.sh
       - name: 6 Login
-        run: ./6-login.sh $TYPE
+        run: ./6-login.sh 
       - name: 7 Static
-        run: ./7-static.sh $TYPE
+        run: ./7-static.sh 
       - name: 8 UserRedis
-        run: ./8-user-redis.sh $TYPE
+        run: ./8-user-redis.sh 
       - name: 9 UserMongo
-        run: ./9-user-mongo.sh $TYPE
+        run: ./9-user-mongo.sh 
       - name: 10 UserMinio
-        run: ./10-user-minio.sh $TYPE
+        run: ./10-user-minio.sh 
       - name: 11 NuvWin
-        run: ./11-nuv-win.sh $TYPE
+        run: ./11-nuv-win.sh 
       - name: 12 NuvMac
-        run: ./12-nuv-mac.sh $TYPE
+        run: ./12-nuv-mac.sh 
       - name: Destroy
         if: always()
         run: ./lib/destroy.sh $TYPE

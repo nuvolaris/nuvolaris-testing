@@ -20,7 +20,7 @@ TYPE=${1:?type}
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 STACK=nuvolaris-testing-$TYPE
 CONF=$TYPE.cf
-HOST=$TYPE-nuv-test2
+HOST=$TYPE-nuv-test
 DNS=$HOST.duckdns.org
 
 # create vm

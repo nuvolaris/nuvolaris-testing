@@ -15,7 +15,10 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-TYPE="${1:?test type}"
-TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-echo "$TYPE: TODO! "
+if ! nuv config status | grep NUVOLARIS_MINIO=true
+then echo SKIPPING ; exit 0
+elif nuv setup nuvolaris minio | grep nuvolaris-data
+then echo SUCCESS ; exit 0
+else echo FAIL ; exit 1 
+fi

@@ -62,7 +62,7 @@ case "$TYPE" in
     ;;
     (mk8s) 
         lib/createAwsVm.sh mk8s
-        lib/getKubeConfig.sh mk8s-nuv-test2.duckdns.org
+        lib/getKubeConfig.sh mk8s-nuv-test.duckdns.org
     ;;
     (k3s)
         lib/createAwsVm.sh k3s
