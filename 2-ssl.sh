@@ -19,6 +19,6 @@
 if nuv debug detect | grep kind
 then echo SKIPPING ; exit 0
 elif nuv debug apihost | grep "https://"
-then echo SUCCESS ; exit 1
+then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1
 fi
