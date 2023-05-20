@@ -28,6 +28,7 @@ case "$TYPE" in
     ;;
     (mk8s)
         nuv config apihost mk8s-nuv-test.duckdns.org
+        nuv config tls $EMAIL
         nuv setup cluster microk8s
     ;;
     (k3s)
