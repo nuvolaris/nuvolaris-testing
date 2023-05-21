@@ -17,26 +17,9 @@
 # under the License.
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
-EMAIL=msciabarra@apache.org
-nuv config enable --redis --mongodb --minio
 
-# actual setup
-case "$TYPE" in
-    (kind) 
-        nuv setup devcluster
-    ;;
-    (mk8s)
-        nuv config apihost mk8s-nuv-test.duckdns.org
-        nuv config tls $EMAIL
-        nuv setup cluster microk8s
-    ;;
-    (k3s)
-        nuv config tls $EMAIL
-        nuv setup server k3s-nuv-test.duckdns.org ubuntu
-    ;;
-    (eks)
-        nuv config tls $EMAIL
-        nuv setup cluster
-    ;;
-        
-esac
+./1-deploy.sh $TYPE
+./2-ssl.sh
+./3-sys-redis.sh
+./4-sys-mongo.sh
+./5-sys-minio.sh
