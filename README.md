@@ -11,8 +11,8 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 | | |Kind|M8S|K3S|EKS|AKS|GKE|OpenShift|
 |-|-|-|-|-|-|-|-|-|
-|1|Deploy     | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|2|SSL    | N/A    | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
+|1|Deploy     | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
+|2|SSL    | N/A    | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
 |3|Sys Redis  | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
 |4|Sys Mongo  | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
 |5|Sys Minio  | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 

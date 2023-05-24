@@ -1,0 +1,3 @@
+[submodule "nuvolaris-documentation"]
+	path = nuvolaris-documentation
+	url = https://github.com/nuvolaris/nuvolaris-documentation
