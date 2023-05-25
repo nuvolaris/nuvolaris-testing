@@ -20,6 +20,9 @@ env:
   NOW:
     sh: date +%Y-%m%d-%H%M
 
+dotenv:
+ - env-adm.src
+  
 tasks:
   default: task -l
   setup: {silent:true}
@@ -28,22 +31,40 @@ tasks:
     - git checkout origin/main -B main
 
   1:
-    desc: tag for kind
+    desc: run kind test
     cmds:
     - git tag kind-$NOW
     - git push origin main --tags
 
   2:
-    desc: tag for microk8s
+    desc: run microk8s test
     cmds:
     - git tag mk8s-$NOW
     - git push origin main --tags
 
   3:
-    desc: tag for k3s
+    desc: run for k3s test
     cmds:
     - git tag k3s-$NOW
     - git push origin main --tags
+
+  eks:
+    desc: prepare eks for test
+    cmds:
+    - nuv config eks --name=nuvolaris --region=us-east-1 --count=1 --vm=m5.xlarge --disk=50 --key=nuvolaris-key --kubever=1.25
+    - nuv setup eks create
+
+  aks:
+    desc: prepare aks for test
+    cmds:
+    - nuv config aks --name=nuvolaris --region=eastus --count=1 --vm=Standard_B4ms --disk=50 --key=~/.ssh/id_rsa.pub
+
+  gke:
+    desc: prepare gke for test
+    cmds:
+    - nuv config gke --project=eighth-pen-334717 --name=nuvolaris --region=us-east1 --count=1 --vm=e2-standard-2 --disk=50 
+
+
 
   debug:
     desc: debug
@@ -52,8 +73,8 @@ tasks:
       - git add debug
       - git commit -m $NOW -a || true
 
-  snap:
-    desc: commit
+  test:
+    desc: commit and run the test
     cmds:
     - if test -e debug ; then git rm debug ; fi
     - git commit -m $NOW -a || true
@@ -63,6 +84,8 @@ tasks:
   watch: watch kubectl -n nuvolaris get po,sts
 
   progress: 
+    desc: update the progress
+    cmds:
     - |
       if test -z "{{.N}}"
       then echo use task progress N=value

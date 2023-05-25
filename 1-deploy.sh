@@ -26,12 +26,11 @@ case "$TYPE" in
         nuv setup devcluster
     ;;
     (mk8s)
-        nuv config apihost mk8s-nuv-test.duckdns.org
-        nuv config tls $EMAIL
+        nuv config apihost mk8s-nuv-test.duckdns.org --tls $EMAIL
         nuv setup cluster microk8s
     ;;
     (k3s)
-        nuv config tls $EMAIL
+        nuv config apihost k3s-nuv-test.duckdns.org --tls $EMAIL
         nuv setup server k3s-nuv-test.duckdns.org ubuntu
     ;;
     (eks)

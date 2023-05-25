@@ -18,7 +18,6 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-
 ## install the latest version of nuv
 # cleanup, just in case
 VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
@@ -55,16 +54,20 @@ fi
 # deploy by type
 case "$TYPE" in
     (kind)
-	# remove containers if any
-	if docker ps -qa | wc -l | grep -v -x 0
-	then docker ps -qa | xargs docker rm -f
+	    #  remove containers if any
+	    if docker ps -qa | wc -l | grep -v -x 0
+	    then docker ps -qa | xargs docker rm -f
         fi
     ;;
     (mk8s) 
         lib/createAwsVm.sh mk8s
-        lib/getKubeConfig.sh mk8s-nuv-test.duckdns.org
+        lib/updateZone.sh mk8s "$(cat _ip)"
+        lib/getKubeConfig.sh mk8s.n9s.cc
     ;;
     (k3s)
         lib/createAwsVm.sh k3s
+        lib/updateZone.sh k3s "$(cat _ip)"
     ;;
+    (eks)
+      
 esac
