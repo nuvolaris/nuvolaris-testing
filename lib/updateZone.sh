@@ -12,39 +12,27 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 VALUE="${2:?ip or cname}"
+REC="${3:-A}"
 DOMAIN="$TYPE.n9s.cc"
 
 case $TYPE in 
-(k3s) ID=Z0096994K8S6KL0FF6TL ; TYPE=A ;;
-(mk8s) ID=Z04984831L1U032GQ1YSR ; TYPE=A ;;
-(eks) ID=Z09449781AEA79H161VH6 ; TYPE=CNAME ;;
-(aks) ID=Z0092660FFL09OQKKQWR ; TYPE=A ;;
-(gke) ID=Z04927103UQGCZORDWZM6 ; TYPE=A ;;
+(k3s) ID=Z0096994K8S6KL0FF6TL   ;;
+(mk8s) ID=Z04984831L1U032GQ1YSR ;;
+(eks) ID=Z09449781AEA79H161VH6  ;;
+(aks) ID=Z0092660FFL09OQKKQWR   ;;
+(gke) ID=Z04927103UQGCZORDWZM6  ;;
 esac
 
 cat <<EOF >_update.json
 {
-  "Comment": "Update A record",
+  "Comment": "Update $REC record",
   "Changes": [
     {
       "Action": "UPSERT",
       "ResourceRecordSet": {
         "Name": "*.$DOMAIN",
-        "Type": "$TYPE",
+        "Type": "$REC",
         "TTL": 60,
-        "ResourceRecords": [
-          {
-            "Value": "$VALUE"
-          }
-        ]
-      }
-    },
-    {
-      "Action": "UPSERT",
-      "ResourceRecordSet": {
-        "Name": "$DOMAIN",
-        "Type": "$TYPE",
-        "TTL": 30,
         "ResourceRecords": [
           {
             "Value": "$VALUE"

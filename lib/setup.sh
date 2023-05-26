@@ -52,6 +52,7 @@ fi
 # docker clean
 
 # deploy by type
+mkdir -p ~/.kube
 case "$TYPE" in
     (kind)
 	    #  remove containers if any
@@ -69,5 +70,7 @@ case "$TYPE" in
         lib/updateZone.sh k3s "$(cat _ip)"
     ;;
     (eks)
+        lib/encdec.sh decode eks
+        lib/updateZone.sh eks "$(cat conf/eks.lb)" CNAME
       
 esac

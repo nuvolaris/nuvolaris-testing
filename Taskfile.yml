@@ -21,7 +21,7 @@ env:
     sh: date +%Y-%m%d-%H%M
 
 dotenv:
- - env-adm.src
+- env-adm.src
   
 tasks:
   default: task -l
@@ -48,11 +48,40 @@ tasks:
     - git tag k3s-$NOW
     - git push origin main --tags
 
+  4:
+    desc: run for eks test
+    cmds:
+    - git tag eks-$NOW
+    - git push origin main --tags
+
   eks:
     desc: prepare eks for test
     cmds:
-    - nuv config eks --name=nuvolaris --region=us-east-1 --count=1 --vm=m5.xlarge --disk=50 --key=nuvolaris-key --kubever=1.25
+    - nuv config eks --name=nuvolaris --region=us-east-2 --count=1 --vm=m5.xlarge --disk=50 --key=nuvolaris-key --kubever=1.25
     - nuv setup eks create
+    - nuv setup eks lb >conf/eks.lb
+    - nuv debug k:export OK=1
+    - lib/encdec.sh encode eks
+    - git add conf/eks.kubeconfig conf/eks.lb
+    - git commit -m "eks config"
+
+  eks:clean:
+    desc: clean eks
+    cmds:
+    - nuv setup eks delete
+    - rm -f conf/eks.*
+
+  osh:
+    desc: prepare openshift for test
+    cmds:
+    - mkdir -p conf/osh ; cp -v conf/install-config.yaml conf/osh
+    - openshift-install create cluster --dir conf/osh
+
+  osh:clean:
+    desc: prepare openshift for test
+    cmds:
+    - openshift-install destroy cluster --dir conf/osh
+
 
   aks:
     desc: prepare aks for test
@@ -65,15 +94,13 @@ tasks:
     - nuv config gke --project=eighth-pen-334717 --name=nuvolaris --region=us-east1 --count=1 --vm=e2-standard-2 --disk=50 
 
 
-
   debug:
     desc: debug
     cmds:
-      - touch debug
-      - git add debug
+      - touch debug && git add debug
       - git commit -m $NOW -a || true
 
-  test:
+  snap:
     desc: commit and run the test
     cmds:
     - if test -e debug ; then git rm debug ; fi
