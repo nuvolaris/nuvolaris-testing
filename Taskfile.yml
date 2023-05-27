@@ -60,10 +60,7 @@ tasks:
     - nuv config eks --name=nuvolaris --region=us-east-2 --count=1 --vm=m5.xlarge --disk=50 --key=nuvolaris-key --kubever=1.25
     - nuv setup eks create
     - nuv setup eks lb >conf/eks.lb
-    - nuv debug k:export OK=1
-    - lib/encdec.sh encode eks
-    - git add conf/eks.kubeconfig conf/eks.lb
-    - git commit -m "eks config"
+    - lib/encdec.sh encode eks ~/.nuv/tmp/kubeconfig
 
   eks:clean:
     desc: clean eks
@@ -82,17 +79,21 @@ tasks:
     cmds:
     - openshift-install destroy cluster --dir conf/osh
 
-
   aks:
     desc: prepare aks for test
     cmds:
     - nuv config aks --name=nuvolaris --region=eastus --count=1 --vm=Standard_B4ms --disk=50 --key=~/.ssh/id_rsa.pub
+    - nuv setup aks lb >conf/aks.lb
+    - lib/encdec.sh encode aks ~/.nuv/tmp/kubeconfig
 
   gke:
     desc: prepare gke for test
     cmds:
     - nuv config gke --project=eighth-pen-334717 --name=nuvolaris --region=us-east1 --count=1 --vm=e2-standard-2 --disk=50 
+    - nuv setup aks lb >conf/gke.lb
+    - lib/encdec.sh encode gke ~/.nuv/tmp/kubeconfig
 
+  conf:clean: rm -f conf/*.lb conf/*.kubeconfig
 
   debug:
     desc: debug
@@ -104,6 +105,7 @@ tasks:
     desc: commit and run the test
     cmds:
     - if test -e debug ; then git rm debug ; fi
+    - git add conf/*.kubeconfig conf/*.lb
     - git commit -m $NOW -a || true
 
   enter: ssh -o "StrictHostKeyChecking=no" "ubuntu@$(cat ip.txt)"

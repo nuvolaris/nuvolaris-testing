@@ -9,9 +9,13 @@ case "$1" in
     (encode)
         echo encode 
         TYPE="${2:?type}"
-        grep server: ~/.nuv/tmp/kubeconfig
-        kubectl --kubeconfig  ~/.nuv/tmp/kubeconfig get nodes
-        openssl aes-256-cbc -e -pbkdf2 -a -in ~/.nuv/tmp/kubeconfig -out "conf/$TYPE.kubeconfig" -pass env:ID_RSA_B64
+        FILE="${3:?kubeconfig}"
+       
+        if  grep server: $FILE
+        then openssl aes-256-cbc -e -pbkdf2 -a -in $FILE -out "conf/$TYPE.kubeconfig" -pass env:ID_RSA_B64
+             echo encoded "conf/$TYPE.kubeconfig"
+        else echo $FILE is not a kubeconfig
+        fi
     ;;
     (decode)
         echo decode
@@ -22,6 +26,6 @@ case "$1" in
         kubectl get nodes
     ;;
     (*)
-        "use: encode/decode <type>"
+        "use: encode <type> <file> | decode <type>"
     ;;
 esac
