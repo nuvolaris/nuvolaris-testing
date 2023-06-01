@@ -16,6 +16,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+nuv config enable --minio
+nuv update apply
+
 if ! nuv config status | grep NUVOLARIS_MINIO=true
 then echo SKIPPING ; exit 0
 elif nuv setup nuvolaris minio | grep nuvolaris-data

@@ -49,7 +49,7 @@ aws route53 change-resource-record-sets --hosted-zone-id=$ID --change-batch file
 echo "*** waiting for the dns to to be ready"
 N=0
 while true
-do  if host -a $DOMAIN | grep $VALUE
+do  if host -a api.$DOMAIN | grep $VALUE
     then break
     else echo $((N++)) waiting DNS ; sleep 5 
     fi

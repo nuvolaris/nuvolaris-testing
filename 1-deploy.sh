@@ -17,25 +17,29 @@
 # under the License.
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
-EMAIL=msciabarra@apache.org
-nuv config enable --redis --mongodb --minio
 
 # actual setup
 case "$TYPE" in
     (kind) 
+        nuv config reset
+        nuv setup devcluster --uninstall
         nuv setup devcluster
     ;;
-    (mk8s)
-        nuv config apihost mk8s-nuv-test.duckdns.org --tls $EMAIL
-        nuv setup cluster microk8s
-    ;;
     (k3s)
-        nuv config apihost k3s-nuv-test.duckdns.org --tls $EMAIL
-        nuv setup server k3s-nuv-test.duckdns.org ubuntu
+        lib/createAwsVm.sh k3s
+        nuv config reset
+        nuv setup server $(cat _ip) ubuntu --uninstall
+        nuv setup server $(cat _ip) ubuntu
+    ;;
+    (mk8s)
+        nuv config reset
+        lib/createAwsVm.sh mk8s
+        lib/getKubeConfig.sh $(cat _ip)
+        nuv setup cluster microk8s --uninstall
     ;;
     (eks)
         nuv config tls $EMAIL
         nuv setup cluster
     ;;
-        
+
 esac

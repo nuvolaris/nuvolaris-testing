@@ -29,7 +29,6 @@ wget --no-verbose $URL -O nuv.deb
 sudo dpkg -i nuv.deb
 nuv -update
 nuv -info
-nuv config reset
 
 ## install task and cram
 sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
@@ -48,11 +47,10 @@ then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa
      ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
 else echo "*** Missing ID_RSA_B64 ***"
 fi
+mkdir -p ~/.kube
 
-# docker clean
 
 # deploy by type
-mkdir -p ~/.kube
 case "$TYPE" in
     (kind)
 	    #  remove containers if any
@@ -60,17 +58,17 @@ case "$TYPE" in
 	    then docker ps -qa | xargs docker rm -f
         fi
     ;;
+    (k3s)
+        lib/createAwsVm.sh k3s
+      
+    ;;
     (mk8s) 
         lib/createAwsVm.sh mk8s
         lib/updateZone.sh mk8s "$(cat _ip)"
         lib/getKubeConfig.sh mk8s.n9s.cc
     ;;
-    (k3s)
-        lib/createAwsVm.sh k3s
-        lib/updateZone.sh k3s "$(cat _ip)"
-    ;;
     (eks)
         lib/encdec.sh decode eks
         lib/updateZone.sh eks "$(cat conf/eks.lb)" CNAME
-      
+    ;;
 esac

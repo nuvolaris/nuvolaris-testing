@@ -15,10 +15,26 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+TYPE="$(nuv debug detect)"
+EMAIL=msciabarra@apache.org
 
-if nuv debug detect | grep kind
-then echo SKIPPING ; exit 0
-elif nuv debug apihost | grep "https://"
+case "$TYPE" in
+    (kind) 
+        echo SKIPPING 
+        exit 0
+    ;;
+    (k3s)
+        lib/updateZone.sh k3s $(cat _ip)
+        DNS=
+        nuv config apihost $api.k3s.n9s.cc --tls $EMAIL
+        nuv update apply
+    ;;
+
+
+if nuv debug apihost | grep "https://"
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1
 fi
+
+
+

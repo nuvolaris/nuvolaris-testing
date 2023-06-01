@@ -9,20 +9,25 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 ## Acceptance Test Status: 22/83 
 <img src="img/progress.svg" width="30%">
 
-| | |Kind|M8S|K3S|EKS|AKS|GKE|OpenShift|
-|-|-|-|-|-|-|-|-|-|
-|1|Deploy     | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|2|SSL    | N/A    | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|3|Sys Redis  | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|4|Sys Mongo  | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|5|Sys Minio  | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|6|Login      | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|7|Statics    | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|8|User Redis | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|9|User Mongo | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|10|User Minio| ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|11|Nuv Win   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
-|12|Nuv Mac   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ 
+|  |               |Kind|M8S |K3S |EKS |AKS |GKE |OSH |
+|--|---------------|----|----|----|----|----|----|----|
+|1 |Deploy         | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
+|2 |SSL            | N/A| ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
+|3 |Sys Redis      | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+|5 |Sys Minio      | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | 
+|14|Sys Postgres   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|6 |Login          | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|7 |Statics        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|8 |User Redis     | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|10|User Minio     | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|15|User Postgres  | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|11|Nuv Win        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+|12|Nuv Mac        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |  
+|--|---------------|----|----|----|----|----|----|----|
+
+|4 |Sys Mongo      | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
+|9 |User Mongo     | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+
 
 ## The challengers
 

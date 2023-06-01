@@ -16,9 +16,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
-if ! nuv config status | grep NUVOLARIS_REDIS=true
-then echo SKIPPING ; exit 0
-elif nuv setup nuvolaris redis | grep hello
+
+nuv config enable --redis
+nuv update apply
+
+if nuv setup nuvolaris redis | grep hello
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1 
 fi
