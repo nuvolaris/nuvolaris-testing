@@ -18,10 +18,9 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-TYPE=kind
-
 ./1-deploy.sh $TYPE
 ./2-ssl.sh  $TYPE
 ./3-sys-redis.sh
 ./4-sys-mongo.sh
 ./5-sys-minio.sh
+

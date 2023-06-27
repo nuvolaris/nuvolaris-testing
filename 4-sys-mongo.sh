@@ -16,6 +16,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
+nuv config enable --mongo
+nuv update apply
+
 if ! nuv config status | grep NUVOLARIS_MONGODB=true
 then echo SKIPPING ; exit 0
 elif nuv setup nuvolaris mongodb | grep hello
