@@ -15,7 +15,9 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-TYPE="$(nuv debug detect)"
+
+# TYPE="$(nuv debug detect)"
+TYPE="${1:?test type}"
 EMAIL=msciabarra@apache.org
 
 case "$TYPE" in
@@ -29,6 +31,7 @@ case "$TYPE" in
         nuv config apihost $api.k3s.n9s.cc --tls $EMAIL
         nuv update apply
     ;;
+esac
 
 
 if nuv debug apihost | grep "https://"
