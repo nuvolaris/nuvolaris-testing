@@ -20,6 +20,8 @@
 nuv config enable --redis
 nuv update apply
 
+sleep 30
+
 if nuv setup nuvolaris redis | grep hello
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1 

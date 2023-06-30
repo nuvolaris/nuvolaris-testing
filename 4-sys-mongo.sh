@@ -19,6 +19,8 @@
 nuv config enable --mongo
 nuv update apply
 
+sleep 30
+
 if ! nuv config status | grep NUVOLARIS_MONGODB=true
 then echo SKIPPING ; exit 0
 elif nuv setup nuvolaris mongodb | grep hello

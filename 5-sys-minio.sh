@@ -19,6 +19,8 @@
 nuv config enable --minio
 nuv update apply
 
+sleep 30
+
 if ! nuv config status | grep NUVOLARIS_MINIO=true
 then echo SKIPPING ; exit 0
 elif nuv setup nuvolaris minio | grep nuvolaris-data
