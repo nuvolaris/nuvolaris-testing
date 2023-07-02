@@ -31,8 +31,12 @@ nuv -update
 nuv -info
 
 ## install task and cram
-sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
-pip install cram --user
+if ! which task 
+then sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+fi
+if ! which cram
+then pip install cram --user
+fi
 
 # deploy the ssh key
 if test -e env.src
