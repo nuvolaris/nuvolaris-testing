@@ -21,8 +21,23 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 # Generate a random password for the user "demo"
 password=$(nuv -random --str 12)
 
+ENABLE_REDIS=""
+if nuv config status | grep NUVOLARIS_REDIS=true 
+then ENABLE_REDIS="--redis"
+fi
+
+ENABLE_MONGODB=""
+if nuv config status | grep NUVOLARIS_MONGODB=true 
+then ENABLE_MONGODB="--mongodb"
+fi
+
+ENABLE_MINIO=""
+if nuv config status | grep NUVOLARIS_MINIO=true 
+then ENABLE_MINIO="--minio"
+fi
+
 # Create a new user "demo-user" with nuv admin adduser with previous services enabled
-if nuv admin adduser demo-user demo@email.com $password --redis --mongodb --minio | grep "whiskuser.nuvolaris.org/demo-user created"
+if nuv admin adduser demo-user demo@email.com $password $ENABLE_REDIS $ENABLE_MONGODB $ENABLE_MINIO | grep "whiskuser.nuvolaris.org/demo-user created"
 then echo SUCCESS CREATING demo-user
 else echo FAIL CREATING demo-user ; exit 1 
 fi
