@@ -15,4 +15,39 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-echo "TODO!"
+TYPE="${1:?test type}"
+TYPE="$(echo $TYPE | awk -F- '{print $1}')"
+
+if nuv config status | grep NUVOLARIS_REDIS=true 
+then echo "REDIS ENABLED"
+else echo "REDIS DISABLED - SKIPPING" ; exit 0
+fi
+
+user="demo-minio-user"
+password=$(nuv -random --str 12)
+
+if nuv admin adduser $user $user@email.com $password --mongodb | grep "whiskuser.nuvolaris.org/$user created"
+then echo SUCCESS CREATING $user
+else echo FAIL CREATING $user; exit 1 
+fi
+
+sleep 10
+
+case "$TYPE" in
+    (kind) 
+        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as $user."
+        then echo SUCCESS LOGIN
+        else echo FAIL LOGIN ; exit 1 
+        fi
+    ;;
+esac
+
+if nuv setup nuvolaris minio | grep hello
+then echo SUCCESS
+else echo FAIL ; exit 1 
+fi
+
+if nuv -wsk action list | grep "/$user/hello/minio"
+then echo SUCCESS ; exit 0
+else echo FAIL ; exit 1 
+fi

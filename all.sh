@@ -67,3 +67,24 @@ echo "#            TESTING LOGIN $TYPE             #"
 echo "#                                            #"
 echo "##############################################"
 ./6-login.sh $TYPE
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING USER REDIS $TYPE        #"
+echo "#                                            #"
+echo "##############################################"
+./8-user-redis.sh $TYPE
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING USER MONGO $TYPE        #"
+echo "#                                            #"
+echo "##############################################"
+./9-user-mongo.sh $TYPE
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING USER MINIO $TYPE        #"
+echo "#                                            #"
+echo "##############################################"
+./10-user-minio.sh $TYPE
