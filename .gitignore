@@ -1,3 +1,4 @@
+attic/
 .vscode/
 .git-hooks/
 *.deb
@@ -7,9 +8,6 @@ conf/id_rsa
 instance.json
 ip.txt
 .latestcheck
-nuv
-olaris
-odocs
 playground.txt
 TODO.txt
 tests/*.err
