@@ -21,5 +21,3 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 STACK=nuvolaris-testing-$TYPE
 
-aws cloudformation delete-stack --stack-name $STACK
-aws cloudformation wait stack-delete-complete --stack-name $STACK

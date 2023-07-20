@@ -2,10 +2,11 @@ This is the setup in AWS and GitHub to run tests
 
 1. Created an AWS user  with the IAM in conf/iam.json
 
-2. Cerates a ssh key, imported as a public key as nuvolaris-key in the defaults zone.
+2. Created a ssh key, imported as a public key as nuvolaris-key in the default zone in AWS.
+
 The private key is encoded as base64 in ID_RSA_B64
 
-3. wrore an env.src with those secrets
+3. wrote an env.src with those secrets
 
 export AWS_ACCESS_KEY_ID=
 export AWS_SECRET_ACCESS_KEY=

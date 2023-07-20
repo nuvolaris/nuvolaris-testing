@@ -1,0 +1,26 @@
+### Reset 
+nuv config reset
+
+nuv setup docker status
+#! no cluster expected
+
+### Create cluster
+nuv setup docker create
+nuv setup docker status
+#! one cluster
+nuv debug kinfo
+#! one cluster
+nuv config use
+#! find kubeconfig kind
+
+## Kubeconfig
+nuv config reset
+nuv config use
+nuv setup docker kubeconfig
+nuv config use
+#! remove and recover kubeconfig
+
+### Delete cluster
+nuv setup docker delete
+nuv setup docker status
+#! no cluster

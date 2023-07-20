@@ -1,0 +1,35 @@
+### Reset
+
+## Config
+nuv kubeconfig reset
+nuv cloud aws vm-list
+task aws:config
+nuv cloud aws vm-list
+#! show list of vms (none)
+
+## Create VM k3s
+nuv cloud aws vm-create k3s-test
+nuv cloud aws vm-list
+nuv config use
+#! see the vm and no kubeconfig
+
+
+## Create VM2 mk8s
+
+nuv cloud aws vm-create mk8s-test --microk8s
+nuv cloud aws vm-list
+nuv config use
+nuv debug kinfo
+#! 2 vm, one config is microk8s, see the cluster nodes
+
+nuv config reset
+task aws:config
+nuv config use
+#! no kubeconfig
+nuv cloud aws vm-kubeconfig mk8s-test
+nuv cloud aws vm-kubeconfig k3s-test
+
+## Delete VMs
+nuv cloud aws vm-delete k3s-test
+nuv cloud aws vm-delete mk8s-test
+nuv cloud aws vm-list

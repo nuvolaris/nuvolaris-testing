@@ -16,104 +16,117 @@
 # under the License.
 
 version: '3'
-env:
-  NOW:
-    sh: date +%Y-%m%d-%H%M
 
-dotenv:
-- env-adm.src
-  
+dotenv: 
+- env
+
 tasks:
-  default: task -l
-  setup: {silent:true}
+  setup: {silent: true}
 
-  1:
-    desc: run kind test
-    cmds:
-    - git tag kind-$NOW
-    - git push origin main --tags
+  kind:config:
+  - which docker
 
-  2:
-    desc: run microk8s test
-    cmds:
-    - git tag mk8s-$NOW
-    - git push origin main --tags
+  kind:create:
+  - nuv setup docker create
 
-  3:
-    desc: run for k3s test
-    cmds:
-    - git tag k3s-$NOW
-    - git push origin main --tags
+  kind:status:
+  - nuv setup docker status
+  - nuv config use
 
-  4:
-    desc: run for eks test
-    cmds:
-    - git tag eks-$NOW
-    - git push origin main --tags
+  kind:delete:
+  - nuv setup docker delete
 
-  eks:
-    desc: prepare eks for test
-    cmds:
-    - nuv config eks --name=nuvolaris --region=us-east-2 --count=1 --vm=m5.xlarge --disk=50 --key=nuvolaris-key --kubever=1.25
-    - nuv setup eks create
-    - nuv setup eks lb >conf/eks.lb
-    - lib/encdec.sh encode eks ~/.nuv/tmp/kubeconfig
+  k3s:config:
+  - task: aws:config
 
-  eks:clean:
-    desc: clean eks
-    cmds:
-    - nuv setup eks delete
-    - rm -f conf/eks.*
+  k3s:create:
+  - task: k3s:config
+  - nuv cloud aws vm-create k3s-test
+  - |
+    IP=$(nuv cloud aws vm-getip k3s-test)
+    test -n $IP && nuv cloud k3s create SERVER=$IP USERNAME=ubuntu
 
-  osh:
-    desc: prepare openshift for test
-    cmds:
-    - mkdir -p conf/osh ; cp -v conf/install-config.yaml conf/osh
-    - openshift-install create cluster --dir conf/osh
+  status:
+  - nuv debug k:no
+  - nuv config use
 
-  osh:clean:
-    desc: prepare openshift for test
-    cmds:
-    - openshift-install destroy cluster --dir conf/osh
 
-  aks:
-    desc: prepare aks for test
-    cmds:
-    - nuv config aks --name=nuvolaris --region=eastus --count=1 --vm=Standard_B4ms --disk=50 --key=~/.ssh/id_rsa.pub
-    - nuv setup aks lb >conf/aks.lb
-    - lib/encdec.sh encode aks ~/.nuv/tmp/kubeconfig
+  k3s:delete:
+  - task: k3s:config
+  - nuv cloud aws vm-delete k3s-test
 
-  gke:
-    desc: prepare gke for test
-    cmds:
-    - nuv config gke --project=eighth-pen-334717 --name=nuvolaris --region=us-east1 --count=1 --vm=e2-standard-2 --disk=50 
-    - nuv setup aks lb >conf/gke.lb
-    - lib/encdec.sh encode gke ~/.nuv/tmp/kubeconfig
-
-  conf:clean: rm -f conf/*.lb conf/*.kubeconfig
-
-  debug:
-    desc: debug
-    cmds:
-      - touch debug && git add debug
-      - git commit -m $NOW -a || true
-
-  snap:
-    desc: commit and run the test
-    cmds:
-    - if test -e debug ; then git rm debug ; fi
-    - git add conf/*.kubeconfig conf/*.lb
-    - git commit -m $NOW -a || true
-
-  enter: ssh -o "StrictHostKeyChecking=no" "ubuntu@$(cat ip.txt)"
+  mk8s:config:
+  - task: aws:config
   
-  watch: watch kubectl -n nuvolaris get po,sts
+  mk8s:create:
+  - task: mk8s:config
+  - nuv cloud aws vm-create mk8s-test --microk8s
 
-  progress: 
-    desc: update the progress
-    cmds:
-    - |
-      if test -z "{{.N}}"
-      then echo use task progress N=value
-      else curl -L "https://geps.dev/progress/{{.N}}?dangerColor=006600&warningColor=006600&successColor=006600" >img/progress.svg
-      fi
+  mk8s:delete:
+  - task: mk8s:config
+  - nuv cloud aws vm-delete mk8s-test
+
+  eks:config:
+  - task: aws:config
+  - >
+    nuv config eks
+    --name=nuvolaris
+    --region=us-east-1
+    --count=3
+    --vm=m5.xlarge 
+    --disk=50
+    --kubever=1.25
+
+
+  eks:create:
+  - task: eks:config
+  - nuv cloud eks create
+
+  eks:delete:
+  - task: eks:config
+  - nuv cloud eks delete
+
+  aks:config:
+  - > 
+    nuv config aks
+    --name=nuvolaris
+    --count=3
+    --region=eastus
+    --vm=Standard_B4ms
+    --disk=50
+    --key=~/.ssh/id_rsa.pub
+
+  aks:create:
+  - task: aks:config
+  - nuv cloud aks create
+
+  aks:delete:
+  - task: aks:config
+  - nuv cloud aks delete
+
+  gke:config:
+  - >
+    nuv config gke
+    --name=nuvolaris 
+    --project=superpippo
+    --region=us-east1
+    --count=3
+    --vm=e2-standard-2
+    --disk=50 
+
+  gke:create:
+  - task: gke:config
+  - nuv cloud gke create
+
+  gke:delete:
+  - task: gke:config
+  - nuv cloud gke delete
+
+  aws:config:
+    - >
+     nuv config aws 
+     --access="$AWS_ACCESS_KEY_ID" 
+     --secret="$AWS_SECRET_ACCESS_KEY" 
+     --region="$AWS_DEFAULT_REGION"
+     --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
+     --key=nuvolaris-key --vmuser=ubuntu
