@@ -24,6 +24,7 @@ if $TYPE == "kind"
 then echo SKIPPING
      exit 1
 fi
+
 # reset
 nuv config reset
 task aws:config
