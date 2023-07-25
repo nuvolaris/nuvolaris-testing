@@ -18,8 +18,7 @@
 
 nuv config enable --mongo
 nuv update apply
-
-sleep 30
+nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.mongodb_url}'
 
 if ! nuv config status | grep NUVOLARIS_MONGODB=true
 then echo SKIPPING ; exit 0

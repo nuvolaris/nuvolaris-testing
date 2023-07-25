@@ -16,13 +16,13 @@
 # specific language governing permissions and limitations
 # under the License.
 
-nuv config enable --minio
+nuv config enable --postgres
 nuv update apply
-nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.minio_bucket_data}'
+nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.postgres_url}'
 
-if ! nuv config status | grep NUVOLARIS_MINIO=true
+if ! nuv config status | grep NUVOLARIS_POSTGRES=true
 then echo SKIPPING ; exit 0
-elif nuv setup nuvolaris minio | grep nuvolaris-data
+elif nuv setup nuvolaris postgres | grep 'Nuvolaris Postgres is up and running!'
 then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1 
+else echo FAIL ; exit 1
 fi
