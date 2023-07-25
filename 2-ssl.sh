@@ -20,21 +20,19 @@
 TYPE="${1:?test type}"
 EMAIL=msciabarra@apache.org
 
-case "$TYPE" in
-    (kind) 
-        echo SKIPPING 
-        exit 0
-    ;;
-    (k3s)
-        lib/updateZone.sh k3s $(cat _ip)
-        DNS=
-        nuv config apihost $api.k3s.n9s.cc --tls $EMAIL
-        nuv update apply
-    ;;
-esac
+if $TYPE == "kind"
+then echo SKIPPING
+     exit 1
+fi
+# reset
+nuv config reset
+task aws:config
+# configure
+nuv config apihost nuvolaris.$TYPE.n9s.cc --tls $EMAIL
+nuv update apply
 
-
-if nuv debug apihost | grep "https://"
+# check we have https 
+if nuv debug status | grep "apihost: https://"
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1
 fi

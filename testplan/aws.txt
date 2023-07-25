@@ -1,33 +1,43 @@
 ### Reset
 
 ## Config
-nuv kubeconfig reset
+nuv config reset
 nuv cloud aws vm-list
+#! error!
 task aws:config
 nuv cloud aws vm-list
 #! show list of vms (none)
 
 ## Create VM k3s
 nuv cloud aws vm-create k3s-test
+nuv cloud aws vm-create mk8s-test
 nuv cloud aws vm-list
+#! see the vm 
+
+# Install k3s
+KIP=$(nuv cloud aws vm-getip k3s-test)
+nuv cloud k3s create SERVER=$KIP USERNAME=ubuntu
 nuv config use
-#! see the vm and no kubeconfig
 
-
-## Create VM2 mk8s
-
-nuv cloud aws vm-create mk8s-test --microk8s
-nuv cloud aws vm-list
+## Install microk8s
+MIP=$(nuv cloud aws vm-getip mk8s-test)
+nuv cloud mk8s create ERVER=$MIP USERNAME=ubuntu
 nuv config use
-nuv debug kinfo
-#! 2 vm, one config is microk8s, see the cluster nodes
 
+# recover config
 nuv config reset
 task aws:config
 nuv config use
-#! no kubeconfig
-nuv cloud aws vm-kubeconfig mk8s-test
-nuv cloud aws vm-kubeconfig k3s-test
+nuv cloud k3s kubeconfig SERVER=$KIP USERNAME=ubuntu
+nuv config use
+nuv cloud mk8s kubeconfig SERVER=$MIP USERNAME=ubuntu
+nuv config use
+
+# Delete
+nuv cloud mk8s delete SERVER=$MIP USERNAME=ubuntu
+nuv config use
+nuv cloud k3s delete SERVER=$KIP USERNAME=ubuntu
+nuv config use
 
 ## Delete VMs
 nuv cloud aws vm-delete k3s-test

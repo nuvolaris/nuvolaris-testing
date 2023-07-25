@@ -20,26 +20,59 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # actual setup
 case "$TYPE" in
-    (kind) 
+    (kind)
+        # create vm with docker
         nuv config reset
         nuv setup devcluster --uninstall
         nuv setup devcluster
     ;;
     (k3s)
-        lib/createAwsVm.sh k3s
+        # create vm and install in the server
         nuv config reset
+        task aws:config
+        # create vm without k3s
+        nuv cloud aws vm-create k3s-test
+        nuv cloud aws vm-getip k3s-test >_ip
+        # install nuvolaris
         nuv setup server $(cat _ip) ubuntu --uninstall
         nuv setup server $(cat _ip) ubuntu
     ;;
     (mk8s)
         nuv config reset
-        lib/createAwsVm.sh mk8s
-        lib/getKubeConfig.sh $(cat _ip)
-        nuv setup cluster microk8s --uninstall
+        task aws:config
+        # create vm with mk8s
+        nuv cloud aws vm-create mk8s-test
+        nuv cloud aws vm-getip mk8s-test >_ip
+        nuv cloud mk8s create SERVER=$(_ip) USERNAME=ubuntu
+        nuv cloud mk8s kubeconfig SERVER=$(_ip) USERNAME=ubuntu
+        #
+        nuv setup cluster --uninstall
     ;;
     (eks)
-        nuv config tls $EMAIL
+        # create cluster
+        task aws:config
+        task eks:config
+        nuv cloud eks create
+        nuv cloud eks kubeconfig
+        # install cluster
+        nuv setup cluster --uninstall
         nuv setup cluster
     ;;
-
+    (aks)
+        # create cluster
+        task aks:config
+        nuv cloud aks create
+        nuv cloud aks kubeconfig
+        # install cluster
+        nuv setup cluster --uninstall
+        nuv setup cluster
+    ;;
+    (gke)
+        # create cluster
+        task gke:config
+        nuv cloud gke create
+        nuv cloud gke kubeconfig
+        # install cluster
+        nuv setup cluster --uninstall
+        nuv setup cluster
 esac

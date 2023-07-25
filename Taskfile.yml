@@ -22,48 +22,37 @@ dotenv:
 
 tasks:
   setup: {silent: true}
-
-  kind:config:
-  - which docker
+  status:
+  - nuv config use
+  - nuv debug kinfo
 
   kind:create:
+  - which docker
   - nuv setup docker create
-
-  kind:status:
-  - nuv setup docker status
-  - nuv config use
 
   kind:delete:
   - nuv setup docker delete
 
-  k3s:config:
-  - task: aws:config
-
   k3s:create:
-  - task: k3s:config
+  - task: aws:config
   - nuv cloud aws vm-create k3s-test
   - |
     IP=$(nuv cloud aws vm-getip k3s-test)
-    test -n $IP && nuv cloud k3s create SERVER=$IP USERNAME=ubuntu
-
-  status:
-  - nuv debug k:no
-  - nuv config use
-
+    nuv cloud k3s create SERVER=$IP USERNAME=ubuntu
 
   k3s:delete:
-  - task: k3s:config
-  - nuv cloud aws vm-delete k3s-test
-
-  mk8s:config:
   - task: aws:config
+  - nuv cloud aws vm-delete k3s-test
   
   mk8s:create:
-  - task: mk8s:config
-  - nuv cloud aws vm-create mk8s-test --microk8s
+  - task: aws:config
+  - nuv cloud aws vm-create mk8s-test
+  - IP=$(nuv cloud aws vm-getip mk8s-test)
+    nuv cloud mk8s create SERVER=$IP USERNAME=ubuntu
+
 
   mk8s:delete:
-  - task: mk8s:config
+  - task: aws:config
   - nuv cloud aws vm-delete mk8s-test
 
   eks:config:
@@ -77,7 +66,6 @@ tasks:
     --disk=50
     --kubever=1.25
 
-
   eks:create:
   - task: eks:config
   - nuv cloud eks create
@@ -89,8 +77,8 @@ tasks:
   aks:config:
   - > 
     nuv config aks
-    --name=nuvolaris
-    --count=3
+    --name=nuvtest
+    --count=4
     --region=eastus
     --vm=Standard_B4ms
     --disk=50
