@@ -32,6 +32,7 @@ case "$TYPE" in
         task aws:config
         # create vm without k3s
         nuv cloud aws vm-create k3s-test
+        nuv cloud aws zone-update k3s.n9s.cc --wildcard --vm=k3s-test
         nuv cloud aws vm-getip k3s-test >_ip
         # install nuvolaris
         nuv setup server $(cat _ip) ubuntu --uninstall
@@ -42,6 +43,7 @@ case "$TYPE" in
         task aws:config
         # create vm with mk8s
         nuv cloud aws vm-create mk8s-test
+        nuv cloud aws zone-update mk8s.n9s.cc --wildcard --vm=mk8s-test
         nuv cloud aws vm-getip mk8s-test >_ip
         nuv cloud mk8s create SERVER=$(_ip) USERNAME=ubuntu
         nuv cloud mk8s kubeconfig SERVER=$(_ip) USERNAME=ubuntu

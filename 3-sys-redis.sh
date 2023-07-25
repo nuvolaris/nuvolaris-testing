@@ -19,8 +19,7 @@
 
 nuv config enable --redis
 nuv update apply
-
-sleep 30
+nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.redis_prefix}'
 
 if nuv setup nuvolaris redis | grep hello
 then echo SUCCESS ; exit 0
