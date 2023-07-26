@@ -31,7 +31,7 @@ then echo SUCCESS CREATING $user
 else echo FAIL CREATING $user; exit 1 
 fi
 
-sleep 10
+nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
 
 case "$TYPE" in
     (kind) 
@@ -40,6 +40,14 @@ case "$TYPE" in
         else echo FAIL LOGIN ; exit 1 
         fi
     ;;
+    *)
+        APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
+        echo $APIURL
+        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
+        then echo SUCCESS LOGIN
+        else echo FAIL LOGIN ; exit 1 
+        fi
+    ;;    
 esac
 
 if nuv setup nuvolaris mongodb | grep hello
@@ -48,6 +56,13 @@ else echo FAIL ; exit 1
 fi
 
 if nuv -wsk action list | grep "/$user/hello/mongodb"
+then echo SUCCESS ; exit 0
+else echo FAIL ; exit 1 
+fi
+
+
+MONGODB_URL=$(nuv -config MONGODB_URL)
+if nuv -wsk action invoke /$user/hello/mongodb -p mongodb_url "$MONGODB_URL"| grep "/$user/hello/mongodb"
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1 
 fi

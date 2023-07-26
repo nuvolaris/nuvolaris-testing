@@ -31,7 +31,7 @@ then echo SUCCESS CREATING $user
 else echo FAIL CREATING $user; exit 1 
 fi
 
-sleep 10
+nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
 
 case "$TYPE" in
     (kind) 
@@ -40,6 +40,14 @@ case "$TYPE" in
         else echo FAIL LOGIN ; exit 1 
         fi
     ;;
+    *)
+        APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
+        echo $APIURL
+        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
+        then echo SUCCESS LOGIN
+        else echo FAIL LOGIN ; exit 1 
+        fi
+    ;;    
 esac
 
 if nuv setup nuvolaris redis | grep hello
@@ -48,6 +56,14 @@ else echo FAIL ; exit 1
 fi
 
 if nuv -wsk action list | grep "/$user/hello/redis"
+then echo SUCCESS ; exit 0
+else echo FAIL ; exit 1 
+fi
+
+REDIS_URL=$(nuv -config REDIS_URL)
+REDIS_PREFIX=$(nuv -config REDIS_PREFIX)
+
+if nuv -wsk action invoke /$user/hello/redis -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX" -r| grep hello
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1 
 fi
