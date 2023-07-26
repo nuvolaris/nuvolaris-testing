@@ -20,6 +20,7 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # Generate a random password for the user "demo"
 password=$(nuv -random --str 12)
+user="demo-user"
 
 ENABLE_REDIS=""
 if nuv config status | grep NUVOLARIS_REDIS=true 
@@ -36,17 +37,30 @@ if nuv config status | grep NUVOLARIS_MINIO=true
 then ENABLE_MINIO="--minio"
 fi
 
-# Create a new user "demo-user" with nuv admin adduser with previous services enabled
-if nuv admin adduser demo-user demo@email.com $password $ENABLE_REDIS $ENABLE_MONGODB $ENABLE_MINIO | grep "whiskuser.nuvolaris.org/demo-user created"
-then echo SUCCESS CREATING demo-user
-else echo FAIL CREATING demo-user ; exit 1 
+ENABLE_POSTGRES=""
+if nuv config status | grep NUVOLARIS_POSTGRES=true 
+then ENABLE_POSTGRES="--postgres"
 fi
 
-sleep 10
+# Create a new user "demo-user" with nuv admin adduser with previous services enabled
+if nuv admin adduser $user demo@email.com $password $ENABLE_REDIS $ENABLE_MONGODB $ENABLE_MINIO $ENABLE_POSTGRES | grep "whiskuser.nuvolaris.org/$user created"
+then echo SUCCESS CREATING $user
+else echo FAIL CREATING $user ; exit 1 
+fi
+
+nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
 
 case "$TYPE" in
     (kind) 
-        if NUV_LOGIN="demo-user" NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as demo-user."
+        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as $user."
+        then echo SUCCESS LOGIN
+        else echo FAIL LOGIN ; exit 1
+        fi
+    ;;
+    *)
+        APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
+        echo $APIURL
+        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
         then echo SUCCESS LOGIN
         else echo FAIL LOGIN ; exit 1 
         fi
