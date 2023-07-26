@@ -23,7 +23,7 @@ then echo "REDIS ENABLED"
 else echo "REDIS DISABLED - SKIPPING" ; exit 0
 fi
 
-user="demo-redis-user"
+user="demoredisuser"
 password=$(nuv -random --str 12)
 
 if nuv admin adduser $user $user@email.com $password --redis | grep "whiskuser.nuvolaris.org/$user created"
@@ -42,7 +42,6 @@ case "$TYPE" in
     ;;
     *)
         APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
-        echo $APIURL
         if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
         then echo SUCCESS LOGIN
         else echo FAIL LOGIN ; exit 1 
@@ -51,19 +50,29 @@ case "$TYPE" in
 esac
 
 if nuv setup nuvolaris redis | grep hello
-then echo SUCCESS
-else echo FAIL ; exit 1 
+then echo SUCCESS SETUP REDIS ACTION
+else echo FAIL SETUP REDIS ACTION; exit 1 
 fi
 
 if nuv -wsk action list | grep "/$user/hello/redis"
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1 
+then echo SUCCESS USER REDIS ACTION LIST
+else echo FAIL USER REDIS ACTION LIST; exit 1 
 fi
 
 REDIS_URL=$(nuv -config REDIS_URL)
 REDIS_PREFIX=$(nuv -config REDIS_PREFIX)
 
+if [ -z "$REDIS_URL" ]
+then echo FAIL REDIS_URL; exit 1    
+else echo SUCCESS REDIS_URL
+fi 
+
+if [ -z "$REDIS_PREFIX" ]
+then echo FAIL REDIS_PREFIX; exit 1    
+else echo SUCCESS REDIS_PREFIX
+fi
+
 if nuv -wsk action invoke /$user/hello/redis -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX" -r| grep hello
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1 
+then echo SUCCESS; exit 0
+else echo FAIL; exit 1 
 fi

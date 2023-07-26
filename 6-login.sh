@@ -20,7 +20,7 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 # Generate a random password for the user "demo"
 password=$(nuv -random --str 12)
-user="demo-user"
+user="demouser"
 
 ENABLE_REDIS=""
 if nuv config status | grep NUVOLARIS_REDIS=true 
@@ -68,11 +68,11 @@ case "$TYPE" in
 esac
 
 if nuv setup nuvolaris hello | grep hello
-then echo SUCCESS ; exit 0
+then echo SUCCESS
 else echo FAIL ; exit 1 
 fi
 
-if nuv -wsk action list | grep /demo-user/hello/hello
+if nuv -wsk action list | grep /$user/hello/hello
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1 
 fi

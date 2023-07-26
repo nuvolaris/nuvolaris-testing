@@ -18,12 +18,12 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-if nuv config status | grep NUVOLARIS_REDIS=true 
-then echo "REDIS ENABLED"
-else echo "REDIS DISABLED - SKIPPING" ; exit 0
+if nuv config status | grep NUVOLARIS_MONGODB=true 
+then echo "MONGODB ENABLED"
+else echo "MONGODB DISABLED - SKIPPING" ; exit 0
 fi
 
-user="demo-mongo-user"
+user="demomongouser"
 password=$(nuv -random --str 12)
 
 if nuv admin adduser $user $user@email.com $password --mongodb | grep "whiskuser.nuvolaris.org/$user created"
@@ -42,7 +42,6 @@ case "$TYPE" in
     ;;
     *)
         APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
-        echo $APIURL
         if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
         then echo SUCCESS LOGIN
         else echo FAIL LOGIN ; exit 1 
@@ -51,18 +50,23 @@ case "$TYPE" in
 esac
 
 if nuv setup nuvolaris mongodb | grep hello
-then echo SUCCESS
-else echo FAIL ; exit 1 
+then echo SUCCESS SETUP MONGODB ACTION
+else echo FAIL SETUP MONGODB ACTION; exit 1 
 fi
 
 if nuv -wsk action list | grep "/$user/hello/mongodb"
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1 
+then echo SUCCESS USER MONGODB ACTION LIST
+else echo FAIL USER MONGODB ACTION LIST; exit 1 
 fi
 
-
 MONGODB_URL=$(nuv -config MONGODB_URL)
-if nuv -wsk action invoke /$user/hello/mongodb -p mongodb_url "$MONGODB_URL"| grep "/$user/hello/mongodb"
+
+if [ -z "$MONGODB_URL" ]
+then echo FAIL USER MONGODB_URL; exit 1
+else echo SUCCESS USER MONGODB_URL
+fi 
+
+if nuv -wsk action invoke /$user/hello/mongodb -p mongodb_url "$MONGODB_URL" -r| grep "hello"
 then echo SUCCESS ; exit 0
 else echo FAIL ; exit 1 
 fi
