@@ -25,7 +25,7 @@ nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris po
 user="demostaticuser"
 password=$(nuv -random --str 12)
 
-if nuv admin adduser $user $user@email.com $password --redis --minio| grep "whiskuser.nuvolaris.org/$user created"
+if nuv admin adduser $user $user@email.com $password --minio| grep "whiskuser.nuvolaris.org/$user created"
 then echo SUCCESS CREATING $user
 else echo FAIL CREATING $user; exit 1 
 fi
@@ -46,7 +46,7 @@ case "$TYPE" in
     ;;
     *)
         STATIC_URL=$API_PROTOCOL://$user.$API_DOMAIN
-        if curl $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"
+        if curl --insecure $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"
         then echo SUCCESS STATIC
         else echo FAIL STATIC ; exit 1 
         fi

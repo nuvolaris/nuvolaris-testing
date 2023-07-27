@@ -100,3 +100,10 @@ echo "#            TESTING USER MINIO $TYPE        #"
 echo "#                                            #"
 echo "##############################################"
 ./10-user-minio.sh $TYPE
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING USER POSTGRES $TYPE     #"
+echo "#                                            #"
+echo "##############################################"
+./15-user-postgres.sh $TYPE

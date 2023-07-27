@@ -29,7 +29,8 @@ nuv config reset
 task aws:config
 
 # configure
-nuv config apihost nuvolaris.$TYPE.n9s.cc --tls $EMAIL
+rn=$(nuv -random --str 5)
+nuv config apihost nuvolaris.$rn.$TYPE.n9s.cc --tls $EMAIL
 nuv update apply
 
 # check we have https
