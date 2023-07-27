@@ -18,6 +18,19 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
+# if type not in (kind, k3s, mk8s, aks, eks, gke) exit
+
+case "$TYPE" in
+"k3s" | "mk8s" | "kind" | "gke" | "aks" | "eks")
+	# The TYPE matches one of the allowed values, so continue with the script
+	;;
+*)
+	# TYPE does not match any of the allowed values, so exit with an error message
+	echo "Error: input must be one of 'kind', 'k3s', 'mk8s', 'gke', 'aks', or 'eks'."
+	exit 1
+	;;
+esac
+
 echo "##############################################"
 echo "#                                            #"
 echo "#             DEPLOYING $TYPE                #"
