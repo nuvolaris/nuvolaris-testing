@@ -45,17 +45,23 @@ case "$TYPE" in
         nuv cloud aws vm-create mk8s-test
         nuv cloud aws zone-update mk8s.n9s.cc --wildcard --vm=mk8s-test
         nuv cloud aws vm-getip mk8s-test >_ip
-        nuv cloud mk8s create SERVER=$(_ip) USERNAME=ubuntu
-        nuv cloud mk8s kubeconfig SERVER=$(_ip) USERNAME=ubuntu
-        #
+        nuv cloud mk8s create SERVER=$(cat _ip) USERNAME=ubuntu
+        nuv cloud mk8s kubeconfig SERVER=$(cat _ip) USERNAME=ubuntu
+        # install cluster
         nuv setup cluster --uninstall
+        nuv setup cluster
     ;;
     (eks)
+        nuv config reset
         # create cluster
         task aws:config
         task eks:config
         nuv cloud eks create
         nuv cloud eks kubeconfig
+        nuv cloud eks lb >_cname
+        nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=$(cat _cname)
+        # on eks we need to setup an initial apihost resolving the NLB hostname
+        nuv config apihost nuvolaris.eks.n9s.cc
         # install cluster
         nuv setup cluster --uninstall
         nuv setup cluster
