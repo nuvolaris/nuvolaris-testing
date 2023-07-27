@@ -23,56 +23,60 @@ password=$(nuv -random --str 12)
 user="demouser"
 
 ENABLE_REDIS=""
-if nuv config status | grep NUVOLARIS_REDIS=true 
-then ENABLE_REDIS="--redis"
+if nuv config status | grep NUVOLARIS_REDIS=true; then
+    ENABLE_REDIS="--redis"
 fi
 
 ENABLE_MONGODB=""
-if nuv config status | grep NUVOLARIS_MONGODB=true 
-then ENABLE_MONGODB="--mongodb"
+if nuv config status | grep NUVOLARIS_MONGODB=true; then
+    ENABLE_MONGODB="--mongodb"
 fi
 
 ENABLE_MINIO=""
-if nuv config status | grep NUVOLARIS_MINIO=true 
-then ENABLE_MINIO="--minio"
+if nuv config status | grep NUVOLARIS_MINIO=true; then
+    ENABLE_MINIO="--minio"
 fi
 
 ENABLE_POSTGRES=""
-if nuv config status | grep NUVOLARIS_POSTGRES=true 
-then ENABLE_POSTGRES="--postgres"
+if nuv config status | grep NUVOLARIS_POSTGRES=true; then
+    ENABLE_POSTGRES="--postgres"
 fi
 
 # Create a new user "demo-user" with nuv admin adduser with previous services enabled
-if nuv admin adduser $user demo@email.com $password $ENABLE_REDIS $ENABLE_MONGODB $ENABLE_MINIO $ENABLE_POSTGRES | grep "whiskuser.nuvolaris.org/$user created"
-then echo SUCCESS CREATING $user
-else echo FAIL CREATING $user ; exit 1 
+if nuv admin adduser $user demo@email.com $password $ENABLE_REDIS $ENABLE_MONGODB $ENABLE_MINIO $ENABLE_POSTGRES | grep "whiskuser.nuvolaris.org/$user created"; then
+    echo SUCCESS CREATING $user
+else
+    echo FAIL CREATING $user
+    exit 1
 fi
 
 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
 
-case "$TYPE" in
-    (kind) 
-        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as $user."
-        then echo SUCCESS LOGIN
-        else echo FAIL LOGIN ; exit 1
-        fi
-    ;;
-    *)
-        APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
-        echo $APIURL
-        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
-        then echo SUCCESS LOGIN
-        else echo FAIL LOGIN ; exit 1 
-        fi
-    ;;
-esac
-
-if nuv setup nuvolaris hello | grep hello
-then echo SUCCESS
-else echo FAIL ; exit 1 
+APIURL="http://localhost:3233"
+# if type is not kind, get the APIURL from nuv debug apihost
+if [ "$TYPE" != "kind" ]; then
+    APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
 fi
 
-if nuv -wsk action list | grep /$user/hello/hello
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1 
+echo $APIURL
+if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."; then
+    echo SUCCESS LOGIN
+else
+    echo FAIL LOGIN
+    exit 1
+fi
+
+if nuv setup nuvolaris hello | grep hello; then
+    echo SUCCESS
+else
+    echo FAIL
+    exit 1
+fi
+
+if nuv -wsk action list | grep /$user/hello/hello; then
+    echo SUCCESS
+    exit 0
+else
+    echo FAIL
+    exit 1
 fi

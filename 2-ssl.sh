@@ -20,23 +20,23 @@
 TYPE="${1:?test type}"
 EMAIL=msciabarra@apache.org
 
-if $TYPE == "kind"
-then echo SKIPPING
-     exit 1
+if $TYPE == "kind"; then
+	echo SKIPPING
+	exit 1
 fi
 
-# reset
 nuv config reset
 task aws:config
+
 # configure
 nuv config apihost nuvolaris.$TYPE.n9s.cc --tls $EMAIL
 nuv update apply
 
-# check we have https 
-if nuv debug status | grep "apihost: https://"
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1
+# check we have https
+if nuv debug status | grep "apihost: https://"; then
+	echo SUCCESS
+	exit 0
+else
+	echo FAIL
+	exit 1
 fi
-
-
-
