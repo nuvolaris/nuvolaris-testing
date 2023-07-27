@@ -74,6 +74,11 @@ case "$TYPE" in
         task gke:config
         nuv cloud gke create
         nuv cloud gke kubeconfig
+
+        task aws:config        
+        IP=$(nuv cloud gke lb)
+        nuv cloud aws zone-update gke.n9s.cc --wildcard --ip $IP
+        
         # install cluster
         nuv setup cluster --uninstall
         nuv setup cluster

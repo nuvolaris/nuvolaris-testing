@@ -15,106 +15,105 @@
 # specific language governing permissions and limitations
 # under the License.
 
-version: '3'
+version: "3"
 
-dotenv: 
-- env
+dotenv:
+  - env
 
 tasks:
-  setup: {silent: true}
+  setup: { silent: true }
   status:
-  - nuv config use
-  - nuv debug kinfo
+    - nuv config use
+    - nuv debug kinfo
 
   kind:create:
-  - which docker
-  - nuv setup docker create
+    - which docker
+    - nuv setup docker create
 
   kind:delete:
-  - nuv setup docker delete
+    - nuv setup docker delete
 
   k3s:create:
-  - task: aws:config
-  - nuv cloud aws vm-create k3s-test
-  - |
-    IP=$(nuv cloud aws vm-getip k3s-test)
-    nuv cloud k3s create SERVER=$IP USERNAME=ubuntu
+    - task: aws:config
+    - nuv cloud aws vm-create k3s-test
+    - |
+      IP=$(nuv cloud aws vm-getip k3s-test)
+      nuv cloud k3s create SERVER=$IP USERNAME=ubuntu
 
   k3s:delete:
-  - task: aws:config
-  - nuv cloud aws vm-delete k3s-test
-  
-  mk8s:create:
-  - task: aws:config
-  - nuv cloud aws vm-create mk8s-test
-  - IP=$(nuv cloud aws vm-getip mk8s-test)
-    nuv cloud mk8s create SERVER=$IP USERNAME=ubuntu
+    - task: aws:config
+    - nuv cloud aws vm-delete k3s-test
 
+  mk8s:create:
+    - task: aws:config
+    - nuv cloud aws vm-create mk8s-test
+    - IP=$(nuv cloud aws vm-getip mk8s-test)
+      nuv cloud mk8s create SERVER=$IP USERNAME=ubuntu
 
   mk8s:delete:
-  - task: aws:config
-  - nuv cloud aws vm-delete mk8s-test
+    - task: aws:config
+    - nuv cloud aws vm-delete mk8s-test
 
   eks:config:
-  - task: aws:config
-  - >
-    nuv config eks
-    --name=nuvolaris
-    --region=us-east-1
-    --count=3
-    --vm=m5.xlarge 
-    --disk=50
-    --kubever=1.25
+    - task: aws:config
+    - >
+      nuv config eks
+      --name=nuvolaris
+      --region=us-east-1
+      --count=3
+      --vm=m5.xlarge 
+      --disk=50
+      --kubever=1.25
 
   eks:create:
-  - task: eks:config
-  - nuv cloud eks create
+    - task: eks:config
+    - nuv cloud eks create
 
   eks:delete:
-  - task: eks:config
-  - nuv cloud eks delete
+    - task: eks:config
+    - nuv cloud eks delete
 
   aks:config:
-  - > 
-    nuv config aks
-    --name=nuvtest
-    --count=4
-    --region=eastus
-    --vm=Standard_B4ms
-    --disk=50
-    --key=~/.ssh/id_rsa.pub
+    - >
+      nuv config aks
+      --name=nuvtest
+      --count=4
+      --region=eastus
+      --vm=Standard_B4ms
+      --disk=50
+      --key=~/.ssh/id_rsa.pub
 
   aks:create:
-  - task: aks:config
-  - nuv cloud aks create
+    - task: aks:config
+    - nuv cloud aks create
 
   aks:delete:
-  - task: aks:config
-  - nuv cloud aks delete
+    - task: aks:config
+    - nuv cloud aks delete
 
   gke:config:
-  - >
-    nuv config gke
-    --name=nuvolaris 
-    --project=superpippo
-    --region=us-east1
-    --count=3
-    --vm=e2-standard-2
-    --disk=50 
+    - >
+      nuv config gke
+      --name=nuvolaris 
+      --project="$GKE_PROJECT"
+      --region="$GKE_REGION"
+      --count="$GKE_NODE_COUNT"
+      --vm="$GKE_NODE_TYPE"
+      --disk="$GKE_DISK_SIZE"
 
   gke:create:
-  - task: gke:config
-  - nuv cloud gke create
+    - task: gke:config
+    - nuv cloud gke create
 
   gke:delete:
-  - task: gke:config
-  - nuv cloud gke delete
+    - task: gke:config
+    - nuv cloud gke delete
 
   aws:config:
     - >
-     nuv config aws 
-     --access="$AWS_ACCESS_KEY_ID" 
-     --secret="$AWS_SECRET_ACCESS_KEY" 
-     --region="$AWS_DEFAULT_REGION"
-     --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
-     --key=nuvolaris-key --vmuser=ubuntu
+      nuv config aws 
+      --access="$AWS_ACCESS_KEY_ID" 
+      --secret="$AWS_SECRET_ACCESS_KEY" 
+      --region="$AWS_DEFAULT_REGION"
+      --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
+      --key=nuvolaris-key --vmuser=ubuntu
