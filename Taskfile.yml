@@ -117,3 +117,15 @@ tasks:
       --region="$AWS_DEFAULT_REGION"
       --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
       --key=nuvolaris-key --vmuser=ubuntu
+
+  progress:
+    desc: update the progress
+    cmds:
+      - |
+        if test -z "{{.N}}"
+        then echo use task progress N=value
+        else 
+        X=$(((100*{{.N}})/96))
+        echo $X
+        curl -L "https://geps.dev/progress/$X?dangerColor=006600&warningColor=006600&successColor=006600" >img/progress.svg
+        fi
