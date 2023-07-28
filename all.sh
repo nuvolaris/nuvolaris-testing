@@ -54,10 +54,17 @@ echo "##############################################"
 
 echo "##############################################"
 echo "#                                            #"
-echo "#            TESTING MONGO $TYPE             #"
+echo "#    TESTING FERRETDB (MONGO) $TYPE          #"
 echo "#                                            #"
 echo "##############################################"
-./4-sys-mongo.sh
+./4a-sys-ferretdb.sh
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING POSTGRES $TYPE          #"
+echo "#                                            #"
+echo "##############################################"
+./4b-sys-postgres.sh
 
 echo "##############################################"
 echo "#                                            #"
@@ -65,13 +72,6 @@ echo "#            TESTING MINIO $TYPE             #"
 echo "#                                            #"
 echo "##############################################"
 ./5-sys-minio.sh
-
-echo "##############################################"
-echo "#                                            #"
-echo "#            TESTING POSTGRES $TYPE          #"
-echo "#                                            #"
-echo "##############################################"
-./14-sys-postgres.sh
 
 echo "##############################################"
 echo "#                                            #"
@@ -89,10 +89,17 @@ echo "##############################################"
 
 echo "##############################################"
 echo "#                                            #"
-echo "#            TESTING USER MONGO $TYPE        #"
+echo "#   TESTING USER FERRETDB (MONGO) $TYPE      #"
 echo "#                                            #"
 echo "##############################################"
-./9-user-mongo.sh $TYPE
+./9a-user-ferretdb.sh $TYPE
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING USER POSTGRES $TYPE     #"
+echo "#                                            #"
+echo "##############################################"
+./9b-user-postgres.sh $TYPE
 
 echo "##############################################"
 echo "#                                            #"
@@ -100,10 +107,3 @@ echo "#            TESTING USER MINIO $TYPE        #"
 echo "#                                            #"
 echo "##############################################"
 ./10-user-minio.sh $TYPE
-
-echo "##############################################"
-echo "#                                            #"
-echo "#            TESTING USER POSTGRES $TYPE     #"
-echo "#                                            #"
-echo "##############################################"
-./15-user-postgres.sh $TYPE

@@ -6,27 +6,27 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 # Nuvolaris 0.3 "Morpheus" Testing
 
-## Acceptance Test Status: 25/83 
-<img src="img/progress.svg" width="30%">
+## Acceptance Test Status: 53/83 
+<img src="img/progress.svg" width="63%">
 
 |  |               |Kind|M8S |K3S |EKS |AKS |GKE |OSH |
 |--|---------------|----|----|----|----|----|----|----|
 |1 |Deploy         | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
 |2 |SSL            | N/A| ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 |3 |Sys Redis      | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
-|5 |Sys Minio      | ✅ | ✅ | ✅ | ❌ | ❌ | ✅ | ❌ | 
-|14|Sys Postgres   | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
-|6 |Login          | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
-|7 |Statics        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
-|8 |User Redis     | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
-|10|User Minio     | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
-|15|User Postgres  | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
+|4a|Sys FerretDB   | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | 
+|4b|Sys Postgres   | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
+|5 |Sys Minio      | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | 
+|6 |Login          | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
+|7 |Statics        | N/A| ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
+|8 |User Redis     | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
+|9a|User FerretDB  | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+|9b|User Postgres  | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
+|10|User Minio     | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | 
 |11|Nuv Win        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 |12|Nuv Mac        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |  
 |--|---------------|----|----|----|----|----|----|----|
 
-|4 |Sys Mongo      | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ | 
-|9 |User Mongo     | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | 
 
 
 ## The challengers
