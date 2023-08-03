@@ -1,0 +1,23 @@
+EKS config
+  $ export EXTRA=D=1
+  $ nuv se config reset >/dev/null
+  2023/05/14 19:39:24 error: no task named config found
+  [1]
+  $ nuv setup eks create 2>&1
+  Please, configure EKS with "nuv config eks"
+  error: task: Failed to run task "create": task: Failed to run task "prereq": exit status 1
+  [1]
+  $ nuv setup config eks --name=nuv --region=us-east-1 --count=3 --vm=m5.xlarge --disk=100 --key=nuvolaris-key --kubever=1.25 | sort
+  2023/05/14 19:39:24 error: no task named config found
+EKS Create
+  $ nuv setup eks create 
+  Please, configure EKS with "nuv config eks"
+  error: task: Failed to run task "create": task: Failed to run task "prereq": exit status 1
+  [1]
+EKS Delete
+  $ nuv setup eks delete
+  *** Deleting the Cluster
+  RUN: kubectl delete -f cert-manager.yaml
+  RUN: kubectl delete -f ingress-deploy.yaml
+  RUN: eksctl delete cluster -f _eks-cluster.yml --disable-nodegroup-eviction
+  RUN: rm /home/ubuntu/.nuv/tmp/kubeconfig

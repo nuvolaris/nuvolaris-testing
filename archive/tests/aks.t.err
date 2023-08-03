@@ -1,0 +1,23 @@
+AKS Config
+  $ export EXTRA=D=1
+  $ nuv se config reset >/dev/null
+  2023/05/14 19:39:23 error: no task named config found
+  [1]
+  $ nuv setup aks create 2>&1
+  Please, configure AKS with "nuv config aks"
+  error: task: Failed to run task "create": task: Failed to run task "prereq": exit status 1
+  [1]
+  $ nuv setup config aks --name=nuv --region=eastus --count=3  --vm=Standard_B4ms --disk=30 | sort
+  2023/05/14 19:39:23 error: no task named config found
+AKS Create
+  $ nuv setup aks create
+  Please, configure AKS with "nuv config aks"
+  error: task: Failed to run task "create": task: Failed to run task "prereq": exit status 1
+  [1]
+AKS Delete  
+  $ nuv setup aks delete
+  *** Deleting the  cluster
+  DATA: az account show --query id -o tsv
+  RUN: az account set --subscription $DATA
+  RUN: az aks delete --name --resource-group
+  RUN: rm $NUV_TMP/kubeconfig

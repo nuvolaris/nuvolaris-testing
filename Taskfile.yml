@@ -118,6 +118,14 @@ tasks:
       --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
       --key=nuvolaris-key --vmuser=ubuntu
 
+  osh:create:
+    - mkdir -p conf/osh
+    - cp conf/openshift-install-config.yaml conf/osh/install-config.yaml
+    - openshift-install create cluster --dir conf/osh
+
+  osh:delete:
+    - openshift-install destroy cluster --dir conf/osh
+
   progress:
     desc: update the progress
     cmds:
@@ -129,3 +137,4 @@ tasks:
         echo $X
         curl -L "https://geps.dev/progress/$X?dangerColor=006600&warningColor=006600&successColor=006600" >img/progress.svg
         fi
+

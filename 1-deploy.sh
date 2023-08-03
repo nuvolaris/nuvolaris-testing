@@ -94,4 +94,11 @@ gke)
     nuv setup cluster --uninstall
     nuv setup cluster
     ;;
+
+osh)
+    # create cluster
+    task osh:create
+    nuv cloud osh import conf/osh/auth/kubeconfig
+;;
+
 esac

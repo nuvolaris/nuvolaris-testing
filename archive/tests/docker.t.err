@@ -1,0 +1,10 @@
+  $ export EXTRA=D=1
+Status 
+  $ nuv setup docker status
+  Cluster Nuvolaris not found
+Create
+  $ nuv setup docker create | grep "RUN:" | sed -e "s|$HOME|home|g"
+  task: Task "create" is up to date
+Delete:
+  $ nuv setup docker delete
+  RUN: kind delete clusters nuvolaris
