@@ -116,7 +116,7 @@ tasks:
       --secret="$AWS_SECRET_ACCESS_KEY" 
       --region="$AWS_DEFAULT_REGION"
       --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
-      --key=nuvolaris-key --vmuser=ubuntu
+      --key=${AWS_DEFAULT_KEY_NAME:-"nuvolaris-key"} --vmuser=ubuntu
 
   osh:create:
     - mkdir -p conf/osh

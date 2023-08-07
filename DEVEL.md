@@ -65,7 +65,7 @@ Once you have setup the environment you can run the tests:
 The first task automate deployment (for continuous integration):
 
 ```
-./1-deploy.sh <type> 
+./1-deploy.sh <type>
 ```
 
 where `<type>` is one of:
