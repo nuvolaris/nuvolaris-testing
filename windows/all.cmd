@@ -78,74 +78,81 @@ echo "#                                            #"
 echo "#             DEPLOYING %TYPE%                #"
 echo "#                                            #"
 echo "##############################################"
-call 1-deploy.cmd %TYPE%
+call "%~dp01-deploy.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#             TESTING SSL %TYPE%              #"
 echo "#                                            #"
 echo "##############################################"
-call 2-ssl.cmd %TYPE%
+call "%~dp02-ssl.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING REDIS %TYPE%             #"
 echo "#                                            #"
 echo "##############################################"
-call 3-sys-redis.cmd
+call "%~dp03-sys-redis.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#    TESTING FERRETDB (MONGO) %TYPE%          #"
 echo "#                                            #"
 echo "##############################################"
-call 4a-sys-ferretdb.cmd
+call "%~dp04a-sys-ferretdb.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING POSTGRES %TYPE%          #"
 echo "#                                            #"
 echo "##############################################"
-call 4b-sys-postgres.cmd
+call "%~dp04b-sys-postgres.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING MINIO %TYPE%             #"
 echo "#                                            #"
 echo "##############################################"
-call 5-sys-minio.cmd
+call "%~dp05-sys-minio.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING LOGIN %TYPE%             #"
 echo "#                                            #"
 echo "##############################################"
-call 6-login.cmd %TYPE%
+call "%~dp06-login.cmd" %TYPE%
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING STATIC %TYPE%            #"
+echo "#                                            #"
+echo "##############################################"
+call "%~dp07-static.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING USER REDIS %TYPE%        #"
 echo "#                                            #"
 echo "##############################################"
-call 8-user-redis.cmd %TYPE%
+call "%~dp08-user-redis.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#   TESTING USER FERRETDB (MONGO) %TYPE%      #"
 echo "#                                            #"
 echo "##############################################"
-call 9a-user-ferretdb.cmd %TYPE%
+call "%~dp09a-user-ferretdb.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING USER POSTGRES %TYPE%     #"
 echo "#                                            #"
 echo "##############################################"
-call 9b-user-postgres.cmd %TYPE%
+call "%~dp09b-user-postgres.cmd" %TYPE%
 
 echo "##############################################"
 echo "#                                            #"
 echo "#            TESTING USER MINIO %TYPE%        #"
 echo "#                                            #"
 echo "##############################################"
-call 10-user-minio.cmd %TYPE%
+call "%~dp10-user-minio.cmd" %TYPE%

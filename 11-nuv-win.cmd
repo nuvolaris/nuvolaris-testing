@@ -19,8 +19,4 @@
 setlocal
 
 set "TYPE=%1"
-if "%TYPE%"=="" exit /b 1
-
-for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
-
-./windows/all.cmd %TYPE%
+call "%~dp0\windows\all.cmd" %TYPE%

@@ -148,5 +148,5 @@ tasks:
         {{else if eq OS "linux"}}
           ./all.sh {{.TYPE}}
         {{else}}
-          ./windows/all.cmd
-        {{end}} {{.TYPE}}
+          cmd.exe /c "windows\all.cmd" {{.TYPE}}
+        {{end}}
