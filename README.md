@@ -23,7 +23,7 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 |9a|User FerretDB  | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 |9b|User Postgres  | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
 |10|User Minio     | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
-|11|Nuv Win        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
+|11|Nuv Win        | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
 |12|Nuv Mac        | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |  
 |--|---------------|----|----|----|----|----|----|----|
 

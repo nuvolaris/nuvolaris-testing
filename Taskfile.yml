@@ -24,7 +24,7 @@ tasks:
   setup: { silent: true }
   status:
     - nuv config use
-    - nuv debug kinfo
+    - nuv debug info
 
   kind:create:
     - which docker
@@ -138,3 +138,15 @@ tasks:
         curl -L "https://geps.dev/progress/$X?dangerColor=006600&warningColor=006600&successColor=006600" >img/progress.svg
         fi
 
+  all:
+    desc: run all the tests (same as all.sh)
+    silent: true
+    cmds:
+      - |
+        {{if eq OS "dawin"}} 
+          ./all.sh {{.TYPE}}
+        {{else if eq OS "linux"}}
+          ./all.sh {{.TYPE}}
+        {{else}}
+          ./windows/all.cmd
+        {{end}} {{.TYPE}}
