@@ -25,13 +25,21 @@ if $TYPE == "kind"; then
 	exit 1
 fi
 
-nuv config reset
-task aws:config
-
-# configure
 rn=$(nuv -random --str 5)
-nuv config apihost nuvolaris.$rn.$TYPE.n9s.cc --tls $EMAIL
-nuv update apply
+
+if $TYPE == "osh"; then
+	# configure
+	nuv config apihost api.$rn.apps.nuvolaris.osh.n9s.cc --tls $EMAIL
+	nuv update apply
+
+else
+	nuv config reset
+	task aws:config
+
+	# configure
+	nuv config apihost nuvolaris.$rn.$TYPE.n9s.cc --tls $EMAIL
+	nuv update apply
+fi
 
 # check we have https
 if nuv debug status | grep "apihost: https://"; then

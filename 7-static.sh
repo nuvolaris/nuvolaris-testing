@@ -25,30 +25,33 @@ nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris po
 user="demostaticuser"
 password=$(nuv -random --str 12)
 
-if nuv admin adduser $user $user@email.com $password --minio| grep "whiskuser.nuvolaris.org/$user created"
-then echo SUCCESS CREATING $user
-else echo FAIL CREATING $user; exit 1 
+if nuv admin adduser $user $user@email.com $password --minio | grep "whiskuser.nuvolaris.org/$user created"; then
+    echo SUCCESS CREATING $user
+else
+    echo FAIL CREATING $user
+    exit 1
 fi
 
 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
 
-
 API_PROTOCOL=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:] '{print $1}')
 API_DOMAIN=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:] '{print $4}')
 
-if [ "$API_PROTOCOL" == "https" ]
-then nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
+if [ "$API_PROTOCOL" == "https" ]; then
+    nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
 fi
 
 case "$TYPE" in
-    (kind)
-        echo SUCCESS STATIC FOR LOCALHOST IS SKIPPED 
+kind)
+    echo SUCCESS STATIC FOR LOCALHOST IS SKIPPED
     ;;
-    *)
-        STATIC_URL=$API_PROTOCOL://$user.$API_DOMAIN
-        if curl --insecure $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"
-        then echo SUCCESS STATIC
-        else echo FAIL STATIC ; exit 1 
-        fi
+*)
+    STATIC_URL=$API_PROTOCOL://$user.$API_DOMAIN
+    if curl --insecure $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"; then
+        echo SUCCESS STATIC
+    else
+        echo FAIL STATIC
+        exit 1
+    fi
     ;;
 esac
