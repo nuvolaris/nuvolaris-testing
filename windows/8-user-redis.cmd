@@ -22,9 +22,9 @@ set "TYPE=%1"
 if "%TYPE%"=="" exit /b 1
 for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
 
-if nuv config status | findstr /C:"NUVOLARIS_REDIS=true" (
+nuv config status && nuv config status | findstr /C:"NUVOLARIS_REDIS=true" > nul && (
     echo REDIS ENABLED
-) else (
+) || (
     echo REDIS DISABLED - SKIPPING
     exit /b 0
 )
@@ -62,15 +62,21 @@ if %errorlevel% equ 0 (
     exit /b 1 
 )
 
-if nuv setup nuvolaris redis | findstr /C:"hello" >nul
-then echo SUCCESS SETUP REDIS ACTION
-else echo FAIL SETUP REDIS ACTION; exit /b 1 
-fi
+nuv setup nuvolaris redis | findstr /C:"hello" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS SETUP REDIS ACTION
+) else (
+    echo FAIL SETUP REDIS ACTION
+    exit /b 1
+)
 
-if nuv -wsk action list | findstr /C:"/%user%/hello/redis" >nul
-then echo SUCCESS USER REDIS ACTION LIST
-else echo FAIL USER REDIS ACTION LIST; exit /b 1 
-fi
+nuv -wsk action list | findstr /C:"/%user%/hello/redis" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS USER REDIS ACTION LIST
+) else (
+    echo FAIL USER REDIS ACTION LIST
+    exit /b 1
+)
 
 for /f "delims=" %%a in ('nuv -config REDIS_URL') do set "REDIS_URL=%%a"
 for /f "delims=" %%a in ('nuv -config REDIS_PREFIX') do set "REDIS_PREFIX=%%a"
@@ -97,3 +103,4 @@ if %errorlevel% equ 0 (
     echo FAIL
     exit /b 1 
 )
+endlocal

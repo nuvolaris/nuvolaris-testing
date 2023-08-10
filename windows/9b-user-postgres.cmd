@@ -22,7 +22,8 @@ set "TYPE=%1"
 if "%TYPE%"=="" exit /b 1
 for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
 
-if nuv config status | findstr /C:"NUVOLARIS_POSTGRES=true" (
+nuv config status | findstr /C:"NUVOLARIS_POSTGRES=true" > nul
+if %ERRORLEVEL% EQU 0 (
     echo POSTGRES ENABLED
 ) else (
     echo POSTGRES DISABLED - SKIPPING
@@ -62,15 +63,21 @@ if %errorlevel% equ 0 (
     exit /b 1 
 )
 
-if nuv setup nuvolaris postgres | findstr /C:"Nuvolaris Postgres is up and running!" >nul
-then echo SUCCESS SETUP POSTGRES ACTION
-else echo FAIL SETUP POSTGRES ACTION; exit /b 1 
-fi
+nuv setup nuvolaris postgres | findstr /C:"Nuvolaris Postgres is up and running!" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS SETUP POSTGRES ACTION
+) else (
+    echo FAIL SETUP POSTGRES ACTION
+    exit /b 1
+)
 
-if nuv -wsk action list | findstr /C:"/%user%/hello/postgres" >nul
-then echo SUCCESS USER POSTGRES ACTION LIST
-else echo FAIL USER POSTGRES ACTION LIST; exit /b 1 
-fi
+nuv -wsk action list | findstr /C:"/%user%/hello/postgres" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS USER POSTGRES ACTION LIST
+) else (
+    echo FAIL USER POSTGRES ACTION LIST
+    exit /b 1
+)
 
 for /f "delims=" %%a in ('nuv -config POSTGRES_URL') do set "POSTGRES_URL=%%a"
 

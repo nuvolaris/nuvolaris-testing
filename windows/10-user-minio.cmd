@@ -22,11 +22,13 @@ set "TYPE=%1"
 if "%TYPE%"=="" exit /b 1
 for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
 
-if nuv config status | findstr /C:"NUVOLARIS_MINIO=true" (
-    echo MINIO ENABLED
-) else (
-    echo MINIO DISABLED - SKIPPING
-    exit /b 0
+for /f "tokens=2 delims==" %%a in ('nuv config status ^| findstr /C:"NUVOLARIS_MINIO="') do (
+    if "%%a"=="true" (
+        echo MINIO ENABLED
+    ) else (
+        echo MINIO DISABLED - SKIPPING
+        exit /b 0
+    )
 )
 
 set "user=demominiouser"
@@ -62,15 +64,21 @@ if %errorlevel% equ 0 (
     exit /b 1 
 )
 
-if nuv setup nuvolaris minio | findstr /C:"hello" >nul
-then echo SUCCESS SETUP MINIO ACTION
-else echo FAIL SETUP MINIO ACTION; exit /b 1 
-fi
+nuv setup nuvolaris minio | findstr /C:"hello" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS SETUP MINIO ACTION
+) else (
+    echo FAIL SETUP MINIO ACTION
+    exit /b 1
+)
 
-if nuv -wsk action list | findstr /C:"/%user%/hello/minio" >nul
-then echo SUCCESS USER MINIO ACTION LIST
-else echo FAIL USER MINIO ACTION LIST; exit /b 1 
-fi
+nuv -wsk action list | findstr /C:"/%user%/hello/minio" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS USER MINIO ACTION LIST
+) else (
+    echo FAIL USER MINIO ACTION LIST
+    exit /b 1
+)
 
 for /f "delims=" %%a in ('nuv -config MINIO_ACCESS_KEY') do set "MINIO_ACCESS_KEY=%%a"
 for /f "delims=" %%a in ('nuv -config MINIO_SECRET_KEY') do set "MINIO_SECRET_KEY=%%a"

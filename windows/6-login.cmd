@@ -22,9 +22,9 @@ set "TYPE=%1"
 if "%TYPE%"=="" exit /b 1
 for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
 
-:: Generate a random password for the user "demo"
-set /a "password=%RANDOM% % 1000000000"
 set "user=demouser"
+set "password="
+for /f "delims=" %%a in ('nuv -random --str 12') do set "password=%%a"
 
 set "ENABLE_REDIS="
 nuv config status | findstr /C:"NUVOLARIS_REDIS=true" >nul && set "ENABLE_REDIS=--redis"

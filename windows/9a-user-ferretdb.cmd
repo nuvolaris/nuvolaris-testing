@@ -22,7 +22,8 @@ set "TYPE=%1"
 if "%TYPE%"=="" exit /b 1
 for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
 
-if nuv config status | findstr /C:"NUVOLARIS_MONGODB=true" (
+nuv config status | findstr /C:"NUVOLARIS_MONGODB=true" > nul
+if %ERRORLEVEL% EQU 0 (
     echo MONGODB ENABLED
 ) else (
     echo MONGODB DISABLED - SKIPPING
@@ -62,15 +63,21 @@ if %errorlevel% equ 0 (
     exit /b 1 
 )
 
-if nuv setup nuvolaris mongodb | findstr /C:"hello" >nul
-then echo SUCCESS SETUP MONGODB ACTION
-else echo FAIL SETUP MONGODB ACTION; exit /b 1 
-fi
+nuv setup nuvolaris mongodb | findstr /C:"hello" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS SETUP MONGODB ACTION
+) else (
+    echo FAIL SETUP MONGODB ACTION
+    exit /b 1
+)
 
-if nuv -wsk action list | findstr /C:"/%user%/hello/mongodb" >nul
-then echo SUCCESS USER MONGODB ACTION LIST
-else echo FAIL USER MONGODB ACTION LIST; exit /b 1 
-fi
+nuv -wsk action list | findstr /C:"/%user%/hello/mongodb" >nul
+if %ERRORLEVEL% EQU 0 (
+    echo SUCCESS USER MONGODB ACTION LIST
+) else (
+    echo FAIL USER MONGODB ACTION LIST
+    exit /b 1
+)
 
 for /f "delims=" %%a in ('nuv -config MONGODB_URL') do set "MONGODB_URL=%%a"
 

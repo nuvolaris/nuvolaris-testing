@@ -16,52 +16,52 @@
 :: under the License.
 
 @echo off
+
 setlocal
 
-set "TYPE=%1"
+set "TYPE=%~1"
 if "%TYPE%"=="" exit /b 1
 for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set "TYPE=%%a"
 
-nuv config enable --minio --static
+set "NUV_CONFIG_ENABLE_ARGS=--minio --static"
+nuv config enable %NUV_CONFIG_ENABLE_ARGS%
 nuv update apply
 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris pod/nuvolaris-static-0"
 
 set "user=demostaticuser"
 set "password="
-for /f "delims=" %%a in ('nuv -random --str 12') do set "password=%%a"
+for /f "delims=" %%i in ('nuv -random --str 12') do set "password=%%i"
 
-set "ENABLE_MINIO="
-nuv config status | findstr /C:"NUVOLARIS_MINIO=true" >nul && set "ENABLE_MINIO=--minio"
-
-nuv admin adduser %user% %user%@email.com %password% %ENABLE_MINIO% | findstr /C:"whiskuser.nuvolaris.org/%user% created" >nul
-if %errorlevel% equ 0 (
+nuv admin adduser %user% %user%@email.com %password% %NUV_CONFIG_ENABLE_ARGS% | findstr /C:"whiskuser.nuvolaris.org/%user% created" >nul
+if %ERRORLEVEL% EQU 0 (
     echo SUCCESS CREATING %user%
 ) else (
     echo FAIL CREATING %user%
-    exit /b 1 
+    exit /b 1
 )
 
 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/%user%"
 
-set "API_PROTOCOL=http"
-set "API_DOMAIN=localhost"
-:: if type is not kind, get the API_PROTOCOL and API_DOMAIN from nuv debug apihost
-if "%TYPE%" neq "kind" (
-    for /f "tokens=4,8 delims=/: " %%a in ('nuv debug apihost ^| findstr /C:"whisk API host"') do (
-        set "API_PROTOCOL=%%a"
-        set "API_DOMAIN=%%b"
-    )
+for /f "tokens=2,4 delims=:[]" %%i in ('nuv debug apihost ^| findstr /C:"whisk API host"') do (
+    set "API_PROTOCOL=%%i"
+    set "API_DOMAIN=%%j"
 )
 
 if "%API_PROTOCOL%"=="https" (
     nuv debug kube wait OBJECT=ingress/%user%-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
 )
 
-set "STATIC_URL=%API_PROTOCOL%://%user%.%API_DOMAIN%"
-curl --insecure %STATIC_URL% | findstr /C:"Welcome to Nuvolaris static content distributor landing page!!!" >nul
-if %errorlevel% equ 0 (
-    echo SUCCESS STATIC
+if "%TYPE%"=="kind" (
+    echo SUCCESS STATIC FOR LOCALHOST IS SKIPPED
 ) else (
-    echo FAIL STATIC
-    exit /b 1 
+    set "STATIC_URL=%API_PROTOCOL%://%user%.%API_DOMAIN%"
+    curl --insecure %STATIC_URL% | findstr /C:"Welcome to Nuvolaris static content distributor landing page!!!"
+    if %ERRORLEVEL% EQU 0 (
+        echo SUCCESS STATIC
+    ) else (
+        echo FAIL STATIC
+        exit /b 1
+    )
 )
+
+endlocal
