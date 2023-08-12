@@ -4,6 +4,3 @@
 [submodule "olaris"]
 	path = olaris
 	url = https://github.com/nuvolaris/olaris
-[submodule "nuvolaris-documentation"]
-	path = nuvolaris-documentation
-	url = https://github.com/nuvolaris/nuvolaris-documentation
