@@ -20,7 +20,7 @@
 TYPE="${1:?test type}"
 EMAIL=msciabarra@apache.org
 
-if [ "$TYPE" = "kind"]; then
+if [ "$TYPE" = "kind" ]; then
 	echo SKIPPING
 	exit 1
 fi
