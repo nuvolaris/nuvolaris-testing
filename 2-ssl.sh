@@ -20,16 +20,16 @@
 TYPE="${1:?test type}"
 EMAIL=msciabarra@apache.org
 
-if $TYPE == "kind"; then
+if [ "$TYPE" = "kind"]; then
 	echo SKIPPING
 	exit 1
 fi
 
 rn=$(nuv -random --str 5)
 
-if $TYPE == "osh"; then
+if [ "$TYPE" = "osh" ]; then
 	# configure
-	nuv config apihost api.$rn.apps.nuvolaris.osh.n9s.cc --tls $EMAIL
+	nuv config apihost nuvolaris.$rn.apps.nuvtest.osh.n9s.cc --tls $EMAIL
 	nuv update apply
 
 else
