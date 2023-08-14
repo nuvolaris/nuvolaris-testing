@@ -67,6 +67,7 @@ eks)
     nuv setup cluster
     ;;
 aks)
+    nuv config reset
     # create cluster
     task aks:config
     nuv cloud aks create
@@ -81,6 +82,7 @@ aks)
     nuv setup cluster
     ;;
 gke)
+    nuv config reset
     # create cluster
     task gke:config
     nuv cloud gke create
@@ -96,9 +98,14 @@ gke)
     ;;
 
 osh)
+    nuv config reset
     # create cluster
     task osh:create
     nuv cloud osh import conf/osh/auth/kubeconfig
+
+    # install cluster
+    nuv setup cluster --uninstall
+    nuv setup cluster
 ;;
 
 esac
