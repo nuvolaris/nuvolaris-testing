@@ -15,4 +15,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-echo "TODO!"
+TYPE="${1:?test type}"
+TYPE="$(echo $TYPE | awk -F- '{print $1}')"
+
+./all.sh $TYPE
