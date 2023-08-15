@@ -12,6 +12,7 @@ conf/id_rsa
 conf/osh
 .openshift*
 *.deb
+**/*.kubeconfig
 output.txt 
 instance.json
 ip.txt
