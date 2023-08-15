@@ -6,8 +6,8 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 # Nuvolaris 0.3 "Morpheus" Testing
 
-## Acceptance Test Status: 84/96
-<img src="img/progress.svg" width="86%">
+## Acceptance Test Status: 85/96
+<img src="img/progress.svg" width="88%">
 
 |  |               |Kind|M8S |K3S |EKS |AKS |GKE |OSH |
 |--|---------------|----|----|----|----|----|----|----|
@@ -24,7 +24,7 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 |9b|User Postgres  | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
 |10|User Minio     | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | 
 |11|Nuv Win        | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-|12|Nuv Mac        | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ | ❌ |
+|12|Nuv Mac        | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ |
 
 
 
