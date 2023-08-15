@@ -38,7 +38,11 @@ API_PROTOCOL=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:]
 API_DOMAIN=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:] '{print $4}')
 
 if [ "$API_PROTOCOL" == "https" ]; then
-    nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
+    if [ "$TYPE" = "osh" ]; then
+        nuv debug kube wait OBJECT=route.route.openshift.io/$user-static-route JSONPATH="{.status.ingress[0].host}"
+    else
+        nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
+    fi
 fi
 
 case "$TYPE" in
