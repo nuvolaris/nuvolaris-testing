@@ -133,7 +133,7 @@ tasks:
         if test -z "{{.N}}"
         then echo use task progress N=value
         else 
-        X=$(((100*{{.N}})/96))
+        X=$(((100*{{.N}})/103))
         echo $X
         curl -L "https://geps.dev/progress/$X?dangerColor=006600&warningColor=006600&successColor=006600" >img/progress.svg
         fi

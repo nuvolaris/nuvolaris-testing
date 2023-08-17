@@ -37,13 +37,13 @@ nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris ws
 API_PROTOCOL=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:] '{print $1}')
 API_DOMAIN=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:] '{print $4}')
 
-if [ "$API_PROTOCOL" == "https" ]; then
-    if [ "$TYPE" = "osh" ]; then
-        nuv debug kube wait OBJECT=route.route.openshift.io/$user-static-route JSONPATH="{.status.ingress[0].host}"
-    else
-        nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
-    fi
+
+if [ "$TYPE" = "osh" ]; then
+    nuv debug kube wait OBJECT=route.route.openshift.io/$user-static-route JSONPATH="{.status.ingress[0].host}"
+else
+    nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
 fi
+
 
 case "$TYPE" in
 kind)
@@ -51,6 +51,7 @@ kind)
     ;;
 *)
     STATIC_URL=$API_PROTOCOL://$user.$API_DOMAIN
+    echo "testing using $STATIC_URL"
     if curl --insecure $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"; then
         echo SUCCESS STATIC
     else

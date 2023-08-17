@@ -114,3 +114,10 @@ echo "#            TESTING USER MINIO $TYPE        #"
 echo "#                                            #"
 echo "##############################################"
 ./10-user-minio.sh $TYPE
+
+echo "##############################################"
+echo "#                                            #"
+echo "#            TESTING NUV RUNTIMES $TYPE      #"
+echo "#                                            #"
+echo "##############################################"
+./14-runtime-testing.sh $TYPE
