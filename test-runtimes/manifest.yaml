@@ -1,0 +1,73 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+packages:
+  javascript:
+    inputs:
+      redis_url: ${REDIS_URL}
+      redis_prefix: ${REDIS_PREFIX}
+      mongodb_url : ${MONGODB_URL}
+      postgres_url : ${POSTGRES_URL}
+      minio_access: ${MINIO_ACCESS_KEY}
+      minio_secret: ${MINIO_SECRET_KEY}
+      minio_host: ${MINIO_HOST}
+      minio_port: ${MINIO_PORT}
+      minio_data: ${MINIO_DATA_BUCKET}
+    actions:
+      hello:
+        function: javascript/hello.js
+        runtime: nodejs
+      redis:
+        function: javascript/redis.js
+        runtime: nodejs
+      mongodb:
+        function: javascript/mongodb.js
+        runtime: nodejs
+      postgres:
+        function: javascript/postgres.js
+        runtime: nodejs
+      minio:
+        function: javascript/minio.js
+        runtime: nodejs
+  python:
+    inputs:
+      redis_url: ${REDIS_URL}
+      redis_prefix: ${REDIS_PREFIX}
+      mongodb_url : ${MONGODB_URL}
+      mongodb_db : ${MONGODB_DB}
+      postgres_url : ${POSTGRES_URL}
+      minio_access: ${MINIO_ACCESS_KEY}
+      minio_secret: ${MINIO_SECRET_KEY}
+      minio_host: ${MINIO_HOST}
+      minio_port: ${MINIO_PORT}
+      minio_data: ${MINIO_DATA_BUCKET}
+    actions:
+      hello:
+        function: python/hello.py
+        runtime: python 
+      redis:  
+        function: python/redis.py
+        runtime: python 
+      mongodb:  
+        function: python/mongodb.py
+        runtime: python
+      postgres:  
+        function: python/postgres.py
+        runtime: python 
+      minio:  
+        function: python/minio.py
+        runtime: python                                                                              
