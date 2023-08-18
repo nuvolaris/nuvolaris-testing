@@ -104,7 +104,7 @@ if not defined MONGODB_URL (
     echo SUCCESS USER MONGODB_URL
 )
 
-nuv -wsk action invoke /%user%/hello/mongodb -p mongodb_url "%MONGODB_URL%" -r | find "hello" > nul
+nuv -wsk action invoke hello/mongodb -p mongodb_url "%MONGODB_URL%" -r | find "hello" > nul
 if not errorlevel 1 (
     echo SUCCESS
     exit /b 0

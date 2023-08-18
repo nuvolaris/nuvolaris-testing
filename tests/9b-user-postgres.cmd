@@ -104,7 +104,7 @@ if not defined POSTGRES_URL (
     echo SUCCESS USER POSTGRES_URL
 )
 
-nuv -wsk action invoke /%user%/hello/postgres -p dburi "%POSTGRES_URL%" -r | find "Nuvolaris Postgres is up and running!" > nul
+nuv -wsk action invoke hello/postgres -p dburi "%POSTGRES_URL%" -r | find "Nuvolaris Postgres is up and running!" > nul
 if not errorlevel 1 (
     echo SUCCESS
     exit /b 0

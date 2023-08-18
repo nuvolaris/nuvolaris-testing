@@ -112,7 +112,7 @@ if not defined REDIS_PREFIX (
     echo SUCCESS REDIS_PREFIX
 )
 
-nuv -wsk action invoke /%user%/hello/redis -p redis_url "%REDIS_URL%" -p redis_prefix "%REDIS_PREFIX%" -r | find "hello" > nul
+nuv -wsk action invoke hello/redis -p redis_url "%REDIS_URL%" -p redis_prefix "%REDIS_PREFIX%" -r | find "hello" > nul
 if not errorlevel 1 (
     echo SUCCESS
     exit /b 0

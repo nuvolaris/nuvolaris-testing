@@ -18,55 +18,71 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-if nuv config status | grep NUVOLARIS_POSTGRES=true 
-then echo "POSTGRES ENABLED"
-else echo "POSTGRES DISABLED - SKIPPING" ; exit 0
+if nuv config status | grep NUVOLARIS_POSTGRES=true; then
+    echo "POSTGRES ENABLED"
+else
+    echo "POSTGRES DISABLED - SKIPPING"
+    exit 0
 fi
 
 user="demopostgresuser"
 password=$(nuv -random --str 12)
 
-if nuv admin adduser $user $user@email.com $password --postgres | grep "whiskuser.nuvolaris.org/$user created"
-then echo SUCCESS CREATING $user
-else echo FAIL CREATING $user; exit 1 
+if nuv admin adduser $user $user@email.com $password --postgres | grep "whiskuser.nuvolaris.org/$user created"; then
+    echo SUCCESS CREATING $user
+else
+    echo FAIL CREATING $user
+    exit 1
 fi
 
 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
 
 case "$TYPE" in
-    (kind) 
-        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as $user."
-        then echo SUCCESS LOGIN
-        else echo FAIL LOGIN ; exit 1 
-        fi
+kind)
+    if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as $user."; then
+        echo SUCCESS LOGIN
+    else
+        echo FAIL LOGIN
+        exit 1
+    fi
     ;;
-    *)
-        APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')        
-        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."
-        then echo SUCCESS LOGIN
-        else echo FAIL LOGIN ; exit 1 
-        fi
-    ;;    
+*)
+    APIURL=$(nuv debug apihost | awk '/whisk API host/{print $4}')
+    if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login $APIURL | grep "Successfully logged in as $user."; then
+        echo SUCCESS LOGIN
+    else
+        echo FAIL LOGIN
+        exit 1
+    fi
+    ;;
 esac
 
-if nuv setup nuvolaris postgres | grep 'Nuvolaris Postgres is up and running!'
-then echo SUCCESS SETUP POSTGRES ACTION
-else echo FAIL SETUP POSTGRES ACTION; exit 1 
+if nuv setup nuvolaris postgres | grep 'Nuvolaris Postgres is up and running!'; then
+    echo SUCCESS SETUP POSTGRES ACTION
+else
+    echo FAIL SETUP POSTGRES ACTION
+    exit 1
 fi
 
-if nuv -wsk action list | grep "/$user/hello/postgres"
-then echo SUCCESS USER POSTGRES ACTION LIST
-else echo FAIL USER POSTGRES ACTION LIST; exit 1 
+if nuv -wsk action list | grep "/$user/hello/postgres"; then
+    echo SUCCESS USER POSTGRES ACTION LIST
+else
+    echo FAIL USER POSTGRES ACTION LIST
+    exit 1
 fi
-
 
 POSTGRES_URL=$(nuv -config POSTGRES_URL)
-if [ -z "$POSTGRES_URL" ]
-then echo FAIL USER POSTGRES_URL; exit 1
-else echo SUCCESS USER POSTGRES_URL
-fi 
+if [ -z "$POSTGRES_URL" ]; then
+    echo FAIL USER POSTGRES_URL
+    exit 1
+else
+    echo SUCCESS USER POSTGRES_URL
+fi
 
-if nuv -wsk action invoke /$user/hello/postgres -p dburi "$POSTGRES_URL" -r| grep 'Nuvolaris Postgres is up and running!'
-then echo SUCCESS ; exit 0
-else echo FAIL ; exit 1 
+if nuv -wsk action invoke hello/postgres -p dburi "$POSTGRES_URL" -r | grep 'Nuvolaris Postgres is up and running!'; then
+    echo SUCCESS
+    exit 0
+else
+    echo FAIL
+    exit 1
 fi

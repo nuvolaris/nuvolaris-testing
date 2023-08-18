@@ -107,7 +107,7 @@ if not defined MINIO_ACCESS_KEY (
     echo SUCCESS USER MINIO_ACCESS_KEY
 )
 
-nuv -wsk action invoke /%user%/hello/minio -p minio_access "%MINIO_ACCESS_KEY%" ^
+nuv -wsk action invoke hello/minio -p minio_access "%MINIO_ACCESS_KEY%" ^
       -p minio_secret "%MINIO_SECRET_KEY%" ^
       -p minio_host "%MINIO_HOST%" ^
       -p minio_port "%MINIO_PORT%" ^
