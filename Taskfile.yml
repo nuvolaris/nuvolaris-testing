@@ -143,10 +143,8 @@ tasks:
     silent: true
     cmds:
       - |
-        {{if eq OS "dawin"}} 
-          ./all.sh {{.TYPE}}
-        {{else if eq OS "linux"}}
-          ./all.sh {{.TYPE}}
+        {{if eq OS "windows"}} 
+          cmd.exe /c "tests\all.cmd" {{.TYPE}}
         {{else}}
-          cmd.exe /c "windows\all.cmd" {{.TYPE}}
+          ./tests/all.sh {{.TYPE}}
         {{end}}

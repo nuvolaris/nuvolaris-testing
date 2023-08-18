@@ -15,22 +15,21 @@
 :: specific language governing permissions and limitations
 :: under the License.
 
-nuv config enable --minio
+nuv config enable --mongo
 nuv update apply
-nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.minio_bucket_data}'
+nuv setup nuvolaris wait-cm JSONPATH="{.metadata.annotations.mongodb_url}"
 
-nuv config status | findstr /C:"NUVOLARIS_MINIO=true" >nul
-if %errorlevel% equ 1 (
+nuv config status | find "NUVOLARIS_MONGODB=true" > nul
+if errorlevel 1 (
     echo SKIPPING
     exit /b 0
-)
-
-nuv setup nuvolaris minio >_output
-findstr /C:"nuvolaris-data" _output >nul
-if %errorlevel% equ 0 (
-    echo SUCCESS
-    exit /b 0
 ) else (
-    echo FAIL
-    exit /b 1
+    nuv setup nuvolaris mongodb | find "hello" > nul
+    if not errorlevel 1 (
+        echo SUCCESS
+        exit /b 0
+    ) else (
+        echo FAIL
+        exit /b 1
+    )
 )

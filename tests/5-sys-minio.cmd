@@ -14,31 +14,22 @@
 :: KIND, either express or implied.  See the License for the
 :: specific language governing permissions and limitations
 :: under the License.
-@echo off
-setlocal
 
-set TYPE=%1
-set EMAIL=msciabarra@apache.org
-
-if "%TYPE%"=="kind" (
-    echo SKIPPING
-    exit /b 1
-)
-
-nuv config reset
-task aws:config
-
-:: configure
-set rn=%RANDOM%
-nuv config apihost nuvolaris.%rn%.%TYPE%.n9s.cc --tls %EMAIL%
+nuv config enable --minio
 nuv update apply
+nuv setup nuvolaris wait-cm JSONPATH="{.metadata.annotations.minio_bucket_data}"
 
-:: check we have https
-nuv debug status | findstr /C:"apihost: https://" >nul
-if %errorlevel% equ 0 (
-    echo SUCCESS
+nuv config status | find "NUVOLARIS_MINIO=true" > nul
+if errorlevel 1 (
+    echo SKIPPING
     exit /b 0
 ) else (
-    echo FAIL
-    exit /b 1
+    nuv setup nuvolaris minio | find "nuvolaris-data" > nul
+    if not errorlevel 1 (
+        echo SUCCESS
+        exit /b 0
+    ) else (
+        echo FAIL
+        exit /b 1
+    )
 )

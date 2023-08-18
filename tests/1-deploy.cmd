@@ -15,17 +15,22 @@
 :: specific language governing permissions and limitations
 :: under the License.
 
-set TYPE=%1
-if "%TYPE%"=="" exit /b 1
-for /f "tokens=1 delims=-" %%a in ("%TYPE%") do set TYPE=%%a
+@ECHO OFF
+SET "TYPE=%~1"
+IF "%TYPE%"=="" (
+    ECHO test type parameter is missing.
+    EXIT /B 1
+)
+
+FOR /F "tokens=1 delims=-" %%A IN ("%TYPE%") DO SET "TYPE=%%A"
 
 :: actual setup
-if "%TYPE%"=="kind" (
+IF "%TYPE%"=="kind" (
     :: create vm with docker
     nuv config reset
     nuv setup devcluster --uninstall
     nuv setup devcluster
-) else if "%TYPE%"=="k3s" (
+) ELSE IF "%TYPE%"=="k3s" (
     :: create vm and install in the server
     nuv config reset
     task aws:config
@@ -34,21 +39,21 @@ if "%TYPE%"=="kind" (
     nuv cloud aws zone-update k3s.n9s.cc --wildcard --vm=k3s-test
     nuv cloud aws vm-getip k3s-test >_ip
     :: install nuvolaris
-    nuv setup server %_ip% ubuntu --uninstall
-    nuv setup server %_ip% ubuntu
-) else if "%TYPE%"=="mk8s" (
+    nuv setup server <_ip.txt> ubuntu --uninstall
+    nuv setup server <_ip.txt> ubuntu
+) ELSE IF "%TYPE%"=="mk8s" (
     nuv config reset
     task aws:config
     :: create vm with mk8s
     nuv cloud aws vm-create mk8s-test
     nuv cloud aws zone-update mk8s.n9s.cc --wildcard --vm=mk8s-test
     nuv cloud aws vm-getip mk8s-test >_ip
-    nuv cloud mk8s create SERVER=%_ip% USERNAME=ubuntu
-    nuv cloud mk8s kubeconfig SERVER=%_ip% USERNAME=ubuntu
+    nuv cloud mk8s create SERVER=<_ip.txt> USERNAME=ubuntu
+    nuv cloud mk8s kubeconfig SERVER=<_ip.txt> USERNAME=ubuntu
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
-) else if "%TYPE%"=="eks" (
+) ELSE IF "%TYPE%"=="eks" (
     nuv config reset
     :: create cluster
     task aws:config
@@ -56,36 +61,47 @@ if "%TYPE%"=="kind" (
     nuv cloud eks create
     nuv cloud eks kubeconfig
     nuv cloud eks lb >_cname
-    nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=%_cname%
+    nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=<_cname.txt>
     :: on eks we need to setup an initial apihost resolving the NLB hostname
     nuv config apihost nuvolaris.eks.n9s.cc
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
-) else if "%TYPE%"=="aks" (
+) ELSE IF "%TYPE%"=="aks" (
+    nuv config reset
     :: create cluster
     task aks:config
     nuv cloud aks create
-    nuv cloud aks kubeconfig
-    task aws:config
-    for /f "tokens=*" %%i in ('nuv cloud aks lb') do set IP=%%i
+    SETLOCAL ENABLEDELAYEDEXPANSION
+    FOR /F "usebackq tokens=*" %%A IN (`nuv cloud aks lb`) DO SET "IP=%%A"
+    ENDLOCAL & SET "IP=%IP%"
     nuv cloud aws zone-update aks.n9s.cc --wildcard --ip %IP%
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
-) else if "%TYPE%"=="gke" (
+) ELSE IF "%TYPE%"=="gke" (
+    nuv config reset
     :: create cluster
     task gke:config
     nuv cloud gke create
     nuv cloud gke kubeconfig
+
     task aws:config
-    for /f "tokens=*" %%i in ('nuv cloud gke lb') do set IP=%%i
+    SETLOCAL ENABLEDELAYEDEXPANSION
+    FOR /F "usebackq tokens=*" %%A IN (`nuv cloud gke lb`) DO SET "IP=%%A"
+    ENDLOCAL & SET "IP=%IP%"
     nuv cloud aws zone-update gke.n9s.cc --wildcard --ip %IP%
+
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
-) else if "%TYPE%"=="osh" (
+) ELSE IF "%TYPE%"=="osh" (
+    nuv config reset
     :: create cluster
     task osh:create
     nuv cloud osh import conf/osh/auth/kubeconfig
+
+    :: install cluster
+    nuv setup cluster --uninstall
+    nuv setup cluster
 )

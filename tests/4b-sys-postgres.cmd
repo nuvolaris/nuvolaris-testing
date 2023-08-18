@@ -15,16 +15,21 @@
 :: specific language governing permissions and limitations
 :: under the License.
 
-nuv config enable --redis
+nuv config enable --postgres
 nuv update apply
-nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.redis_prefix}'
+nuv setup nuvolaris wait-cm JSONPATH="{.metadata.annotations.postgres_url}"
 
-nuv setup nuvolaris redis >_output
-findstr /C:"hello" _output >nul
-if %errorlevel% equ 0 (
-    echo SUCCESS
+nuv config status | find "NUVOLARIS_POSTGRES=true" > nul
+if errorlevel 1 (
+    echo SKIPPING
     exit /b 0
 ) else (
-    echo FAIL
-    exit /b 1
+    nuv setup nuvolaris postgres | find "Nuvolaris Postgres is up and running!" > nul
+    if not errorlevel 1 (
+        echo SUCCESS
+        exit /b 0
+    ) else (
+        echo FAIL
+        exit /b 1
+    )
 )

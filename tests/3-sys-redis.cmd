@@ -15,22 +15,18 @@
 :: specific language governing permissions and limitations
 :: under the License.
 
-nuv config enable --postgres
+@ECHO OFF
+
+:: Configure
+nuv config enable --redis
 nuv update apply
-nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.postgres_url}'
+nuv setup nuvolaris wait-cm JSONPATH="{.metadata.annotations.redis_prefix}"
 
-nuv config status | findstr /C:"NUVOLARIS_POSTGRES=true" >nul
-if %errorlevel% equ 1 (
-    echo SKIPPING
-    exit /b 0
+:: Check if "hello" exists in the output of "nuv setup nuvolaris redis"
+FOR /F "tokens=* USEBACKQ" %%L IN (`nuv setup nuvolaris redis ^| FIND "hello"`) DO (
+    ECHO SUCCESS
+    EXIT /B 0
 )
 
-nuv setup nuvolaris postgres >_output
-findstr /C:"Nuvolaris Postgres is up and running!" _output >nul
-if %errorlevel% equ 0 (
-    echo SUCCESS
-    exit /b 0
-) else (
-    echo FAIL
-    exit /b 1
-)
+ECHO FAIL
+EXIT /B 1

@@ -29,7 +29,7 @@ rn=$(nuv -random --str 5)
 
 if [ "$TYPE" = "osh" ]; then
 	# configure
-	nuv config apihost api.apps.nuvolaris.osh.n9s.cc --tls $EMAIL
+	nuv config apihost api.apps.nuvolaris.osh.nuvtest.net --tls $EMAIL
 	nuv update apply
 
 else
@@ -37,7 +37,7 @@ else
 	task aws:config
 
 	# configure
-	nuv config apihost nuvolaris.$rn.$TYPE.n9s.cc --tls $EMAIL
+	nuv config apihost nuvolaris.$rn.$TYPE.nuvtest.net --tls $EMAIL
 	nuv update apply
 fi
 

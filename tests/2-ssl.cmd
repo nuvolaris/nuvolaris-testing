@@ -15,22 +15,40 @@
 :: specific language governing permissions and limitations
 :: under the License.
 
-nuv config enable --mongo
-nuv update apply
-nuv setup nuvolaris wait-cm JSONPATH='{.metadata.annotations.mongodb_url}'
+@ECHO OFF
+SET "TYPE=%~1"
+SET "EMAIL=msciabarra@apache.org"
 
-nuv config status | findstr /C:"NUVOLARIS_MONGODB=true" >nul
-if %errorlevel% equ 1 (
-    echo SKIPPING
-    exit /b 0
+IF "%TYPE%"=="" (
+    ECHO test type parameter is missing.
+    EXIT /B 1
 )
 
-nuv setup nuvolaris mongodb >_output
-findstr /C:"hello" _output >nul
-if %errorlevel% equ 0 (
-    echo SUCCESS
-    exit /b 0
-) else (
-    echo FAIL
-    exit /b 1
+IF "%TYPE%"=="kind" (
+    ECHO SKIPPING
+    EXIT /B 1
 )
+
+FOR /F %%A IN ('nuv -random --str 5') DO SET "rn=%%A"
+
+IF "%TYPE%"=="osh" (
+    REM configure
+    nuv config apihost api.apps.nuvolaris.osh.nuvtest.net --tls %EMAIL%
+    nuv update apply
+) ELSE (
+    nuv config reset
+    REM task aws:config
+
+    REM configure
+    nuv config apihost nuvolaris.%rn%.%TYPE%.nuvtest.net --tls %EMAIL%
+    nuv update apply
+)
+
+REM check we have https
+FOR /F "tokens=* USEBACKQ" %%L IN (`nuv debug status ^| FIND "apihost: https://"`) DO (
+    ECHO SUCCESS
+    EXIT /B 0
+)
+
+ECHO FAIL
+EXIT /B 1
