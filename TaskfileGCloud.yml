@@ -1,0 +1,23 @@
+version: '3'
+
+tasks:
+
+  gke:config:
+    - >
+      nuv config gke
+      --name=nuvolaris 
+      --project="$GKE_PROJECT"
+      --region="$GKE_REGION"
+      --count="$GKE_NODE_COUNT"
+      --vm="$GKE_NODE_TYPE"
+      --disk="$GKE_DISK_SIZE"
+
+  gke:create:
+    - task: gke:config
+    - nuv cloud gke create
+
+  gke:delete:
+    - task: gke:config
+    - nuv cloud gke delete
+
+

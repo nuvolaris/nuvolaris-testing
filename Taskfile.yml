@@ -18,10 +18,17 @@
 version: "3"
 
 dotenv:
+  - ../../env-testing
   - env
+
+includes:
+  aw: ./TaskfileAWS.yml
+  az: ./TaskfileAzure.yml
+  gc: ./TaskfileGCloud.yml
 
 tasks:
   setup: { silent: true }
+
   status:
     - nuv config use
     - nuv debug info
@@ -34,89 +41,32 @@ tasks:
     - nuv setup docker delete
 
   k3s:create:
-    - task: aws:config
-    - nuv cloud aws vm-create k3s-test
-    - |
-      IP=$(nuv cloud aws vm-getip k3s-test)
-      nuv cloud k3s create SERVER=$IP USERNAME=ubuntu
-
-  k3s:delete:
-    - task: aws:config
-    - nuv cloud aws vm-delete k3s-test
+    cmds:
+    - task: aw:vm:create
+      vars:
+          NAME: k3s-test
+          TYPE: k3s
 
   mk8s:create:
-    - task: aws:config
-    - nuv cloud aws vm-create mk8s-test
-    - IP=$(nuv cloud aws vm-getip mk8s-test)
-      nuv cloud mk8s create SERVER=$IP USERNAME=ubuntu
+    cmds:
+    - task: aw:vm:create
+      vars:
+          NAME: mk8s-test
+          TYPE: mk8s
+
+  k3s:delete:
+    cmds:
+    - task: aw:vm:delete
+      vars:
+          NAME: k3s-test
+          TYPE: k3s
 
   mk8s:delete:
-    - task: aws:config
-    - nuv cloud aws vm-delete mk8s-test
-
-  eks:config:
-    - task: aws:config
-    - >
-      nuv config eks
-      --name=nuvolaris
-      --region=us-east-1
-      --count=3
-      --vm=m5.xlarge 
-      --disk=50
-      --kubever=1.25
-
-  eks:create:
-    - task: eks:config
-    - nuv cloud eks create
-
-  eks:delete:
-    - task: eks:config
-    - nuv cloud eks delete
-
-  aks:config:
-    - >
-      nuv config aks
-      --name=nuvtest
-      --count=4
-      --region=eastus
-      --vm=Standard_B4ms
-      --disk=50
-      --key=~/.ssh/id_rsa.pub
-
-  aks:create:
-    - task: aks:config
-    - nuv cloud aks create
-
-  aks:delete:
-    - task: aks:config
-    - nuv cloud aks delete
-
-  gke:config:
-    - >
-      nuv config gke
-      --name=nuvolaris 
-      --project="$GKE_PROJECT"
-      --region="$GKE_REGION"
-      --count="$GKE_NODE_COUNT"
-      --vm="$GKE_NODE_TYPE"
-      --disk="$GKE_DISK_SIZE"
-
-  gke:create:
-    - task: gke:config
-    - nuv cloud gke create
-
-  gke:delete:
-    - task: gke:config
-    - nuv cloud gke delete
-
-  aws:config:
-    - >
-      nuv config aws 
-      --access="$AWS_ACCESS_KEY_ID" 
-      --secret="$AWS_SECRET_ACCESS_KEY" 
-      --region="$AWS_DEFAULT_REGION"
-      --image=ami-052efd3df9dad4825 --vm=t3a.large --disk=100 
-      --key=${AWS_DEFAULT_KEY_NAME:-"nuvolaris-key"} --vmuser=ubuntu
+    cmds:
+    - task: aw:vm:delete
+      vars:
+          NAME: mk8s-test
+          TYPE: mk8s
 
   osh:create:
     - mkdir -p conf/osh

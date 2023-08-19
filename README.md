@@ -26,8 +26,6 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 |11|Nuv Win        | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
 |12|Nuv Mac        | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 
-
-
 ## The challengers
 
 ### Franztt
@@ -40,7 +38,6 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 
 ### Msciab
 ![](img/msciab.jpg)
-
 
 Do you want to join us? Read [this](DEVEL.md) to know how to run the tests and send us a PR to fix a failing test!
 

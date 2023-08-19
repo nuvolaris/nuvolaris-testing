@@ -61,7 +61,6 @@ Once you have setup the environment you can run the tests:
 
 ## Deployment
 
-
 The first task automate deployment (for continuous integration):
 
 ```
@@ -81,7 +80,6 @@ where `<type>` is one of:
 this task is to be executed by GitHub, once you have provided enough informations as secrets.
 
 ###
-
 
 # future multi environment
 The following tests are plannedo to  ensure everything works in different environments:

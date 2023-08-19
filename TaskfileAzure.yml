@@ -1,0 +1,22 @@
+version: '3'
+
+tasks:
+
+  aks:config:
+    - >
+      nuv config aks
+      --name=nuvtest
+      --count=4
+      --region=eastus
+      --vm=Standard_B4ms
+      --disk=50
+      --key=~/.ssh/id_rsa.pub
+
+  aks:create:
+    - task: aks:config
+    - nuv cloud aks create
+
+  aks:delete:
+    - task: aks:config
+    - nuv cloud aks delete
+
