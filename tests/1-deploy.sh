@@ -32,7 +32,7 @@ k3s)
     task aws:config
     # create vm without k3s
     nuv cloud aws vm-create k3s-test
-    nuv cloud aws zone-update k3s.n9s.cc --wildcard --vm=k3s-test
+    nuv cloud aws zone-update k3s.nuvtest.net --wildcard --vm=k3s-test
     nuv cloud aws vm-getip k3s-test >_ip
     # install nuvolaris
     nuv setup server $(cat _ip) ubuntu --uninstall
@@ -43,7 +43,7 @@ mk8s)
     task aws:config
     # create vm with mk8s
     nuv cloud aws vm-create mk8s-test
-    nuv cloud aws zone-update mk8s.n9s.cc --wildcard --vm=mk8s-test
+    nuv cloud aws zone-update mk8s.nuvtest.net --wildcard --vm=mk8s-test
     nuv cloud aws vm-getip mk8s-test >_ip
     nuv cloud mk8s create SERVER=$(cat _ip) USERNAME=ubuntu
     nuv cloud mk8s kubeconfig SERVER=$(cat _ip) USERNAME=ubuntu
@@ -59,9 +59,9 @@ eks)
     nuv cloud eks create
     nuv cloud eks kubeconfig
     nuv cloud eks lb >_cname
-    nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=$(cat _cname)
+    nuv cloud aws zone-update eks.nuvtest.net --wildcard --cname=$(cat _cname)
     # on eks we need to setup an initial apihost resolving the NLB hostname
-    nuv config apihost nuvolaris.eks.n9s.cc
+    nuv config apihost nuvolaris.eks.nuvtest.net
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -75,7 +75,7 @@ aks)
 
     task aws:config
     IP=$(nuv cloud aks lb)
-    nuv cloud aws zone-update aks.n9s.cc --wildcard --ip $IP
+    nuv cloud aws zone-update aks.nuvtest.net --wildcard --ip $IP
 
     # install cluster
     nuv setup cluster --uninstall
@@ -90,7 +90,7 @@ gke)
 
     task aws:config
     IP=$(nuv cloud gke lb)
-    nuv cloud aws zone-update gke.n9s.cc --wildcard --ip $IP
+    nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip $IP
 
     # install cluster
     nuv setup cluster --uninstall
@@ -106,6 +106,6 @@ osh)
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
-;;
+    ;;
 
 esac

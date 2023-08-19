@@ -36,7 +36,7 @@ IF "%TYPE%"=="kind" (
     task aws:config
     :: create vm without k3s
     nuv cloud aws vm-create k3s-test
-    nuv cloud aws zone-update k3s.n9s.cc --wildcard --vm=k3s-test
+    nuv cloud aws zone-update k3s.nuvtest.net --wildcard --vm=k3s-test
     nuv cloud aws vm-getip k3s-test >_ip
     :: install nuvolaris
     nuv setup server %_ip% ubuntu --uninstall
@@ -46,7 +46,7 @@ IF "%TYPE%"=="kind" (
     task aws:config
     :: create vm with mk8s
     nuv cloud aws vm-create mk8s-test
-    nuv cloud aws zone-update mk8s.n9s.cc --wildcard --vm=mk8s-test
+    nuv cloud aws zone-update mk8s.nuvtest.net --wildcard --vm=mk8s-test
     nuv cloud aws vm-getip mk8s-test >_ip
     nuv cloud mk8s create SERVER=%_ip% USERNAME=ubuntu
     nuv cloud mk8s kubeconfig SERVER=%_ip% USERNAME=ubuntu
@@ -61,9 +61,9 @@ IF "%TYPE%"=="kind" (
     nuv cloud eks create
     nuv cloud eks kubeconfig
     nuv cloud eks lb >_cname
-    nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=%_cname%
+    nuv cloud aws zone-update eks.nuvtest.net --wildcard --cname=%_cname%
     :: on eks we need to setup an initial apihost resolving the NLB hostname
-    nuv config apihost nuvolaris.eks.n9s.cc
+    nuv config apihost nuvolaris.eks.nuvtest.net
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -75,7 +75,7 @@ IF "%TYPE%"=="kind" (
     SETLOCAL ENABLEDELAYEDEXPANSION
     FOR /F "usebackq tokens=*" %%A IN (`nuv cloud aks lb`) DO SET "IP=%%A"
     ENDLOCAL & SET "IP=%IP%"
-    nuv cloud aws zone-update aks.n9s.cc --wildcard --ip %IP%
+    nuv cloud aws zone-update aks.nuvtest.net --wildcard --ip %IP%
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -90,7 +90,7 @@ IF "%TYPE%"=="kind" (
     SETLOCAL ENABLEDELAYEDEXPANSION
     FOR /F "usebackq tokens=*" %%A IN (`nuv cloud gke lb`) DO SET "IP=%%A"
     ENDLOCAL & SET "IP=%IP%"
-    nuv cloud aws zone-update gke.n9s.cc --wildcard --ip %IP%
+    nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip %IP%
 
     :: install cluster
     nuv setup cluster --uninstall

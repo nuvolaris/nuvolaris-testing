@@ -31,48 +31,48 @@ nuv -update
 nuv -info
 
 ## install task and cram
-if ! which task 
-then sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+if ! which task; then
+    sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 fi
-if ! which cram
-then pip install cram --user
+if ! which cram; then
+    pip install cram --user
 fi
 
 # deploy the ssh key
-if test -e env.src
-then echo "Sourcing env.src"
-     source env.src
+if test -e env.src; then
+    echo "Sourcing env.src"
+    source env.src
 fi
 
 mkdir -p ~/.ssh
-if test -n "$ID_RSA_B64"
-then echo $ID_RSA_B64 | base64 -d - > ~/.ssh/id_rsa 
-     chmod 0600 ~/.ssh/id_rsa
-     ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
-else echo "*** Missing ID_RSA_B64 ***"
+if test -n "$ID_RSA_B64"; then
+    echo $ID_RSA_B64 | base64 -d - >~/.ssh/id_rsa
+    chmod 0600 ~/.ssh/id_rsa
+    ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
+else
+    echo "*** Missing ID_RSA_B64 ***"
 fi
 mkdir -p ~/.kube
 
-
 # deploy by type
 case "$TYPE" in
-    (kind)
-	    #  remove containers if any
-	    if docker ps -qa | wc -l | grep -v -x 0
-	    then docker ps -qa | xargs docker rm -f
-        fi
+kind)
+    #  remove containers if any
+    if docker ps -qa | wc -l | grep -v -x 0; then
+        docker ps -qa | xargs docker rm -f
+    fi
     ;;
-    (k3s)
-        lib/createAwsVm.sh k3s
-      
+k3s)
+    lib/createAwsVm.sh k3s
+
     ;;
-    (mk8s) 
-        lib/createAwsVm.sh mk8s
-        lib/updateZone.sh mk8s "$(cat _ip)"
-        lib/getKubeConfig.sh mk8s.n9s.cc
+mk8s)
+    lib/createAwsVm.sh mk8s
+    lib/updateZone.sh mk8s "$(cat _ip)"
+    lib/getKubeConfig.sh mk8s.nuvtest.net
     ;;
-    (eks)
-        lib/encdec.sh decode eks
-        lib/updateZone.sh eks "$(cat conf/eks.lb)" CNAME
+eks)
+    lib/encdec.sh decode eks
+    lib/updateZone.sh eks "$(cat conf/eks.lb)" CNAME
     ;;
 esac

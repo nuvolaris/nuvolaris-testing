@@ -40,7 +40,7 @@ IF "%TYPE%"=="osh" (
     REM task aws:config
 
     REM configure
-    nuv config apihost nuvolaris.%rn%.%TYPE%.nuvtest.net --tls %EMAIL%
+    nuv config apihost %rn%.%TYPE%.nuvtest.net --tls %EMAIL%
     nuv update apply
 )
 

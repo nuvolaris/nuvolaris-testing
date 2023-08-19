@@ -37,7 +37,7 @@ else
 	task aws:config
 
 	# configure
-	nuv config apihost nuvolaris.$rn.$TYPE.nuvtest.net --tls $EMAIL
+	nuv config apihost $rn.$TYPE.nuvtest.net --tls $EMAIL
 	nuv update apply
 fi
 
