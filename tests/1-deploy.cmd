@@ -39,8 +39,8 @@ IF "%TYPE%"=="kind" (
     nuv cloud aws zone-update k3s.n9s.cc --wildcard --vm=k3s-test
     nuv cloud aws vm-getip k3s-test >_ip
     :: install nuvolaris
-    nuv setup server <_ip.txt> ubuntu --uninstall
-    nuv setup server <_ip.txt> ubuntu
+    nuv setup server %_ip% ubuntu --uninstall
+    nuv setup server %_ip% ubuntu
 ) ELSE IF "%TYPE%"=="mk8s" (
     nuv config reset
     task aws:config
@@ -48,8 +48,8 @@ IF "%TYPE%"=="kind" (
     nuv cloud aws vm-create mk8s-test
     nuv cloud aws zone-update mk8s.n9s.cc --wildcard --vm=mk8s-test
     nuv cloud aws vm-getip mk8s-test >_ip
-    nuv cloud mk8s create SERVER=<_ip.txt> USERNAME=ubuntu
-    nuv cloud mk8s kubeconfig SERVER=<_ip.txt> USERNAME=ubuntu
+    nuv cloud mk8s create SERVER=%_ip% USERNAME=ubuntu
+    nuv cloud mk8s kubeconfig SERVER=%_ip% USERNAME=ubuntu
     :: install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -61,7 +61,7 @@ IF "%TYPE%"=="kind" (
     nuv cloud eks create
     nuv cloud eks kubeconfig
     nuv cloud eks lb >_cname
-    nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=<_cname.txt>
+    nuv cloud aws zone-update eks.n9s.cc --wildcard --cname=%_cname%
     :: on eks we need to setup an initial apihost resolving the NLB hostname
     nuv config apihost nuvolaris.eks.n9s.cc
     :: install cluster
