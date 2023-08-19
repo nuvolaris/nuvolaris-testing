@@ -16,6 +16,7 @@ conf/osh
 output.txt 
 instance.json
 ip.txt
+_ip
 .latestcheck
 tests/*.err
 _*
