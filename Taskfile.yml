@@ -146,5 +146,7 @@ tasks:
         {{if eq OS "windows"}} 
           cmd.exe /c "tests\all.cmd" {{.TYPE}}
         {{else}}
-          ./tests/all.sh {{.TYPE}}
+          cd tests
+          ./all.sh {{.TYPE}}
+          cd ..
         {{end}}
