@@ -5,7 +5,7 @@ tasks:
   aks:config:
     - >
       nuv config aks
-      --name=nuvtest
+      --name=$AKS_CLUSTER_NAME
       --count=4
       --region=eastus
       --vm=Standard_B4ms

@@ -5,12 +5,12 @@ tasks:
   gke:config:
     - >
       nuv config gke
-      --name=nuvolaris 
+      --name=$GKE_PROJECT 
       --project="$GKE_PROJECT"
-      --region="$GKE_REGION"
-      --count="$GKE_NODE_COUNT"
-      --vm="$GKE_NODE_TYPE"
-      --disk="$GKE_DISK_SIZE"
+      --region="us-east1"
+      --count="3"
+      --vm="e2-standard-2"
+      --disk="50"
 
   gke:create:
     - task: gke:config

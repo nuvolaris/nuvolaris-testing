@@ -1,6 +1,6 @@
 # Setup of Continuos Integration
 
-Those notes to remind the steps executed to build our CI environment.
+Those notes are to remind the steps executed to build our CI environment.
 
 ## Overview
 
@@ -25,15 +25,26 @@ Note that a number of cloud parameters are wired in the taskfiles: look for the 
 
 Register manually a domain in AWS (nuvtest.net) and setup the following subzones. 
 
-- awstest.nuvtest.net
-- gketest.nuvtest.net 
+- k3stest.nuvtest.net
+- mk8stest.nuvtest.net
+- ekstest.nuvtest.net
 - akstest.nuvtest.net 
+- gketest.nuvtest.net 
 - oshtest.nuvtest.net 
 
 ## TODO: Setup a GKE Clusters in GCloud
+
+```
+task gc:gke:create
+```
 
 ## TODO: Setup an AKS Clusters in Azure
 
 ## TODO: Setup an OpenShift Cluster in GCloud
 
 ## TODO: Setup an EKS cluster in Amazon
+
+
+## Cleanup
+
+task gc:gke:delete
