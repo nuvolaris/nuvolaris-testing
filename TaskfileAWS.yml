@@ -2,15 +2,6 @@ version: '3'
 
 tasks:
 
-  aws:config:
-    - >
-      nuv config aws 
-      --access="$AWS_ACCESS_KEY_ID" 
-      --secret="$AWS_SECRET_ACCESS_KEY" 
-      --key=${AWS_DEFAULT_KEY_NAME:-"nuvolaris-key"} 
-      --region=us-east-1 
-      --image=ami-052efd3df9dad4825 --vmuser=ubuntu
-      --vm=t3a.large --disk=100 
 
   eks:config:
     - task: aws:config
@@ -23,9 +14,19 @@ tasks:
       --disk=50
       --kubever=1.25
 
+  vm:config:
+    - >
+      nuv config aws 
+      --access="$AWS_ACCESS_KEY_ID" 
+      --secret="$AWS_SECRET_ACCESS_KEY" 
+      --key=${AWS_DEFAULT_KEY_NAME:-"nuvolaris-key"} 
+      --region=us-east-1 
+      --image=ami-052efd3df9dad4825 --vmuser=ubuntu
+      --vm=t3a.large --disk=100 
+
   vm:create:
     cmds:
-    - task: aws:config
+    - task: vm:config
     - nuv cloud aws vm-create {{.NAME}}
     - nuv cloud aws vm-getip {{.NAME}} >_ip
     - nuv cloud {{.TYPE}} create SERVER=$(cat _ip) USERNAME=ubuntu
@@ -34,9 +35,9 @@ tasks:
 
   vm:delete:
     cmds:
+    - task: vm:config
     - nuv cloud aws vm-delete {{.NAME}}
     requires: [NAME]
-
 
   eks:create:
     - task: eks:config

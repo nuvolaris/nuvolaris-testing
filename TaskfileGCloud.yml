@@ -2,6 +2,15 @@ version: '3'
 
 tasks:
 
+  vm:config:
+    - >
+      nuv config gcloud
+      --project=$GKE_PROJECT 
+      --region="us-east1-d"
+      --vm="n2-standard-4"
+      --disk="200"
+      --key=$HOME/.ssh/id_rsa.pub
+
   gke:config:
     - >
       nuv config gke
@@ -20,4 +29,18 @@ tasks:
     - task: gke:config
     - nuv cloud gke delete
 
+  vm:create:
+    cmds:
+    - task: vm:config
+    - nuv cloud gcloud vm-create {{.NAME}}
+    - nuv cloud gcloud vm-getip {{.NAME}} >_ip
+    - nuv cloud {{.TYPE}} create SERVER=$(cat _ip) USERNAME=ubuntu
+    requires: 
+      vars: [NAME, TYPE]
+
+  vm:delete:
+    cmds:
+    - task: vm:config
+    - nuv cloud gcloud vm-delete {{.NAME}}
+    requires: [NAME]
 

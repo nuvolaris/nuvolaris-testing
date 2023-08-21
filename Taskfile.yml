@@ -17,14 +17,17 @@
 
 version: "3"
 
+vars:
+  CLOUD: gcp
+
 dotenv:
   - ../../env-testing
   - env
 
 includes:
-  aw: ./TaskfileAWS.yml
-  az: ./TaskfileAzure.yml
-  gc: ./TaskfileGCloud.yml
+  aws: ./TaskfileAWS.yml
+  gcp: ./TaskfileGCloud.yml
+  azure: ./TaskfileAzure.yml
 
 tasks:
   setup: { silent: true }
@@ -42,39 +45,40 @@ tasks:
 
   k3s:create:
     cmds:
-    - task: aw:vm:create
+    - task: "{{.CLOUD}}:vm:create"
       vars:
           NAME: k3s-test
           TYPE: k3s
 
   mk8s:create:
     cmds:
-    - task: aw:vm:create
+    - task: "{{.CLOUD}}:vm:create"
       vars:
           NAME: mk8s-test
           TYPE: mk8s
 
   k3s:delete:
     cmds:
-    - task: aw:vm:delete
+    - task: "{{.CLOUD}}:vm:delete"
       vars:
           NAME: k3s-test
           TYPE: k3s
 
   mk8s:delete:
     cmds:
-    - task: aw:vm:delete
+    - task: "{{.CLOUD}}:vm:delete"
       vars:
           NAME: mk8s-test
           TYPE: mk8s
 
   osh:create:
-    - mkdir -p conf/osh
-    - cp conf/openshift-install-config.yaml conf/osh/install-config.yaml
-    - openshift-install create cluster --dir conf/osh
+    cmds:
+    - mkdir -p conf/{{.CLOUD}}
+    - cp conf/{{.CLOUD}}-install-config.yaml conf/{{.CLOUD}}/install-config.yaml
+    - openshift-install create cluster --dir conf/{{.CLOUD}}
 
   osh:delete:
-    - openshift-install destroy cluster --dir conf/osh
+    - openshift-install destroy cluster --dir conf/{{.CLOUD}}
 
   progress:
     desc: update the progress

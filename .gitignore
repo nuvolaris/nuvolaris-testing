@@ -20,3 +20,5 @@ _ip
 .latestcheck
 tests/*.err
 _*
+conf/gcp
+conf/aws
