@@ -111,7 +111,7 @@ tasks:
   aks:delete:
     cmds:
     - task azure:cluster:delete
-    
+
   progress:
     desc: update the progress
     cmds:
@@ -152,12 +152,14 @@ tasks:
     gh -R nuvolaris/nuvolaris-testing secret set "MK8S_IP" -b "$MK8S_IP"
     for i in aks eks gke openshift
     do
-       nuv config use "$i-nuvolaris-testing"
-       nuv debug export F=kubeconfig
+       f="$i-nuvolaris-testing"
+       nuv config use $f
+       nuv debug export F=$f
        VAR="$(echo $i | tr 'a-z-' 'A-Z_')_KUBECONFIG_B64"
-       DATA="$(cat kubeconfig | base64 -w0)"
+       DATA="$(cat $f | base64 -w0)"
        echo "Secret $VAR:"
        gh -R nuvolaris/nuvolaris-testing secret set "$VAR" -b "$DATA"
        echo export "$VAR=$DATA" >>env-github
+       rm -v $f
     done
     

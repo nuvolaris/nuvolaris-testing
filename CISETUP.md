@@ -2,6 +2,7 @@
 
 Those notes are a remindinder of the steps executed to build our CI environment.
 
+
 ## Overview
 
 We have a stable test environment on AWS/GCloud/Azure  with:
@@ -14,6 +15,15 @@ We have a stable test environment on AWS/GCloud/Azure  with:
 - in Azure, an AKS cluster
 
 # Setup
+
+## Prereq
+
+You to isntall a few tools:
+
+- [`task`](taskfile.dev)
+- `aws` cli
+- `azure` cli 
+- `gcloud` cli 
 
 ## Permissions in AWS
 
@@ -78,7 +88,7 @@ Note you need:
 
 ```
 {"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}
-``````
+```
 
 # Configure variables
 

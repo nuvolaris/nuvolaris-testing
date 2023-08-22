@@ -31,7 +31,9 @@ k3s)
     nuv config reset
     # create vm without k3s
     if test -n "$K3S_IP"
-    then echo $K3S_IP>_ip
+    then 
+        echo $K3S_IP>_ip
+        nuv config apihost api.k3s.nuvtest.net
     else
         task aws:vm:config
         nuv cloud aws vm-create k3s-test
@@ -46,7 +48,9 @@ mk8s)
     nuv config reset
     # create vm with mk8s
     if test -n "$MK8S_IP"
-    then echo $MK8S_IP>_ip
+    then 
+          echo $MK8S_IP>_ip
+          nuv config apihost api.mk8s.nuvtest.net
     else
         task aws:vm:config
         nuv cloud aws vm-create mk8s-test
@@ -66,6 +70,7 @@ eks)
     then
         mkdir -p ~/.kube
         echo $EKS_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        nuv config apihost api.eks.nuvtest.net
         nuv config use 0
     else
         task aws:config
@@ -74,9 +79,9 @@ eks)
         nuv cloud eks kubeconfig
         nuv cloud eks lb >_cname
         nuv cloud aws zone-update eks.nuvtest.net --wildcard --cname=$(cat _cname)
+        # on eks we need to setup an initial apihost resolving the NLB hostname
+        nuv config apihost api.eks.nuvtest.net
     fi
-    # on eks we need to setup an initial apihost resolving the NLB hostname
-    nuv config apihost nuvolaris.eks.nuvtest.net
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -89,6 +94,7 @@ aks)
         mkdir -p ~/.kube
         echo $AKS_KUBECONFIG_B64 | base64 -d >~/.kube/config
         nuv config use 0
+        nuv config apihost api.aks.nuvtest.net
     else
         task aks:config
         nuv cloud aks create
@@ -109,6 +115,7 @@ gke)
         mkdir -p ~/.kube
         echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
         nuv config use 0
+        nuv config apihost api.gke.nuvtest.net
     else
         task gke:config
         nuv cloud gke create
@@ -128,13 +135,13 @@ osh)
     if test -n "$OPENSHIFT_KUBECONFIG_B64"
     then
         mkdir -p ~/.kube
-        echo $$OPENSHIFT_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        echo $OPENSHIFT_KUBECONFIG_B64 | base64 -d >~/.kube/config
         nuv config use 0
+        nuv config apihost api.apps.nuvolaris-testing.oshgcp.nuvtest.net
     else
         task osh:create
         nuv cloud osh import conf/gcp/auth/kubeconfig
     fi
-
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
