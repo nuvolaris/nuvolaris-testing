@@ -2,16 +2,8 @@ version: '3'
 
 tasks:
 
-  vm:config:
-    - >
-      nuv config gcloud
-      --project=$GKE_PROJECT 
-      --region="us-east1-d"
-      --vm="n2-standard-4"
-      --disk="200"
-      --key=$HOME/.ssh/id_rsa.pub
 
-  gke:config:
+  cluster:config:
     - >
       nuv config gke
       --name=$GKE_PROJECT 
@@ -21,13 +13,22 @@ tasks:
       --vm="e2-standard-2"
       --disk="50"
 
-  gke:create:
-    - task: gke:config
+  cluster:create:
+    - task: cluster:config
     - nuv cloud gke create
 
-  gke:delete:
-    - task: gke:config
+  cluster:delete:
+    - task: cluster:config
     - nuv cloud gke delete
+
+  vm:config:
+    - >
+      nuv config gcloud
+      --project=$GKE_PROJECT 
+      --region="us-east1-d"
+      --vm="n2-standard-4"
+      --disk="200"
+      --key=$HOME/.ssh/id_rsa.pub
 
   vm:create:
     cmds:

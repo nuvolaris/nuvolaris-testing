@@ -2,7 +2,7 @@ version: '3'
 
 tasks:
 
-  aks:config:
+  cluster:config:
     - >
       nuv config aks
       --name=$AKS_CLUSTER_NAME
@@ -12,11 +12,11 @@ tasks:
       --disk=50
       --key=~/.ssh/id_rsa.pub
 
-  aks:create:
-    - task: aks:config
+  cluster:create:
+    - task: cluster:config
     - nuv cloud aks create
 
-  aks:delete:
-    - task: aks:config
+  cluster:delete:
+    - task: cluster:config
     - nuv cloud aks delete
 

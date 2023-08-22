@@ -2,24 +2,12 @@ version: '3'
 
 tasks:
 
-
-  eks:config:
-    - task: aws:config
-    - >
-      nuv config eks
-      --name=$AWS_CLUSTER_NAME
-      --region=us-east-2
-      --count=3
-      --vm=m5.xlarge 
-      --disk=50
-      --kubever=1.25
-
   vm:config:
     - >
       nuv config aws 
       --access="$AWS_ACCESS_KEY_ID" 
       --secret="$AWS_SECRET_ACCESS_KEY" 
-      --key=${AWS_DEFAULT_KEY_NAME:-"nuvolaris-key"} 
+      --key="$AWS_DEFAULT_KEY_NAME"
       --region=us-east-1 
       --image=ami-052efd3df9dad4825 --vmuser=ubuntu
       --vm=t3a.large --disk=100 
@@ -39,11 +27,22 @@ tasks:
     - nuv cloud aws vm-delete {{.NAME}}
     requires: [NAME]
 
-  eks:create:
-    - task: eks:config
+  cluster:config:
+    - task: vm:config
+    - >
+      nuv config eks
+      --name=$AWS_CLUSTER_NAME
+      --region=us-east-2
+      --count=3
+      --vm=m5.xlarge 
+      --disk=50
+      --kubever=1.25
+
+  cluster:create:
+    - task: cluster:config
     - nuv cloud eks create
 
-  eks:delete:
-    - task: eks:config
+  cluster:delete:
+    - task: cluster:config
     - nuv cloud eks delete
 

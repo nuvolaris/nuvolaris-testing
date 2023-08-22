@@ -104,3 +104,17 @@ tasks:
           ./all.sh {{.TYPE}}
           cd ..
         {{end}}
+
+  upload-secrets: |
+    rm -f env-kubeconfig
+    for i in k3s mk8s aks eks gke openshift
+    do
+       nuv config use "$i-nuvolaris-testing"
+       nuv debug export F=kubeconfig
+       VAR="$(echo $i | tr 'a-z-' 'A-Z_')_KUBECONFIG"
+       DATA="$(cat kubeconfig | base64 -w0)"
+       echo "Secret $VAR:"
+       gh -R nuvolaris/nuvolaris-testing secret set "$VAR" -b "$DATA"
+       echo "$VAR=$DATA" >>env-kubeconfig
+    done
+    
