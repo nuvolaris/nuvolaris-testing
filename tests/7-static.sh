@@ -44,7 +44,6 @@ else
     nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
 fi
 
-
 case "$TYPE" in
 kind)
     echo SUCCESS STATIC FOR LOCALHOST IS SKIPPED

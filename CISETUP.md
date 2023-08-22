@@ -53,14 +53,14 @@ stored in ~/.ssh/id_rsa and ~/.id_rsa.pub
 
 # DNS
 
-- Created the zone oshgcp.nuvtest.net in Gcloud
+- Created the zone `oshgcp.nuvtest.net` in Gcloud
 
-- Created the zones in AWS Route53
-  - k3stest.nuvtest.net
-  - mk8stest.nuvtest.net
-  - ekstest.nuvtest.net
-  - akstest.nuvtest.net 
-  - gketest.nuvtest.net 
+- Created the following zones in AWS Route53
+  - k3s.nuvtest.net
+  - mk8s.nuvtest.net
+  - eks.nuvtest.net
+  - aks.nuvtest.net 
+  - gke.nuvtest.net 
 
 - Registered a domain in AWS (nuvtest.net) and delegated all the subzones.
 
@@ -73,44 +73,32 @@ First running the openshift-install and then manually tweaked the configuration.
 Note you need:
 - an id_rsa.pub
 - for gcloud, the service account file 
-- the dns zone we created (oshgcp.nuvtest.net)
-- the pullSecret for OKD (open source openshift) 
+- the dns zone ub GCP we created (oshgcp.nuvtest.net)
+- the pullSecret for OKD (open source openshift) as follows: 
 
 ```
 {"auths":{"fake":{"auth":"aWQ6cGFzcwo="}}}
 ``````
 
-# Configured variables
+# Configure variables
 
-Finally configure `env` copying it from env.dit and filling it with all the required secrets.
+Configure `env` copying it from env.dit and filling it with all the required secrets.
 
-# Once everything is configured we can build all the clusters:
+# Create all the clusters and vms
 
-- task k3s:create
-- task mk8s:create
-- task osh:create
-- task gcp:cluster:create
-- task azure:cluster:create
+Once everything is configured we can build all the clusters:
 
-task aws:cluster:create
+- `task k3s:create`
+- `task mk8s:create`
+- `task gke:create`
+- `task aks:create`
+- `task eks:create`
+- `task osh:create`
 
-Note that a number of cloud parameters are wired in the taskfiles: look for the `*:config` tasks in `Taskfile*.yml`.
+*NOTE*: many parameters are wired in the taskfiles: look for the `*:config` tasks in `Taskfile*.yml` if you want to tune them.
 
+# Upload the secrets
 
+Once you created the clusters, you can upload their kubeconfig or ip as secrets to GitHub with:
 
-## TODO: Setup a GKE Clusters in GCloud
-
-```
-task gc:gke:create
-```
-
-## TODO: Setup an AKS Clusters in Azure
-
-## TODO: Setup an OpenShift Cluster in GCloud
-
-## TODO: Setup an EKS cluster in Amazon
-
-
-## Cleanup
-
-task gc:gke:delete
+- `task upload-secrets`

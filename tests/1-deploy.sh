@@ -29,24 +29,32 @@ kind)
 k3s)
     # create vm and install in the server
     nuv config reset
-    task aws:config
     # create vm without k3s
-    nuv cloud aws vm-create k3s-test
-    nuv cloud aws zone-update k3s.nuvtest.net --wildcard --vm=k3s-test
-    nuv cloud aws vm-getip k3s-test >_ip
+    if test -n "$K3S_IP"
+    then echo $K3S_IP>_ip
+    else
+        task aws:vm:config
+        nuv cloud aws vm-create k3s-test
+        nuv cloud aws zone-update k3s.nuvtest.net --wildcard --vm=k3s-test
+        nuv cloud aws vm-getip k3s-test >_ip
+    fi
     # install nuvolaris
     nuv setup server $(cat _ip) ubuntu --uninstall
     nuv setup server $(cat _ip) ubuntu
     ;;
 mk8s)
     nuv config reset
-    task aws:config
     # create vm with mk8s
-    nuv cloud aws vm-create mk8s-test
-    nuv cloud aws zone-update mk8s.nuvtest.net --wildcard --vm=mk8s-test
-    nuv cloud aws vm-getip mk8s-test >_ip
-    nuv cloud mk8s create SERVER=$(cat _ip) USERNAME=ubuntu
-    nuv cloud mk8s kubeconfig SERVER=$(cat _ip) USERNAME=ubuntu
+    if test -n "$MK8S_IP"
+    then echo $MK8S_IP>_ip
+    else
+        task aws:vm:config
+        nuv cloud aws vm-create mk8s-test
+        nuv cloud aws zone-update mk8s.nuvtest.net --wildcard --vm=mk8s-test
+        nuv cloud aws vm-getip mk8s-test >_ip
+        nuv cloud mk8s create SERVER=$(cat _ip) USERNAME=ubuntu
+        nuv cloud mk8s kubeconfig SERVER=$(cat _ip) USERNAME=ubuntu
+    fi
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -54,12 +62,19 @@ mk8s)
 eks)
     nuv config reset
     # create cluster
-    task aws:config
-    task eks:config
-    nuv cloud eks create
-    nuv cloud eks kubeconfig
-    nuv cloud eks lb >_cname
-    nuv cloud aws zone-update eks.nuvtest.net --wildcard --cname=$(cat _cname)
+    if test -n "$EKS_KUBECONFIG_B64"
+    then
+        mkdir -p ~/.kube
+        echo $EKS_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        nuv config use 0
+    else
+        task aws:config
+        task eks:config
+        nuv cloud eks create
+        nuv cloud eks kubeconfig
+        nuv cloud eks lb >_cname
+        nuv cloud aws zone-update eks.nuvtest.net --wildcard --cname=$(cat _cname)
+    fi
     # on eks we need to setup an initial apihost resolving the NLB hostname
     nuv config apihost nuvolaris.eks.nuvtest.net
     # install cluster
@@ -69,14 +84,19 @@ eks)
 aks)
     nuv config reset
     # create cluster
-    task aks:config
-    nuv cloud aks create
-    nuv cloud aks kubeconfig
-
-    task aws:config
-    IP=$(nuv cloud aks lb)
-    nuv cloud aws zone-update aks.nuvtest.net --wildcard --ip $IP
-
+    if test -n "$AKS_KUBECONFIG_B64"
+    then
+        mkdir -p ~/.kube
+        echo $AKS_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        nuv config use 0
+    else
+        task aks:config
+        nuv cloud aks create
+        nuv cloud aks kubeconfig
+        task aws:config
+        IP=$(nuv cloud aks lb)
+        nuv cloud aws zone-update aks.nuvtest.net --wildcard --ip $IP
+    fi
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -84,14 +104,19 @@ aks)
 gke)
     nuv config reset
     # create cluster
-    task gke:config
-    nuv cloud gke create
-    nuv cloud gke kubeconfig
-
-    task aws:config
-    IP=$(nuv cloud gke lb)
-    nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip $IP
-
+    if test -n "$GKE_KUBECONFIG_B64"
+    then
+        mkdir -p ~/.kube
+        echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        nuv config use 0
+    else
+        task gke:config
+        nuv cloud gke create
+        nuv cloud gke kubeconfig
+        task aws:config
+        IP=$(nuv cloud gke lb)
+        nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip $IP
+    fi
     # install cluster
     nuv setup cluster --uninstall
     nuv setup cluster
@@ -100,8 +125,15 @@ gke)
 osh)
     nuv config reset
     # create cluster
-    task osh:create
-    nuv cloud osh import conf/osh/auth/kubeconfig
+    if test -n "$OPENSHIFT_KUBECONFIG_B64"
+    then
+        mkdir -p ~/.kube
+        echo $$OPENSHIFT_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        nuv config use 0
+    else
+        task osh:create
+        nuv cloud osh import conf/gcp/auth/kubeconfig
+    fi
 
     # install cluster
     nuv setup cluster --uninstall

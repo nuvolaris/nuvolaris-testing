@@ -49,6 +49,10 @@ tasks:
       vars:
           NAME: k3s-test
           TYPE: k3s
+    - task: aws:vm:config
+    - task: gcp:vm:config
+    - nuv cloud gcloud vm-getip k3s-test >_ip
+    - nuv cloud aws zone-update k3s.nuvtest.net --wildcard --ip=$(cat _ip)
 
   mk8s:create:
     cmds:
@@ -56,6 +60,10 @@ tasks:
       vars:
           NAME: mk8s-test
           TYPE: mk8s
+    - task: aws:vm:config
+    - task: gcp:vm:config
+    - nuv cloud gcloud vm-getip mk8s-test >_ip
+    - nuv cloud aws zone-update mk8s.nuvtest.net --wildcard --ip=$(cat _ip)
 
   k3s:delete:
     cmds:
@@ -76,10 +84,34 @@ tasks:
     - mkdir -p conf/{{.CLOUD}}
     - cp conf/{{.CLOUD}}-install-config.yaml conf/{{.CLOUD}}/install-config.yaml
     - openshift-install create cluster --dir conf/{{.CLOUD}}
+    - nuv cloud osh import conf/{{.CLOUD}}/auth/kubeconfig
+    - nuv cloud osh setup
+    - nuv config use openshift --rename=openshift-nuvolaris-testing
 
   osh:delete:
     - openshift-install destroy cluster --dir conf/{{.CLOUD}}
 
+
+  eks:create:
+    cmds:
+    - task aws:cluster:create
+    - nuv cloud eks lb >_cname
+    - nuv cloud aws zone-update eks.nuvtest.net --wildcard --cname=$(cat _cname)
+
+  eks:delete:
+    cmds:
+    - task aws:cluster:delete
+
+  aks:create:
+    cmds:
+    - task azure:cluster:create
+    - nuv cloud aks lb >_ip
+    - nuv cloud aws zone-update aks.nuvtest.net --wildcard --ip $(cat _ip)
+  
+  aks:delete:
+    cmds:
+    - task azure:cluster:delete
+    
   progress:
     desc: update the progress
     cmds:
@@ -106,15 +138,26 @@ tasks:
         {{end}}
 
   upload-secrets: |
-    rm -f env-kubeconfig
-    for i in k3s mk8s aks eks gke openshift
+    task gcp:vm:config
+    rm -f env-github
+    echo SKIP_SSL=true >env-github
+    ID_RSA_B64="$(cat ~/.ssh/id_rsa | base64 -w0)"
+    echo export ID_RSA_B64=$ID_RSA_B64 >>env-github
+    gh -R nuvolaris/nuvolaris-testing secret set "ID_RSA_B64" -b "$ID_RSA_B64"
+    K3S_IP=$(nuv cloud gcloud vm-getip k3s-test)
+    echo export K3S_IP=$K3S_IP >>env-github
+    gh -R nuvolaris/nuvolaris-testing secret set "K3S_IP" -b "$K3S_IP"
+    MK8S_IP=$(nuv cloud gcloud vm-getip mk8s-test)
+    echo export MK8S_IP=$MK8S_IP >>env-github
+    gh -R nuvolaris/nuvolaris-testing secret set "MK8S_IP" -b "$MK8S_IP"
+    for i in aks eks gke openshift
     do
        nuv config use "$i-nuvolaris-testing"
        nuv debug export F=kubeconfig
-       VAR="$(echo $i | tr 'a-z-' 'A-Z_')_KUBECONFIG"
+       VAR="$(echo $i | tr 'a-z-' 'A-Z_')_KUBECONFIG_B64"
        DATA="$(cat kubeconfig | base64 -w0)"
        echo "Secret $VAR:"
        gh -R nuvolaris/nuvolaris-testing secret set "$VAR" -b "$DATA"
-       echo "$VAR=$DATA" >>env-kubeconfig
+       echo export "$VAR=$DATA" >>env-github
     done
     
