@@ -22,3 +22,5 @@ tests/*.err
 _*
 conf/gcp
 conf/aws
+kubeconfig
+env-github
