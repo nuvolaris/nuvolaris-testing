@@ -20,7 +20,7 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
 
 mkdir -p ~/.ssh
-echo ID_RSA_B64 | base64 -d >~/.ssh/id_rsa
+echo $ID_RSA_B64 | base64 -d >~/.ssh/id_rsa
 chmod 0600 ~/.ssh/id_rsa
 
 # actual setup
