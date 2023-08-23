@@ -39,6 +39,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Nuv
+        run: |
+          VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
+          URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
+          wget --no-verbose $URL -O nuv.deb
+          dpkg -i nuv.deb
+          nuv -update
+          nuv -info
       - name: 1 Deploy
         run: tests/1-deploy.sh $TYPE
       - name: Debug Action (if requested)
