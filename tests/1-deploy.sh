@@ -54,8 +54,8 @@ mk8s)
     # create vm with mk8s
     if test -n "$MK8S_IP"
     then 
-          echo $MK8S_IP>_ip
           nuv config apihost api.mk8s.nuvtest.net
+          nuv cloud mk8s kubeconfig SERVER=$MK8S_IP USERNAME=ubuntu
     else
         task aws:vm:config
         nuv cloud aws vm-create mk8s-test
