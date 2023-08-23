@@ -7,10 +7,12 @@ tasks:
       nuv config aws 
       --access="$AWS_ACCESS_KEY_ID" 
       --secret="$AWS_SECRET_ACCESS_KEY" 
-      --key="$AWS_DEFAULT_KEY_NAME"
       --region=us-east-1 
-      --image=ami-052efd3df9dad4825 --vmuser=ubuntu
-      --vm=t3a.large --disk=100 
+      --image=ami-052efd3df9dad4825
+      --vm=t3a.large
+      --vmuser=ubuntu
+      --disk=100 
+      --key="$AWS_DEFAULT_KEY_NAME"
 
   vm:create:
     cmds:
@@ -28,14 +30,16 @@ tasks:
     requires: [NAME]
 
   cluster:config:
-    - task: vm:config
     - >
       nuv config eks
+      --access="$AWS_ACCESS_KEY_ID" 
+      --secret="$AWS_SECRET_ACCESS_KEY" 
       --name=$AWS_CLUSTER_NAME
       --region=us-east-2
       --count=3
       --vm=m5.xlarge 
       --disk=50
+      --key="$AWS_DEFAULT_KEY_NAME"
       --kubever=1.25
 
   cluster:create:

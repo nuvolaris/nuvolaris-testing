@@ -19,6 +19,8 @@ version: "3"
 
 vars:
   CLOUD: gcp
+  NOW:
+    sh: date "+%y%m%d%H%M"
 
 dotenv:
   - ../../env-testing
@@ -91,7 +93,6 @@ tasks:
   osh:delete:
     - openshift-install destroy cluster --dir conf/{{.CLOUD}}
 
-
   eks:create:
     cmds:
     - task aws:cluster:create
@@ -162,4 +163,18 @@ tasks:
        echo export "$VAR=$DATA" >>env-github
        rm -v $f
     done
-    
+
+  test-ci: |
+    git tag {{.N}}-{{.NOW}}
+    git push origin --tags
+
+  d: task test-ci N=kind
+  k: task test-ci N=k3s
+  m: task test-ci N=mk8s
+  e: task test-ci N=eks
+  a: task test-ci N=aks
+  g: task test-ci N=gke
+  o: task test-ci N=osk
+
+  
+  
