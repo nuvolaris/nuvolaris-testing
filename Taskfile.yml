@@ -20,7 +20,7 @@ version: "3"
 vars:
   CLOUD: gcp
   NOW:
-    sh: date "+%y%m%d%H%M"
+    sh: date "+%Y-%m%d-%H%M"
 
 dotenv:
   - ../../env-testing
