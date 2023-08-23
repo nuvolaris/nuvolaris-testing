@@ -58,7 +58,7 @@ jobs:
       - name: 4 SysMongo
         run: tests/4a-sys-ferretdb.sh
       - name: 4b SysPostgres
-        run: tests/4a-sys-postgres.sh
+        run: tests/4b-sys-postgres.sh
       - name: 5 SysMinio
         run: tests/5-sys-minio.sh
       - name: 6 Login
@@ -70,7 +70,7 @@ jobs:
       - name: 9a UserFerretDB
         run: tests/9a-user-ferretdb.sh 
       - name: 9b UserPostgres
-        run: tests/9-user-postgres.sh 
+        run: tests/9b-user-postgres.sh 
       - name: 10 UserMinio
         run: tests/10-user-minio.sh 
       - name: 14 RuntimeTesting
