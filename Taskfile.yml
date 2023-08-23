@@ -32,6 +32,7 @@ includes:
   azure: ./TaskfileAzure.yml
 
 tasks:
+  default: task --list-all
   setup: { silent: true }
 
   status:
@@ -114,7 +115,7 @@ tasks:
     - task azure:cluster:delete
 
   progress:
-    desc: update the progress
+    #desc: update the progress
     cmds:
       - |
         if test -z "{{.N}}"
@@ -126,7 +127,7 @@ tasks:
         fi
 
   all:
-    desc: run all the tests (same as all.sh)
+    #desc: run all the tests (same as all.sh)
     silent: true
     cmds:
       - |
