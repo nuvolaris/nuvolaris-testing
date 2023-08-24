@@ -35,6 +35,8 @@ env:
   AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   GCLOUD_SA_B64: ${{ secrets.GCLOUD_SA_B64 }}
+  # workaround to log in gke from ubuntu 22 with the gcloud installed
+  USE_GKE_GCLOUD_AUTH_PLUGIN: True
 
 jobs:
   test:
