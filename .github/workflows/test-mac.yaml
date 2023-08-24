@@ -15,13 +15,13 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-name: TestLinux
+name: TestMac
 
 on:
-  workflow_run:
-    workflows: ["TestMac"]
-    types:
-      - completed
+  push:
+    tags:
+    - '*-*'
+    branches-ignore: '*'
 
 env:
   PLATFORM: ${{ github.ref_name }}
@@ -38,24 +38,16 @@ env:
   USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
 
 jobs:
-  test-linux:
-    runs-on: ubuntu-22.04
+  test-mac:
+    runs-on: macOS-12
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Fix
-        run: |     
-          # fix for missing auth-plugin
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-          sudo apt update
-          sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl   
       - name: Nuv
         run: |
           VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
-          URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
-          wget --no-verbose $URL -O nuv.deb
-          sudo dpkg -i nuv.deb
+          URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.pkg"
+          sudo installer -target / -pkg nuv.pkg
           nuv -update
           nuv -info
       - name: 1 Deploy
