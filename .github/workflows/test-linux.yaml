@@ -15,13 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-name: TestLinux
+name: LinuxTests
 
 on:
   workflow_run:
-    workflows: ["TestMac"]
-    types:
-      - completed
+    workflows: [MacTests]
+    types: [completed]
 
 env:
   PLATFORM: ${{ github.ref_name }}
