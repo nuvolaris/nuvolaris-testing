@@ -117,10 +117,16 @@ gke)
     # create cluster
     if test -n "$GKE_KUBECONFIG_B64"
     then
+        # fix for missing auth-plugin
+        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+        sudo apt update
+        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
+        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+        # now use the kubeconfig
         mkdir -p ~/.kube
         echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
         echo $GCLOUD_SA_B64 | base64 -d >~/.kube/gcloud.json
-        export USE_GKE_GCLOUD_AUTH_PLUGIN="True"
         gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net
