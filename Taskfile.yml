@@ -140,7 +140,7 @@ tasks:
         {{end}}
 
   # upload secrets to access to vm
-  # requirements: ~/.ssh/id_rsa
+  # prereq: ssh key in ~/.ssh/id_rsa
   # two vm created with k3s:create and mk8s:create
   upload-secrets-vm: |
     K3S_IP=$(nuv cloud gcloud vm-getip k3s-test)
