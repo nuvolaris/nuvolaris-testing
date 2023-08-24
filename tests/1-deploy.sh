@@ -120,7 +120,7 @@ gke)
         mkdir -p ~/.kube
         echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
         echo $GCLOUD_SA_B64 | base64 -d >~/.kube/gcloud.json
-        gcloud components install gke-gcloud-auth-plugin
+        sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
         gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net
