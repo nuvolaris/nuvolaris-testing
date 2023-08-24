@@ -139,19 +139,21 @@ tasks:
           cd ..
         {{end}}
 
-  upload-secrets: |
-    task gcp:vm:config
-    rm -f env-github
-    echo SKIP_SSL=true >env-github
-    ID_RSA_B64="$(cat ~/.ssh/id_rsa | base64 -w0)"
-    echo export ID_RSA_B64=$ID_RSA_B64 >>env-github
-    gh -R nuvolaris/nuvolaris-testing secret set "ID_RSA_B64" -b "$ID_RSA_B64"
+  # upload secrets to access to vm
+  # requirements: ~/.ssh/id_rsa
+  # two vm created with k3s:create and mk8s:create
+  upload-secrets-vm: |
     K3S_IP=$(nuv cloud gcloud vm-getip k3s-test)
     echo export K3S_IP=$K3S_IP >>env-github
     gh -R nuvolaris/nuvolaris-testing secret set "K3S_IP" -b "$K3S_IP"
     MK8S_IP=$(nuv cloud gcloud vm-getip mk8s-test)
     echo export MK8S_IP=$MK8S_IP >>env-github
     gh -R nuvolaris/nuvolaris-testing secret set "MK8S_IP" -b "$MK8S_IP"
+
+  # upload secrets to access to kubernetes clusters
+  # prereq: eks:create aks:create gke:create openshift:create
+  # kubernetes configs stored in ~/.nuv
+  upload-secrets-kube: |
     for i in aks eks gke openshift
     do
        f="$i-nuvolaris-testing"
@@ -164,6 +166,33 @@ tasks:
        echo export "$VAR=$DATA" >>env-github
        rm -v $f
     done
+
+  # here you need
+  # ssh key in ~/.ssh/id_rsa
+  # gloud service account in ~/.ssh/gcloud.json
+  upload-secrets-id: 
+    - |
+      ID_RSA_B64="$(cat ~/.ssh/id_rsa | base64 -w0)"
+      echo export ID_RSA_B64=$ID_RSA_B64 >>env-github
+      gh -R nuvolaris/nuvolaris-testing secret set "ID_RSA_B64" -b "$ID_RSA_B64"
+    - |
+      gh -R nuvolaris/nuvolaris-testing secret set "AWS_ACCESS_KEY_ID" -b "$AWS_ACCESS_KEY_ID"
+      gh -R nuvolaris/nuvolaris-testing secret set "AWS_SECRET_ACCESS_KEY" -b "$AWS_SECRET_ACCESS_KEY"
+      echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >>env-github
+      echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >>env-github
+    - |
+      GCLOUD_SA_B64="$(cat ~/.ssh/gcloud.json | base64 -w0)"
+      gh -R nuvolaris/nuvolaris-testing secret set "GCLOUD_SA_B64" -b "$GCLOUD_SA_B64"
+      echo export GCLOUD_SA_B64=$GCLOUD_SA_B64 >>env-github
+
+  upload-secrets:
+      cmds:
+      - echo export SKIP_SSL=true >env-github
+      - task: gcp:vm:config
+      - task: upload-secrets-id
+      - task: upload-secrets-vm
+      - task: upload-secrets-kube
+
 
   test-ci: |
     git tag {{.N}}-{{.NOW}}

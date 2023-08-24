@@ -119,6 +119,8 @@ gke)
     then
         mkdir -p ~/.kube
         echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        echo $GCLOUD_SA_B64 | bass64 -d >~/.kube/gcloud.json
+        gcloud auth activate-service-account --key-file ~/.ssh/gcloud.json
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net
     else
