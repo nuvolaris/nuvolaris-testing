@@ -18,7 +18,6 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-
 mkdir -p ~/.ssh
 echo $ID_RSA_B64 | base64 -d >~/.ssh/id_rsa
 chmod 0600 ~/.ssh/id_rsa
@@ -117,12 +116,6 @@ gke)
     # create cluster
     if test -n "$GKE_KUBECONFIG_B64"
     then
-        # fix for missing auth-plugin
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-        sudo apt update
-        sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl
-        export USE_GKE_GCLOUD_AUTH_PLUGIN=True
         # now use the kubeconfig
         mkdir -p ~/.kube
         echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
@@ -131,12 +124,11 @@ gke)
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net
     else
-        task gke:config
+        task gcp:vm:config
+        task aws:vm:config
         nuv cloud gke create
         nuv cloud gke kubeconfig
-        task aws:config
-        IP=$(nuv cloud gke lb)
-        nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip $IP
+        nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip $(nuv cloud gke lb)
     fi
     # install cluster
     nuv setup cluster --uninstall
