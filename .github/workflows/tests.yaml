@@ -44,15 +44,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Nuv
+      - name: Nuv Download
         shell: bash
         run: |
           VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
           URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.msi"
           curl --progress-bar -L $URL >nuv.msi
-          msiexec /c nuv.msi
-          nuv -update
-          nuv -info
+      - name: Nuv Installation
+        shell: cmd
+        run: | 
+          msiexec /qn /c nuv.msi
+          "C:\Program Files\Nuvolaris\nuv" -update
+          "C:\Program Files\Nuvolaris\nuv" -info
       - name: 1 Deploy
         shell: bash
         run: tests/1-deploy.sh $PLATFORM
