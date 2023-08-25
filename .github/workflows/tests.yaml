@@ -49,7 +49,7 @@ jobs:
           $jsonContent = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json"
           $VER = $jsonContent.version
           $URL = "https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.msi"
-          Invoke-WebRequest -Uri $URL -OutFile "nuv.msi" -Progress
+          Invoke-WebRequest -Uri $URL -OutFile "nuv.msi"
           msiexec /qn /c nuv.msi
       - name: Nuv Update
         shell: bash
