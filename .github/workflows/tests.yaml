@@ -40,6 +40,7 @@ env:
 jobs:
   test-linux:
     runs-on: ubuntu-22.04
+    needs: test-windows
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -89,9 +90,12 @@ jobs:
 
   test-windows:
     runs-on: windows-2022
-    needs: test-linux
+    #needs: test-linux
     if: ${{ ! startsWith(github.ref_name, 'kind') }}
     steps:
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Nuv
@@ -157,7 +161,7 @@ jobs:
   test-mac:
     runs-on: macOS-12
     if: ${{ ! startsWith(github.ref_name, 'kind') }}
-    needs: test-windows
+    needs: test-linux
     steps:
       - name: Checkout
         uses: actions/checkout@v3
