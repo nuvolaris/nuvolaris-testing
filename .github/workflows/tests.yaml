@@ -51,6 +51,7 @@ jobs:
           $URL = "https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.msi"
           Invoke-WebRequest -Uri $URL -OutFile "nuv.msi"
           msiexec /qn /c nuv.msi
+          echo "C:\Program Files\Nuvolaris" >> $GITHUB_PATH
       - name: Nuv Update
         shell: bash
         run: |
