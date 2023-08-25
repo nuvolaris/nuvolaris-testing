@@ -40,17 +40,24 @@ env:
 jobs:
   test-linux:
     runs-on: ubuntu-22.04
-    needs: test-windows
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Fix
-        run: |     
-          # fix for missing auth-plugin
-          echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-          sudo apt update
-          sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl   
+      - name: 'Login in GCloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ fromBase64(secrets.GCLOUD_SA_B64) }}   
+        if: ${{ startsWith(github.ref_name, 'gke') }}
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        if: ${{ startsWith(github.ref_name, 'gke') }}
+      #- name: Fix
+      #  run: |     
+      #    # fix for missing auth-plugin
+      #    echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+      #    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+      #    sudo apt update
+      #    sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl   
       - name: Nuv
         run: |
           VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
@@ -90,9 +97,14 @@ jobs:
 
   test-windows:
     runs-on: windows-2022
-    #needs: test-linux
+    needs: test-linux
     if: ${{ ! startsWith(github.ref_name, 'kind') }}
     steps:
+      - name: 'Login in GCloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ fromBase64(secrets.GCLOUD_SA_B64) }}   
+        if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         if: ${{ startsWith(github.ref_name, 'gke') }}
@@ -165,7 +177,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Nuv
+      - name: 'Login in GCloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: ${{ fromBase64(secrets.GCLOUD_SA_B64) }}   
+        if: ${{ startsWith(github.ref_name, 'gke') }}
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        if: ${{ startsWith(github.ref_name, 'gke') }}
+     - name: Nuv
         run: |
           VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
           URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.pkg"
