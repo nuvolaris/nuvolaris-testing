@@ -65,7 +65,6 @@ jobs:
       - name: 3 SysRedis
         shell: bash
         run: tests/3-sys-redis.sh $PLATFORM
-        shell: bash
       - name: 4 SysMongo
         shell: bash
         run: tests/4a-sys-ferretdb.sh $PLATFORM
