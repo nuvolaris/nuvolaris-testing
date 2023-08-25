@@ -90,7 +90,7 @@ jobs:
   test-windows:
     runs-on: windows-2022
     needs: test-linux
-    if: ! github.ref_name.startsWith("kind")
+    if: ${{ ! github.ref_name.startsWith("kind") }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -156,7 +156,7 @@ jobs:
 
   test-mac:
     runs-on: macOS-12
-    if: ! github.ref_name.startsWith("kind")
+    if: ${{ ! github.ref_name.startsWith("kind") }}
     needs: test-linux
     steps:
       - name: Checkout
