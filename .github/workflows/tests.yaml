@@ -157,7 +157,7 @@ jobs:
   test-mac:
     runs-on: macOS-12
     if: ${{ ! startsWith(github.ref_name, 'kind') }}
-    needs: test-linux
+    needs: test-windows
     steps:
       - name: Checkout
         uses: actions/checkout@v3
