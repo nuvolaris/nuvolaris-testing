@@ -117,13 +117,10 @@ gke)
     if test -n "$GKE_KUBECONFIG_B64"
     then
         
-        ## moved to .github workflow
-        #echo "$GCLOUD_SERVICE_ACCOUNT"  >~/.kube/gcloud.json
-        #gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
-        
-        # export kubeconfig
         mkdir -p ~/.kube
-        echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
+        echo "$GCLOUD_SERVICE_ACCOUNT"  >~/.kube/gcloud.json
+        gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
+        gcloud container clusters get-credentials nuvolaris-testing --region=us-east1
         
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net

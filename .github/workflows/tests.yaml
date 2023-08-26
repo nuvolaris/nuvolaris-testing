@@ -44,14 +44,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: 'Login in GCloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}   
-        if: ${{ startsWith(github.ref_name, 'gke') }}
-      - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
-        if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: Add Missing plugin
         run: |
           # fix for missing auth-plugin
@@ -102,19 +94,14 @@ jobs:
     #needs: test-mac
     if: ${{ ! startsWith(github.ref_name, 'kind') }}
     steps:
-      - name: 'Login in GCloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}   
-        if: ${{ startsWith(github.ref_name, 'gke') }}
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: 'Update plugin'
         if: ${{ startsWith(github.ref_name, 'gke') }}
         run: gcloud components install gke-gcloud-auth-plugin
-      - name: Checkout
-        uses: actions/checkout@v3
       - name: Nuv
         run: |
           $jsonContent = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json"
@@ -182,11 +169,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: 'Login in GCloud'
-        uses: 'google-github-actions/auth@v1'
-        with:
-          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}   
-        if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         if: ${{ startsWith(github.ref_name, 'gke') }}
