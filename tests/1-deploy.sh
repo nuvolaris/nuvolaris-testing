@@ -114,7 +114,7 @@ aks)
 gke)
     nuv config reset
     # create cluster
-    if test -n "$GKE_KUBECONFIG_B64"
+    if test -n "$GCLOUD_SERVICE_ACCOUNT"
     then
         
         mkdir -p ~/.kube
