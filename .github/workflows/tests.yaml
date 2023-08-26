@@ -40,6 +40,7 @@ env:
 jobs:
   test-linux:
     runs-on: ubuntu-22.04
+    needs: test-mac
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -98,7 +99,7 @@ jobs:
 
   test-windows:
     runs-on: windows-2022
-    needs: test-linux
+    #needs: test-mac
     if: ${{ ! startsWith(github.ref_name, 'kind') }}
     steps:
       - name: 'Login in GCloud'
@@ -109,6 +110,9 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         if: ${{ startsWith(github.ref_name, 'gke') }}
+      - name: 'Update plugin'
+        if: ${{ startsWith(github.ref_name, 'gke') }}
+        run: gcloud components install gke-gcloud-auth-plugin
       - name: Checkout
         uses: actions/checkout@v3
       - name: Nuv
@@ -186,6 +190,9 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
         if: ${{ startsWith(github.ref_name, 'gke') }}
+      - name: 'Update plugin'
+        if: ${{ startsWith(github.ref_name, 'gke') }}
+        run: gcloud components install gke-gcloud-auth-plugin
       - name: Nuv
         run: |
           VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
