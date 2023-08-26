@@ -120,7 +120,7 @@ gke)
         mkdir -p ~/.kube
         echo "$GCLOUD_SERVICE_ACCOUNT"  >~/.kube/gcloud.json
         gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
-        gcloud container clusters get-credentials nuvolaris-testing --region=us-east1
+        gcloud container clusters get-credentials nuvolaris-testing --project nuvolaris-testing --region=us-east1
         
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net
