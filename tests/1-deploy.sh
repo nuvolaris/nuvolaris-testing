@@ -116,11 +116,15 @@ gke)
     # create cluster
     if test -n "$GKE_KUBECONFIG_B64"
     then
-        # now use the kubeconfig
+        
+        ## moved to .github workflow
+        #echo "$GCLOUD_SERVICE_ACCOUNT"  >~/.kube/gcloud.json
+        #gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
+        
+        # export kubeconfig
         mkdir -p ~/.kube
         echo $GKE_KUBECONFIG_B64 | base64 -d >~/.kube/config
-        echo $GCLOUD_SA_B64 | base64 -d >~/.kube/gcloud.json
-        #gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
+        
         nuv config use 0
         nuv config apihost api.gke.nuvtest.net
     else

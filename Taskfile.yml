@@ -181,9 +181,9 @@ tasks:
       echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >>env-github
       echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >>env-github
     - |
-      GCLOUD_SA_B64="$(cat ~/.ssh/gcloud.json | base64 -w0)"
-      gh -R nuvolaris/nuvolaris-testing secret set "GCLOUD_SA_B64" -b "$GCLOUD_SA_B64"
-      echo export GCLOUD_SA_B64=$GCLOUD_SA_B64 >>env-github
+      GCLOUD_SERVICE_ACCOUNT="$(cat ~/.ssh/gcloud.json | tr -d '\n')"
+      gh -R nuvolaris/nuvolaris-testing secret set "GCLOUD_SERVICE_ACCOUNT" -b "$GCLOUD_SERVICE_ACCOUNT"
+      echo export GCLOUD_SERVICE_ACCOUNT=$GCLOUD_SERVICE_ACCOUNT >>env-github
 
   upload-secrets:
       cmds:

@@ -46,7 +46,7 @@ jobs:
       - name: 'Login in GCloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{ fromBase64(secrets.GCLOUD_SA_B64) }}   
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}   
         if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -103,7 +103,7 @@ jobs:
       - name: 'Login in GCloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{ fromBase64(secrets.GCLOUD_SA_B64) }}   
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}   
         if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
@@ -180,7 +180,7 @@ jobs:
       - name: 'Login in GCloud'
         uses: 'google-github-actions/auth@v1'
         with:
-          credentials_json: ${{ fromBase64(secrets.GCLOUD_SA_B64) }}   
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}   
         if: ${{ startsWith(github.ref_name, 'gke') }}
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v1'
