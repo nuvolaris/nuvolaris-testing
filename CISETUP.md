@@ -2,7 +2,6 @@
 
 Those notes are a remindinder of the steps executed to build our CI environment.
 
-
 ## Overview
 
 We have a stable test environment on AWS/GCloud/Azure  with:

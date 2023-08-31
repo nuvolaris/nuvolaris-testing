@@ -23,8 +23,7 @@ vars:
     sh: date "+%Y-%m%d-%H%M"
 
 dotenv:
-  - ../../env-testing
-  - env
+  - .env
 
 includes:
   aws: ./TaskfileAWS.yml
