@@ -222,7 +222,7 @@ tasks:
   kubeconfig:
     - task: config
     - task: login
-    - task: vm:config
+    - task: vmconfig
     - echo "eks kubeconfig"
     - nuv cloud eks kubeconfig
     - echo "gke kubeconfig"
