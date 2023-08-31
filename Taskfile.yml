@@ -206,4 +206,40 @@ tasks:
   o: task test-ci N=osh
 
   
-  
+  config:
+    cmds:
+    - task aws:vm:config
+    - task aws:cluster:config
+    - task gcp:vm:config
+    - task gcp:cluster:config
+    - task azure:cluster:config  
+
+  login:
+    - az login
+    - gcloud auth login 
+    - gcloud config set project nuvolaris-testing
+    
+  kubeconfig:
+    - task: config
+    - task: login
+    - task: vm:config
+    - echo "eks kubeconfig"
+    - nuv cloud eks kubeconfig
+    - echo "gke kubeconfig"
+    - nuv cloud gke kubeconfig
+    - echo "openshift kubeconfig"
+    - KUBECONFIG=conf/osh.kubeconfig oc login https://api.nuvolaris-testing.oshgcp.nuvtest.net:6443 --insecure-skip-tls-verify=true  -u kubeadmin -p $OSH_KUBEADMIN_PASSWORD
+    - nuv cloud osh import conf/osh.kubeconfig 
+    #- nuv cloud aks kubeconfig
+    - nuv config use
+
+  vmconfig:
+    silent: true
+    cmds:
+    - echo $ID_RSA_B64 | base64 -d >conf/id_rsa
+    - chmod 0600 conf/id_rsa
+    - |
+      eval $(ssh-agent -s) 
+      ssh-add conf/id_rsa
+      nuv cloud k3s kubeconfig SERVER=api.k3s.nuvtest.net USERNAME=ubuntu
+      nuv cloud mk8s kubeconfig SERVER=api.mk8s.nuvtest.net USERNAME=ubuntu

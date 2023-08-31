@@ -1,3 +1,18 @@
+# Recover access to the CI environemt
+
+- Copy `env.dist` in `.env` and put the secrets in it
+
+## Access to the clusters 
+
+- Execute task kubeconfig to get all the configuration
+
+- Execute `nuv config use` then `nuv config use <n>` to select a configuration
+
+- Execute `nuv setup nuvolaris login` to log into one of them
+
+## Access to the vms
+
+
 # Setup of Continuos Integration
 
 Those notes are a remindinder of the steps executed to build our CI environment.
