@@ -43,5 +43,6 @@ tasks:
     cmds:
     - task: vm:config
     - nuv cloud gcloud vm-delete {{.NAME}}
-    requires: [NAME]
+    requires: 
+      vars: [NAME]
 
