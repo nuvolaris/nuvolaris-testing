@@ -27,7 +27,8 @@ tasks:
     cmds:
     - task: vm:config
     - nuv cloud aws vm-delete {{.NAME}}
-    requires: [NAME]
+    requires: 
+      vars: [NAME]
 
   cluster:config:
     - >
