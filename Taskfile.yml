@@ -215,7 +215,7 @@ tasks:
     - task azure:cluster:config  
 
   login:
-    - az login
+    #- az login --use-device-code
     - gcloud auth login 
     - gcloud config set project nuvolaris-testing
     
