@@ -215,14 +215,14 @@ tasks:
     - task azure:cluster:config  
 
   login:
-    - az login
+    #- az login --use-device-code
     - gcloud auth login 
     - gcloud config set project nuvolaris-testing
     
   kubeconfig:
     - task: config
     - task: login
-    - task: vm:config
+    - task: vmconfig
     - echo "eks kubeconfig"
     - nuv cloud eks kubeconfig
     - echo "gke kubeconfig"
