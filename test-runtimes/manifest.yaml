@@ -20,8 +20,8 @@ packages:
     inputs:
       redis_url: ${REDIS_URL}
       redis_prefix: ${REDIS_PREFIX}
-      mongodb_url : ${MONGODB_URL}
-      postgres_url : ${POSTGRES_URL}
+      mongodb_url: ${MONGODB_URL}
+      postgres_url: ${POSTGRES_URL}
       minio_access: ${MINIO_ACCESS_KEY}
       minio_secret: ${MINIO_SECRET_KEY}
       minio_host: ${MINIO_HOST}
@@ -30,26 +30,21 @@ packages:
     actions:
       hello:
         function: javascript/hello.js
-        runtime: nodejs
       redis:
         function: javascript/redis.js
-        runtime: nodejs
       mongodb:
         function: javascript/mongodb.js
-        runtime: nodejs
       postgres:
         function: javascript/postgres.js
-        runtime: nodejs
       minio:
         function: javascript/minio.js
-        runtime: nodejs
   python:
     inputs:
       redis_url: ${REDIS_URL}
       redis_prefix: ${REDIS_PREFIX}
-      mongodb_url : ${MONGODB_URL}
-      mongodb_db : ${MONGODB_DB}
-      postgres_url : ${POSTGRES_URL}
+      mongodb_url: ${MONGODB_URL}
+      mongodb_db: ${MONGODB_DB}
+      postgres_url: ${POSTGRES_URL}
       minio_access: ${MINIO_ACCESS_KEY}
       minio_secret: ${MINIO_SECRET_KEY}
       minio_host: ${MINIO_HOST}
@@ -58,16 +53,11 @@ packages:
     actions:
       hello:
         function: python/hello.py
-        runtime: python 
-      redis:  
+      redis:
         function: python/redis.py
-        runtime: python 
-      mongodb:  
+      mongodb:
         function: python/mongodb.py
-        runtime: python
-      postgres:  
+      postgres:
         function: python/postgres.py
-        runtime: python 
-      minio:  
+      minio:
         function: python/minio.py
-        runtime: python                                                                              
