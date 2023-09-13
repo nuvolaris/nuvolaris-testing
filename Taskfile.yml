@@ -192,7 +192,6 @@ tasks:
       - task: upload-secrets-vm
       - task: upload-secrets-kube
 
-
   test-ci: |
     git tag {{.N}}-{{.NOW}}
     git push origin --tags

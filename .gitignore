@@ -24,4 +24,4 @@ conf/gcp
 conf/aws
 kubeconfig
 env-github
-.env
+.env*

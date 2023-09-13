@@ -1,6 +1,6 @@
 # Recover access to the CI environemt
 
-- Copy `env.dist` in `.env` and put the secrets in it
+- Copy `.env.dist` in `.env` and put the secrets in it
 
 ## Access to the clusters 
 
