@@ -19,7 +19,13 @@ name: On Olaris Testing Update
 
 on:
   repository_dispatch:
-    types: [olaris-testing-update, workflow_dispatch]
+    types: [olaris-testing-update]
+  workflow_dispatch :
+    inputs:
+      tags:
+        description: 'Test scenario tags'
+        required: false
+        type: boolean
 
 env:
   K3S_IP: ${{ secrets.K3S_IP }}
