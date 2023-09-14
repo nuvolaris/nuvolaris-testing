@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-name: AllTests
+name: On Olaris Testing Update
 
 on:
   repository_dispatch:
