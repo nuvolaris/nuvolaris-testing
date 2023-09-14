@@ -19,7 +19,7 @@ name: On Olaris Testing Update
 
 on:
   repository_dispatch:
-    types: [olaris-testing-update]
+    types: [olaris-testing-update, workflow_dispatch]
 
 env:
   K3S_IP: ${{ secrets.K3S_IP }}
