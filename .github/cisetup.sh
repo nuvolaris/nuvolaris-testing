@@ -1,3 +1,4 @@
+#!/bin/bash
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -15,19 +16,4 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-name: On Olaris Testing Update
-
-on:
-  repository_dispatch:
-    types: [olaris-testing-update]
-
-jobs:  
-  tag-and-push:   
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup
-        run: bash .github/cisetup.sh
-      - name: Task Zeta
-        run: task z
+sudo sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
