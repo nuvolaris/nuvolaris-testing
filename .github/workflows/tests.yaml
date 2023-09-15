@@ -37,6 +37,8 @@ env:
   GCLOUD_SERVICE_ACCOUNT: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
   USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
   NUV_BRANCH: 3.0.0-testing
+  NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+  NGROK_PASSWORD: ${{ secrets.NGROK_PASSWORD }}
 
 jobs:
   test-linux:
