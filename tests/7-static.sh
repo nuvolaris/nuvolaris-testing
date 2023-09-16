@@ -40,8 +40,6 @@ API_DOMAIN=$(nuv debug apihost | awk '/whisk API host/{print $4}' | awk -F[/:] '
 
 if [ "$TYPE" = "osh" ]; then
     nuv debug kube wait OBJECT=route.route.openshift.io/$user-static-route JSONPATH="{.status.ingress[0].host}"
-elif [ "$TYPE" = "k3s" ]; then
-    nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0].ip}"
 else
     nuv debug kube wait OBJECT=ingress/$user-static-ingress JSONPATH="{.status.loadBalancer.ingress[0]}"
 fi
@@ -53,11 +51,21 @@ kind)
 *)
     STATIC_URL=$API_PROTOCOL://$user.$API_DOMAIN
     echo "testing using $STATIC_URL"
-    if curl --insecure $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"; then
-        echo SUCCESS STATIC
-    else
-        echo FAIL STATIC
+    N=0
+    RES=false
+    while [[ $N -lt 12 ]]
+    do 
+        if curl $STATIC_URL | grep "Welcome to Nuvolaris static content distributor landing page!!!"; then
+            RES=true;
+            echo SUCCESS STATIC
+        else
+            echo "$((N++)) FAIL STATIC. WAITING FOR 5 SECONDS..."
+            sleep 5
+        fi
+    done
+
+    if [[ $RES == false]]; then
         exit 1
-    fi
+    fi    
     ;;
 esac
