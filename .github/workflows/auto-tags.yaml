@@ -19,7 +19,7 @@ name: On Olaris Testing Update
 
 on:
   repository_dispatch:
-    types: [olaris-testing-update]
+    types: [olaris-testing-update]  
 
 jobs:  
   tag-and-push:   
