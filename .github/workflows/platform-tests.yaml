@@ -1,0 +1,212 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+name: On Olaris Testing Update
+
+on:
+  repository_dispatch:
+    types: [olaris-testing-update]  
+
+env:
+      PLATFORM: ${{ github.event.client_payload.platform }}
+      K3S_IP: ${{ secrets.K3S_IP }}
+      MK8S_IP: ${{ secrets.MK8S_IP }}
+      ID_RSA_B64: ${{ secrets.ID_RSA_B64 }}
+      AKS_KUBECONFIG_B64: ${{ secrets.AKS_KUBECONFIG_B64 }}
+      EKS_KUBECONFIG_B64: ${{ secrets.EKS_KUBECONFIG_B64 }}
+      GKE_KUBECONFIG_B64: ${{ secrets.GKE_KUBECONFIG_B64 }}
+      OPENSHIFT_KUBECONFIG_B64: ${{ secrets.OPENSHIFT_KUBECONFIG_B64 }}
+      AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      GCLOUD_SERVICE_ACCOUNT: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+      USE_GKE_GCLOUD_AUTH_PLUGIN: "True"
+      NUV_BRANCH: 3.0.0-testing
+    
+jobs:
+      test-linux:
+        runs-on: ubuntu-22.04
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: Add Missing plugin
+            run: |
+              # fix for missing auth-plugin
+              echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+              curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+              sudo apt update
+              sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl  
+            if: ${{ startsWith(github.event.client_payload.platform, 'gke') }} 
+          - name: Nuv
+            run: |
+              VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/3.0.0-testing/nuvroot.json | jq .version -r)"
+              URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.deb"
+              wget --no-verbose $URL -O nuv.deb
+              sudo dpkg -i nuv.deb
+              nuv -update
+              nuv -info
+          - name: 1 Deploy
+            run: tests/1-deploy.sh $PLATFORM
+          - name: Debug Action (if requested)
+            run:  .github/debugAction.sh
+          - name: Wait for Debug (if requested)
+            run: .github/waitIfDebug.sh
+          - name: 3 SysRedis
+            run: tests/3-sys-redis.sh $PLATFORM
+          - name: 4 SysMongo
+            run: tests/4a-sys-ferretdb.sh $PLATFORM
+          - name: 4b SysPostgres
+            run: tests/4b-sys-postgres.sh $PLATFORM
+          - name: 5 SysMinio
+            run: tests/5-sys-minio.sh $PLATFORM
+          - name: 6 Login
+            run: tests/6-login.sh $PLATFORM
+          - name: 7 Static
+            run: tests/7-static.sh $PLATFORM
+          - name: 8 UserRedis
+            run: tests/8-user-redis.sh $PLATFORM
+          - name: 9a UserFerretDB
+            run: tests/9a-user-ferretdb.sh $PLATFORM
+          - name: 9b UserPostgres
+            run: tests/9b-user-postgres.sh $PLATFORM
+          - name: 10 UserMinio
+            run: tests/10-user-minio.sh $PLATFORM
+          - name: 14 RuntimeTesting
+            run: tests/14-runtime-testing.sh $PLATFORM
+    
+      test-windows:
+        runs-on: windows-2022
+        needs: test-linux
+        if: ${{ ! startsWith(github.event.client_payload.platform, 'kind') }}
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: 'Set up Cloud SDK'
+            uses: 'google-github-actions/setup-gcloud@v1'
+            if: ${{ startsWith(github.event.client_payload.platform, 'gke') }}
+          - name: 'Update plugin'
+            if: ${{ startsWith(github.event.client_payload.platform, 'gke') }}
+            run: gcloud components install gke-gcloud-auth-plugin
+          - name: Nuv
+            run: |
+              $jsonContent = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json"
+              $VER = $jsonContent.version
+              $URL = "https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.msi"
+              Invoke-WebRequest -Uri $URL -OutFile "nuv.msi"
+              msiexec /i nuv.msi /passive
+              $procMain = Start-Process "msiexec" "/i nuv.msi /qn" -NoNewWindow -PassThru
+              echo "Install started, waiting for finish"
+              $procMain.WaitForExit()
+              echo "Install completed"
+              Add-Content $env:GITHUB_PATH "C:\Program Files\Nuvolaris"
+          - name: Nuv Update
+            shell: bash
+            run: |
+               nuv -update
+               nuv -info
+          - name: 1 Deploy
+            shell: bash
+            run: tests/1-deploy.sh $PLATFORM
+          - name: Debug Action (if requested)
+            shell: bash
+            run:  .github/debugAction.sh
+          - name: Wait for Debug (if requested)
+            shell: bash
+            run: .github/waitIfDebug.sh
+          - name: 3 SysRedis
+            shell: bash
+            run: tests/3-sys-redis.sh $PLATFORM
+          - name: 4 SysMongo
+            shell: bash
+            run: tests/4a-sys-ferretdb.sh $PLATFORM
+          - name: 4b SysPostgres
+            shell: bash
+            run: tests/4b-sys-postgres.sh $PLATFORM
+          - name: 5 SysMinio
+            shell: bash
+            run: tests/5-sys-minio.sh $PLATFORM
+          - name: 6 Login
+            shell: bash
+            run: tests/6-login.sh $PLATFORM
+          - name: 7 Static
+            shell: bash
+            run: tests/7-static.sh $PLATFORM
+          - name: 8 UserRedis
+            shell: bash
+            run: tests/8-user-redis.sh $PLATFORM
+          - name: 9a UserFerretDB
+            shell: bash
+            run: tests/9a-user-ferretdb.sh $PLATFORM
+          - name: 9b UserPostgres
+            shell: bash
+            run: tests/9b-user-postgres.sh $PLATFORM
+          - name: 10 UserMinio
+            shell: bash
+            run: tests/10-user-minio.sh $PLATFORM
+          - name: 14 RuntimeTesting
+            shell: bash
+            run: tests/14-runtime-testing.sh $PLATFORM
+    
+      test-mac:
+        runs-on: macOS-12
+        if: ${{ ! startsWith(github.event.client_payload.platform, 'kind') }}
+        needs: test-windows
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v3
+          - name: 'Set up Cloud SDK'
+            uses: 'google-github-actions/setup-gcloud@v1'
+            if: ${{ startsWith(github.event.client_payload.platform, 'gke') }}
+          - name: 'Update plugin'
+            if: ${{ startsWith(github.event.client_payload.platform, 'gke') }}
+            run: gcloud components install gke-gcloud-auth-plugin
+          - name: Nuv
+            run: |
+              VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
+              URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.pkg"
+              curl --progress-bar -L $URL >nuv.pkg
+              sudo installer -target / -pkg nuv.pkg
+              nuv -update
+              nuv -info
+          - name: 1 Deploy
+            run: tests/1-deploy.sh $PLATFORM
+          - name: Debug Action (if requested)
+            run:  .github/debugAction.sh
+          - name: Wait for Debug (if requested)
+            run: .github/waitIfDebug.sh
+          - name: 3 SysRedis
+            run: tests/3-sys-redis.sh $PLATFORM
+          - name: 4 SysMongo
+            run: tests/4a-sys-ferretdb.sh $PLATFORM
+          - name: 4b SysPostgres
+            run: tests/4b-sys-postgres.sh $PLATFORM
+          - name: 5 SysMinio
+            run: tests/5-sys-minio.sh $PLATFORM
+          - name: 6 Login
+            run: tests/6-login.sh $PLATFORM
+          - name: 7 Static
+            run: tests/7-static.sh $PLATFORM
+          - name: 8 UserRedis
+            run: tests/8-user-redis.sh $PLATFORM
+          - name: 9a UserFerretDB
+            run: tests/9a-user-ferretdb.sh $PLATFORM
+          - name: 9b UserPostgres
+            run: tests/9b-user-postgres.sh $PLATFORM
+          - name: 10 UserMinio
+            run: tests/10-user-minio.sh $PLATFORM
+          - name: 14 RuntimeTesting
+            run: tests/14-runtime-testing.sh $PLATFORM
+    
