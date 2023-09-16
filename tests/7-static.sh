@@ -64,7 +64,7 @@ kind)
         fi
     done
 
-    if [[ $RES == false]]; then
+    if [[ $RES = false ]]; then
         exit 1
     fi    
     ;;
