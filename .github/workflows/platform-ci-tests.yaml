@@ -20,7 +20,7 @@ name: On Olaris Testing Update
 
 on:
   repository_dispatch:
-    types: [olaris-testing-update-fake]  
+    types: [olaris-testing-update]  
 
 env:
       PLATFORM: ${{ github.event.client_payload.platform }}
