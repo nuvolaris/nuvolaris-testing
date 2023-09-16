@@ -104,7 +104,7 @@ jobs:
             run: gcloud components install gke-gcloud-auth-plugin
           - name: Nuv
             run: |
-              $jsonContent = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json"
+              $jsonContent = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/nuvolaris/olaris/3.0.0-testing/nuvroot.json"
               $VER = $jsonContent.version
               $URL = "https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.msi"
               Invoke-WebRequest -Uri $URL -OutFile "nuv.msi"
@@ -177,7 +177,7 @@ jobs:
             run: gcloud components install gke-gcloud-auth-plugin
           - name: Nuv
             run: |
-              VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/0.3.0/nuvroot.json | jq .version -r)"
+              VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/3.0.0-testing/nuvroot.json | jq .version -r)"
               URL="https://github.com/nuvolaris/nuv/releases/download/$VER/nuv_${VER}_amd64.pkg"
               curl --progress-bar -L $URL >nuv.pkg
               sudo installer -target / -pkg nuv.pkg
