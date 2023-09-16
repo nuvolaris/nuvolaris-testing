@@ -30,7 +30,7 @@ nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris ws
 
 case "$TYPE" in
     (kind) 
-        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:3233 | grep "Successfully logged in as $user."
+        if NUV_LOGIN=$user NUV_PASSWORD=$password nuv -login http://localhost:80 | grep "Successfully logged in as $user."
         then echo SUCCESS LOGIN
         else echo FAIL LOGIN ; exit 1 
         fi
