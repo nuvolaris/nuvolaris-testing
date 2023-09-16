@@ -17,6 +17,7 @@
 #
 # Use client_payload.platform attribute to detect the platform being tested.
 name: On Olaris Testing Update
+run-name: Testing Olaris Update on platform ${{ github.event.client_payload.platform }}
 
 on:
   repository_dispatch:
