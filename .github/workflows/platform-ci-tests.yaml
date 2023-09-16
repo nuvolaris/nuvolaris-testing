@@ -15,6 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+# Use client_payload.platform attribute to detect the platform being tested.
 name: On Olaris Testing Update
 
 on:
@@ -39,6 +40,7 @@ env:
 jobs:
       test-linux:
         runs-on: ubuntu-22.04
+        if: ${{ github.event.client_payload.platform != '' }}
         steps:
           - name: Checkout
             uses: actions/checkout@v3
@@ -90,7 +92,7 @@ jobs:
       test-windows:
         runs-on: windows-2022
         needs: test-linux
-        if: ${{ ! startsWith(github.event.client_payload.platform, 'kind') }}
+        if: ${{ github.event.client_payload.platform != '' && ! startsWith(github.event.client_payload.platform, 'kind') }}
         steps:
           - name: Checkout
             uses: actions/checkout@v3
@@ -162,7 +164,7 @@ jobs:
     
       test-mac:
         runs-on: macOS-12
-        if: ${{ ! startsWith(github.event.client_payload.platform, 'kind') }}
+        if: ${{ github.event.client_payload.platform != '' && ! startsWith(github.event.client_payload.platform, 'kind') }}
         needs: test-windows
         steps:
           - name: Checkout
