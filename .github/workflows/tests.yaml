@@ -64,7 +64,6 @@ jobs:
           nuv -info
       - name: 1 Deploy
         run: tests/1-deploy.sh $PLATFORM
-      - run: curl http://localhost/api/runtimes
       - name: 3 SysRedis
         run: tests/3-sys-redis.sh $PLATFORM
       - name: 4 SysMongo
@@ -75,10 +74,8 @@ jobs:
         run: tests/5-sys-minio.sh $PLATFORM
       - name: 6 Login
         run: tests/6-login.sh $PLATFORM
-      - run: curl http://localhost/api/runtimes
       - name: 7 Static
         run: tests/7-static.sh $PLATFORM
-      - run: curl http://localhost/api/runtimes
       - name: 8 UserRedis
         run: tests/8-user-redis.sh $PLATFORM
       - name: 9a UserFerretDB
@@ -87,7 +84,6 @@ jobs:
         run: tests/9b-user-postgres.sh $PLATFORM
       - name: 10 UserMinio
         run: tests/10-user-minio.sh $PLATFORM
-      - run: curl http://localhost/api/runtimes
       - name: 14 RuntimeTesting
         run: tests/14-runtime-testing.sh $PLATFORM
       - name: Debug Action (if requested)
