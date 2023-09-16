@@ -25,3 +25,4 @@ conf/aws
 kubeconfig
 env-github
 .env*
+runtimes.json
