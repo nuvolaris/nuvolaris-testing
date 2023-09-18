@@ -24,7 +24,7 @@ on:
     types: [olaris-testing-update]  
 
 env:
-  TAG: ${{ format('{0}-{1}', github.event.client_payload.tag, github.event.client_payload.platform) }}
+  TAG: ${{ format('{0}-{1}', github.event.client_payload.platform, github.event.client_payload.tag) }}
     
 jobs:
       tags-push:
