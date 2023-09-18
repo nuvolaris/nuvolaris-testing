@@ -26,7 +26,7 @@ if test -e ../.secrets
 then source ../.secrets
 else echo "missing .secrets - you should generate it"
      echo "to generate it, set .env variables from .env.dist then execute task secrets"
-     echo "otherwise, just touch env-github but be aware it will try to rebuild all the clusters (good luck)"
+     echo "otherwise, just touch .secrets but be aware it will try to rebuild all the clusters (good luck)"
 fi
 
 # recode the id_rsa if setup
