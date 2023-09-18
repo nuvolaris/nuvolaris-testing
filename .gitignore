@@ -26,3 +26,4 @@ kubeconfig
 env-github
 .env*
 runtimes.json
+.secrets

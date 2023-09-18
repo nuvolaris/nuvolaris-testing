@@ -18,9 +18,23 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
+
+cd "$(dirname $0)"
+
+
+if test -e ../.secrets
+then source ../.secrets
+else echo "missing .secrets - you should generate it"
+     echo "to generate it, set .env variables from .env.dist then execute task secrets"
+     echo "otherwise, just touch env-github but be aware it will try to rebuild all the clusters (good luck)"
+fi
+
+# recode the id_rsa if setup
 mkdir -p ~/.ssh
-echo $ID_RSA_B64 | base64 -d >~/.ssh/id_rsa
-chmod 0600 ~/.ssh/id_rsa
+if test -n "$ID_RSA_B64"
+then echo $ID_RSA_B64 | base64 -d >~/.ssh/id_rsa
+     chmod 0600 ~/.ssh/id_rsa
+fi
 
 # actual setup
 case "$TYPE" in
@@ -115,8 +129,7 @@ gke)
     nuv config reset
     # create cluster
     if test -n "$GCLOUD_SERVICE_ACCOUNT"
-    then
-        
+    then     
         mkdir -p ~/.kube
         echo "$GCLOUD_SERVICE_ACCOUNT"  >~/.kube/gcloud.json
         gcloud auth activate-service-account --key-file ~/.kube/gcloud.json

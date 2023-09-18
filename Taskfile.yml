@@ -24,6 +24,7 @@ vars:
 
 dotenv:
   - .env
+  - .secrets
 
 includes:
   aws: ./TaskfileAWS.yml
@@ -125,72 +126,64 @@ tasks:
         curl -L "https://geps.dev/progress/$X?dangerColor=006600&warningColor=006600&successColor=006600" >img/progress.svg
         fi
 
-  all:
-    #desc: run all the tests (same as all.sh)
-    silent: true
+  upload-secrets:
     cmds:
       - |
-        {{if eq OS "windows"}} 
-          cmd.exe /c "tests\all.cmd" {{.TYPE}}
-        {{else}}
-          cd tests
-          ./all.sh {{.TYPE}}
-          cd ..
-        {{end}}
+        if ! test -e .secrets
+        then echo "please setup .env and generate secrets with task secrets before"
+            exit 1
+        fi
+      - |
+        for i in $(awk -F= '{print $1}' <.secrets)
+        do echo "uploading $i"
+           gh -R nuvolaris/nuvolaris-testing secret set "$i" -b "${!i}"
+        done
 
   # upload secrets to access to vm
   # prereq: ssh key in ~/.ssh/id_rsa
   # two vm created with k3s:create and mk8s:create
-  upload-secrets-vm: |
+  secrets-vm: |
     K3S_IP=$(nuv cloud gcloud vm-getip k3s-test)
-    echo export K3S_IP=$K3S_IP >>env-github
-    gh -R nuvolaris/nuvolaris-testing secret set "K3S_IP" -b "$K3S_IP"
+    echo K3S_IP=$K3S_IP >>.secrets
     MK8S_IP=$(nuv cloud gcloud vm-getip mk8s-test)
-    echo export MK8S_IP=$MK8S_IP >>env-github
-    gh -R nuvolaris/nuvolaris-testing secret set "MK8S_IP" -b "$MK8S_IP"
-
+    echo MK8S_IP=$MK8S_IP >>.secrets
+  
   # upload secrets to access to kubernetes clusters
   # prereq: eks:create aks:create gke:create openshift:create
   # kubernetes configs stored in ~/.nuv
-  upload-secrets-kube: |
+  secrets-kube: |
     for i in aks eks gke openshift
     do
        f="$i-nuvolaris-testing"
        nuv config use $f
-       nuv debug export F=$f
+       nuv debug kubeconfig
        VAR="$(echo $i | tr 'a-z-' 'A-Z_')_KUBECONFIG_B64"
-       DATA="$(cat $f | base64 -w0)"
+       DATA="$(cat ~/.kube/config | base64 -w0)"
        echo "Secret $VAR:"
-       gh -R nuvolaris/nuvolaris-testing secret set "$VAR" -b "$DATA"
-       echo export "$VAR=$DATA" >>env-github
-       rm -v $f
+       echo "$VAR=$DATA" >>.secrets
     done
 
   # here you need
   # ssh key in ~/.ssh/id_rsa
   # gloud service account in ~/.ssh/gcloud.json
-  upload-secrets-id: 
+  secrets-id: 
     - |
       ID_RSA_B64="$(cat ~/.ssh/id_rsa | base64 -w0)"
-      echo export ID_RSA_B64=$ID_RSA_B64 >>env-github
-      gh -R nuvolaris/nuvolaris-testing secret set "ID_RSA_B64" -b "$ID_RSA_B64"
+      echo ID_RSA_B64=$ID_RSA_B64 >>.secrets
     - |
-      gh -R nuvolaris/nuvolaris-testing secret set "AWS_ACCESS_KEY_ID" -b "$AWS_ACCESS_KEY_ID"
-      gh -R nuvolaris/nuvolaris-testing secret set "AWS_SECRET_ACCESS_KEY" -b "$AWS_SECRET_ACCESS_KEY"
-      echo export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >>env-github
-      echo export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >>env-github
+      echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >>.secrets
+      echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >>.secrets
     - |
       GCLOUD_SERVICE_ACCOUNT="$(cat ~/.ssh/gcloud.json | tr -d '\n')"
-      gh -R nuvolaris/nuvolaris-testing secret set "GCLOUD_SERVICE_ACCOUNT" -b "$GCLOUD_SERVICE_ACCOUNT"
-      echo export GCLOUD_SERVICE_ACCOUNT=$GCLOUD_SERVICE_ACCOUNT >>env-github
+      echo GCLOUD_SERVICE_ACCOUNT=$GCLOUD_SERVICE_ACCOUNT >>.secrets
 
-  upload-secrets:
+  secrets:
       cmds:
-      - echo export SKIP_SSL=true >env-github
+      - echo SKIP_SSL=true >.secrets
       - task: gcp:vm:config
-      - task: upload-secrets-id
-      - task: upload-secrets-vm
-      - task: upload-secrets-kube
+      - task: secrets-id
+      - task: secrets-vm
+      - task: secrets-kube
 
   test-ci: |
     git tag {{.N}}-{{.NOW}}
@@ -206,7 +199,6 @@ tasks:
 
   z: task d k m e a g o
 
-  
   config:
     cmds:
     - task aws:vm:config
@@ -216,23 +208,9 @@ tasks:
     - task azure:cluster:config  
 
   login:
-    #- az login --use-device-code
+    - az login --use-device-code
     - gcloud auth login 
     - gcloud config set project nuvolaris-testing
-    
-  kubeconfig:
-    - task: config
-    - task: login
-    - task: vmconfig
-    - echo "eks kubeconfig"
-    - nuv cloud eks kubeconfig
-    - echo "gke kubeconfig"
-    - nuv cloud gke kubeconfig
-    - echo "openshift kubeconfig"
-    - KUBECONFIG=conf/osh.kubeconfig oc login https://api.nuvolaris-testing.oshgcp.nuvtest.net:6443 --insecure-skip-tls-verify=true  -u kubeadmin -p $OSH_KUBEADMIN_PASSWORD
-    - nuv cloud osh import conf/osh.kubeconfig 
-    #- nuv cloud aks kubeconfig
-    - nuv config use
 
   vmconfig:
     silent: true
@@ -244,3 +222,18 @@ tasks:
       ssh-add conf/id_rsa
       nuv cloud k3s kubeconfig SERVER=api.k3s.nuvtest.net USERNAME=ubuntu
       nuv cloud mk8s kubeconfig SERVER=api.mk8s.nuvtest.net USERNAME=ubuntu
+
+  kubeconfig:
+    - task: config
+    - task: login
+    - task: vmconfig
+    - echo "eks kubeconfig"
+    - nuv cloud eks kubeconfig
+    - echo "gke kubeconfig"
+    - nuv cloud gke kubeconfig
+    - echo "openshift kubeconfig"
+    - KUBECONFIG=conf/osh.kubeconfig oc login https://api.nuvolaris-testing.oshgcp.nuvtest.net:6443 --insecure-skip-tls-verify=true  -u kubeadmin -p $OSH_KUBEADMIN_PASSWORD
+    - nuv cloud osh import conf/osh.kubeconfig 
+    - nuv cloud aks kubeconfig
+    - nuv config use
+

@@ -1,10 +1,13 @@
+# Setting up the nuvolaris-testing environment
+
+Since we are testing in many clouds and environments, test setup is pretty compilcated. Details are in [this document](SETUP.md), please read it carefully...
+
+# Nuvolaris 3.0.0 "Morpheus" Testing
 <img height="180" src="img/morpheus.png">
 
 Welcome to the Nuvolaris "Morpheus" release challenge! 
 
 The goal of the challenge is to pass all the tests in the grid, using GitHub Actions.
-
-# Nuvolaris 0.3 "Morpheus" Testing
 
 ## Acceptance Test Status: 103/103
 <img src="img/progress.svg" width="60%">
@@ -41,5 +44,4 @@ The goal of the challenge is to pass all the tests in the grid, using GitHub Act
 ### Msciab
 ![](img/msciab.jpg)
 
-Do you want to join us? Read [this](CISETUP.md) to know how to run the tests and send us a PR to fix a failing test!
 

@@ -1,8 +1,7 @@
 version: '3'
 
 tasks:
-
-
+ 
   cluster:config:
     - >
       nuv config gke

@@ -1,17 +1,22 @@
-# Recover access to the CI environemt
+# What you want to do?
 
-- Copy `.env.dist` in `.env` and put the secrets in it
+- Get access to the test environments
+- Generate all the secrets to run the tests locally
+- Upload the secrets and run the tests on GitHub actions
+- Rebuild the CI environment
 
-## Access to the clusters 
+# Recover access to the CI environenent
 
-- Execute task kubeconfig to get all the configuration
-
+- Copy `.env.dist` in `.env` and put the secrets in it (ask us of course)
+- Execute `task kubeconfig`` to load all the kubeconfig in nuv.
 - Execute `nuv config use` then `nuv config use <n>` to select a configuration
-
 - Execute `nuv setup nuvolaris login` to log into one of them
 
-## Access to the vms
+# Generate all the secrets
 
+- Copy `.env.dist` in `.env` and put the secrets in it
+- `task secrets` generates a  `.secrets` with all the secrets for github
+- now you can run the tests, most notably the `tests/1-deploy.sh` that builds environments
 
 # Setup of Continuos Integration
 
@@ -125,4 +130,5 @@ Once everything is configured we can build all the clusters:
 
 Once you created the clusters, you can upload their kubeconfig or ip as secrets to GitHub with:
 
+- `task secrets`
 - `task upload-secrets`
