@@ -35,4 +35,4 @@ jobs:
           - name: Tag
             run: git tag $TAG
           - name: Push Tag
-            run: git push origin --tags           
+            run: git push origin $TAG           
