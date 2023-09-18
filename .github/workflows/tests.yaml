@@ -16,6 +16,7 @@
 # under the License.
 #
 name: AllTests
+run-name: Testing nuvolaris-testing branch/tag ${{ github.ref_name}}
 
 on:
   push:
