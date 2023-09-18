@@ -199,6 +199,10 @@ tasks:
 
   z: task d k m e a g o
 
+  tag-test-ci: |
+    git tag {{.TAG}}
+    git push origin --tags  
+
   config:
     cmds:
     - task aws:vm:config
