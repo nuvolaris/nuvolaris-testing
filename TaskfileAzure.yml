@@ -7,9 +7,9 @@ tasks:
       nuv config aks
       --name=$AKS_CLUSTER_NAME
       --count=4
-      --region=eastus
-      --vm=Standard_B4ms
-      --disk=50
+      --region=uksouth
+      --vm=Standard_D3
+      --disk=100
       --key=~/.ssh/id_rsa.pub
 
   cluster:create:
