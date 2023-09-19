@@ -99,6 +99,7 @@ eks)
         nuv config apihost api.eks.nuvtest.net
     fi
     # install cluster
+    nuv debug defin
     nuv setup cluster --uninstall
     nuv setup cluster
     ;;
@@ -120,6 +121,7 @@ aks)
         nuv cloud aws zone-update aks.nuvtest.net --wildcard --ip $IP
     fi
     # install cluster
+    nuv debug defin
     nuv setup cluster --uninstall
     nuv setup cluster
     ;;
@@ -143,6 +145,7 @@ gke)
         nuv cloud aws zone-update gke.nuvtest.net --wildcard --ip $(nuv cloud gke lb)
     fi
     # install cluster
+    nuv debug defin
     nuv setup cluster --uninstall
     nuv setup cluster
     ;;
@@ -161,6 +164,7 @@ osh)
         nuv cloud osh import conf/gcp/auth/kubeconfig
     fi
     # install cluster
+    nuv debug defin
     nuv setup cluster --uninstall
     nuv setup cluster
     ;;
