@@ -63,6 +63,10 @@ jobs:
           sudo dpkg -i nuv.deb
           nuv -update
           nuv -info
+      - name: Debug Action (if requested)
+        run:  .github/debugAction.sh
+      - name: Wait for Debug (if requested)
+        run: .github/waitIfDebug.sh
       - name: 1 Deploy
         run: tests/1-deploy.sh $PLATFORM
       - name: 3 SysRedis
@@ -87,10 +91,6 @@ jobs:
         run: tests/10-user-minio.sh $PLATFORM
       - name: 14 RuntimeTesting
         run: tests/14-runtime-testing.sh $PLATFORM
-      - name: Debug Action (if requested)
-        run:  .github/debugAction.sh
-      - name: Wait for Debug (if requested)
-        run: .github/waitIfDebug.sh
 
   test-windows:
     runs-on: windows-2022
