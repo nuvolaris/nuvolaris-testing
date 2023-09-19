@@ -63,14 +63,15 @@ jobs:
           sudo dpkg -i nuv.deb
           nuv -update
           nuv -info
-      - name: 1 Deploy
-        run: |
-             touch .secrets
-             tests/1-deploy.sh $PLATFORM
       - name: Debug Action (if requested)
         run:  .github/debugAction.sh
       - name: Wait for Debug (if requested)
         run: .github/waitIfDebug.sh
+      - name: 1 Deploy
+        run: |
+             touch .secrets
+             echo "AKS_KUBECONFIG_B64=$AKS_KUBECONFIG_B64" >>.secrets
+             tests/1-deploy.sh $PLATFORM
       - name: 3 SysRedis
         run: tests/3-sys-redis.sh $PLATFORM
       - name: 4 SysMongo
