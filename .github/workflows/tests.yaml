@@ -55,6 +55,10 @@ jobs:
           sudo apt update
           sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin kubectl  
         if: ${{ startsWith(github.ref_name, 'gke') }} 
+      - name: Debug Action (if requested)
+        run:  .github/debugAction.sh
+      - name: Wait for Debug (if requested)
+        run: .github/waitIfDebug.sh
       - name: Nuv
         run: |
           VER="$(curl https://raw.githubusercontent.com/nuvolaris/olaris/3.0.0-testing/nuvroot.json | jq .version -r)"
@@ -63,14 +67,10 @@ jobs:
           sudo dpkg -i nuv.deb
           nuv -update
           nuv -info
-      - name: Debug Action (if requested)
-        run:  .github/debugAction.sh
-      - name: Wait for Debug (if requested)
-        run: .github/waitIfDebug.sh
       - name: 1 Deploy
         run: |
              touch .secrets
-             echo "AKS_KUBECONFIG_B64=$AKS_KUBECONFIG_B64" >>.secrets
+             nuv debug defin
              tests/1-deploy.sh $PLATFORM
       - name: 3 SysRedis
         run: tests/3-sys-redis.sh $PLATFORM
