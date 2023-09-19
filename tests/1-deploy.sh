@@ -18,9 +18,7 @@
 TYPE="${1:?test type}"
 TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 
-
 cd "$(dirname $0)"
-
 
 if test -e ../.secrets
 then source ../.secrets
@@ -128,10 +126,10 @@ aks)
 gke)
     nuv config reset
     # create cluster
-    if test -n "$GCLOUD_SERVICE_ACCOUNT"
+    if test -n "$GCLOUD_SERVICE_ACCOUNT_B64"
     then     
         mkdir -p ~/.kube
-        echo "$GCLOUD_SERVICE_ACCOUNT"  >~/.kube/gcloud.json
+        echo "$GCLOUD_SERVICE_ACCOUNT_B64" | base64 -d  >~/.kube/gcloud.json
         gcloud auth activate-service-account --key-file ~/.kube/gcloud.json
         gcloud container clusters get-credentials nuvolaris-testing --project nuvolaris-testing --region=us-east1
         

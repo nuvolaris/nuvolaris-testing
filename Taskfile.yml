@@ -160,7 +160,7 @@ tasks:
        VAR="$(echo $i | tr 'a-z-' 'A-Z_')_KUBECONFIG_B64"
        DATA="$(cat ~/.kube/config | base64 -w0)"
        echo "Secret $VAR:"
-       echo "$VAR=$DATA" >>.secrets
+       echo "$VAR=\"$DATA\"" >>.secrets
     done
 
   # here you need
@@ -174,8 +174,8 @@ tasks:
       echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID >>.secrets
       echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY >>.secrets
     - |
-      GCLOUD_SERVICE_ACCOUNT="$(cat ~/.ssh/gcloud.json | tr -d '\n')"
-      echo GCLOUD_SERVICE_ACCOUNT=$GCLOUD_SERVICE_ACCOUNT >>.secrets
+      GCLOUD_SERVICE_ACCOUNT_B64="$(cat ~/.ssh/gcloud.json | base64 -w0)"
+      echo GCLOUD_SERVICE_ACCOUNT_B64=\"$GCLOUD_SERVICE_ACCOUNT_B64\" >>.secrets
 
   secrets:
       cmds:
