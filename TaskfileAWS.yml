@@ -36,6 +36,7 @@ tasks:
       --access="$AWS_ACCESS_KEY_ID" 
       --secret="$AWS_SECRET_ACCESS_KEY" 
       --name=$AWS_CLUSTER_NAME
+      --region=us-east-2
       --count=3
       --vm=m5.xlarge 
       --disk=50
