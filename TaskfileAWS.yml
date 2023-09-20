@@ -7,8 +7,8 @@ tasks:
       nuv config aws 
       --access="$AWS_ACCESS_KEY_ID" 
       --secret="$AWS_SECRET_ACCESS_KEY" 
-      --region=us-east-1 
-      --image=ami-052efd3df9dad4825
+      --region=us-east-2
+      --image=ami-024e6efaf93d85776
       --vm=t3a.large
       --vmuser=ubuntu
       --disk=100 
@@ -36,7 +36,6 @@ tasks:
       --access="$AWS_ACCESS_KEY_ID" 
       --secret="$AWS_SECRET_ACCESS_KEY" 
       --name=$AWS_CLUSTER_NAME
-      --region=us-east-2
       --count=3
       --vm=m5.xlarge 
       --disk=50
