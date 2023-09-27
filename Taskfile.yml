@@ -19,8 +19,8 @@ version: "3"
 
 vars:
   CLOUD: gcp
-  NOW:
-    sh: date "+%Y-%m%d-%H%M"
+  OLARIS_TAG:
+    sh: cd olaris && git rev-parse --short HEAD
 
 dotenv:
   - .env
