@@ -19,8 +19,6 @@ version: "3"
 
 vars:
   CLOUD: gcp
-  OLARIS_TAG:
-    sh: cd olaris && git rev-parse --short HEAD
 
 dotenv:
   - .env
@@ -186,7 +184,8 @@ tasks:
       - task: secrets-kube
 
   test-ci: |
-    git tag {{.N}}-{{.NOW}}
+    git tag -d $(git tag)
+    git tag {{.N}}-$OLARIS
     git push origin --tags
 
   d: task test-ci N=kind
@@ -197,7 +196,14 @@ tasks:
   g: task test-ci N=gke
   o: task test-ci N=osh
 
-  z: task d k m e a g o
+  all:
+   - |
+     cd olaris
+     export OLARIS=$(git rev-parse --short HEAD)
+     gh pr create --title="Tentative merge for $OLARIS" --body "Merge this if all *-$OLARIS tests succeed."
+   - task d k m e a g o
+
+
 
   tag-test-ci: |
     git tag {{.TAG}}
