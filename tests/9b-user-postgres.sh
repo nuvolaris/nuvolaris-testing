@@ -35,7 +35,7 @@ else
     exit 1
 fi
 
-nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris wsku/$user"
+nuv debug kube ctl CMD="wait --for=condition=ready --timeout=120s -n nuvolaris wsku/$user"
 
 case "$TYPE" in
 kind)
