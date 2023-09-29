@@ -185,16 +185,16 @@ tasks:
 
   test-ci: |
     git tag -d $(git tag)
-    git tag {{.N}}-$OLARIS
+    git tag {{.N}}-{{.TAG}}
     git push origin --tags
 
-  d: task test-ci N=kind
-  k: task test-ci N=k3s
-  m: task test-ci N=mk8s
-  e: task test-ci N=eks
-  a: task test-ci N=aks
-  g: task test-ci N=gke
-  o: task test-ci N=osh
+  d: task test-ci N=kind TAG=$OLARIS
+  k: task test-ci N=k3s TAG=$OLARIS
+  m: task test-ci N=mk8s TAG=$OLARIS
+  e: task test-ci N=eks TAG=$OLARIS
+  a: task test-ci N=aks TAG=$OLARIS
+  g: task test-ci N=gke TAG=$OLARIS
+  o: task test-ci N=osh TAG=$OLARIS
 
   all:
    - |
