@@ -197,11 +197,16 @@ tasks:
   o: task test-ci N=osh TAG=$OLARIS
 
   all:
-   - |
-     cd olaris
-     export OLARIS=$(git rev-parse --short HEAD)
-     gh pr create --title="Tentative merge for $OLARIS" --body "Merge this if all [*-$OLARIS](https://github.com/nuvolaris/nuvolaris-testing/actions) tests succeed."
-   - task d k m e a g o
+   ignore_error: true
+   env:
+    OLARIS:
+      sh: echo $(cd olaris;git rev-parse --short HEAD) 
+   cmds:
+    - |
+      cd olaris
+      gh pr create --title="Tentative merge for $OLARIS" --body "Merge this if all [*-$OLARIS](https://github.com/nuvolaris/nuvolaris-testing/actions) tests succeed."    
+    - task d k m e a g o
+
 
   tag-test-ci: |
     git tag {{.TAG}}
