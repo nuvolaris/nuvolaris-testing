@@ -34,13 +34,15 @@ then echo $ID_RSA_B64 | base64 -d >~/.ssh/id_rsa
      chmod 0600 ~/.ssh/id_rsa
 fi
 
+# disable preflight memory and cpu check
+export PREFL_NO_CPU_CHECK=true
+export PREFL_NO_MEM_CHECK=true
+
 # actual setup
 case "$TYPE" in
 kind)
     # create vm with docker
     nuv config reset
-    nuv -config PREFL_NO_CPU_CHECK=true
-    nuv -config PREFL_NO_MEM_CHECK=true
     nuv setup devcluster --uninstall
     nuv setup devcluster
     ;;
