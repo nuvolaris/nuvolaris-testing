@@ -39,8 +39,8 @@ case "$TYPE" in
 kind)
     # create vm with docker
     nuv config reset
-    nuv -config PREF_NO_CPU_CHECK=true
-    nuv -config PREF_NO_MEM_CHECK=true
+    nuv -config PREFL_NO_CPU_CHECK=true
+    nuv -config PREFL_NO_MEM_CHECK=true
     nuv setup devcluster --uninstall
     nuv setup devcluster
     ;;
