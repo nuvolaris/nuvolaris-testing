@@ -16,6 +16,11 @@
 # under the License.
 
 version: "3"
+  
+  
+env:
+  OLARIS:
+    sh: echo $(cd olaris;git rev-parse --short HEAD) 
 
 vars:
   CLOUD: gcp
@@ -198,9 +203,6 @@ tasks:
 
   all:
    ignore_error: true
-   env:
-    OLARIS:
-      sh: echo $(cd olaris;git rev-parse --short HEAD) 
    cmds:
     - |
       cd olaris
