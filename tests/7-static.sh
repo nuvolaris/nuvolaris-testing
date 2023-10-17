@@ -21,7 +21,7 @@ TYPE="$(echo $TYPE | awk -F- '{print $1}')"
 nuv config enable --minio --static
 nuv update apply
 
-nuv -retry -t 100 -m 240 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=60s -n nuvolaris pod/nuvolaris-static-0"
+nuv util kube waitfor FOR=condition=ready OBJ=pod/nuvolaris-static-0 TIMEOUT=60
 
 user="demostaticuser"
 password=$(nuv -random --str 12)

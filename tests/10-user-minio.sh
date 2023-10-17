@@ -35,7 +35,7 @@ else
     exit 1
 fi
 
-nuv -retry -t 100 -m 240 nuv debug kube ctl CMD="wait --for=condition=ready --timeout=120s -n nuvolaris wsku/$user"
+nuv util kube waitfor FOR=condition=ready OBJ="wsku/$user" TIMEOUT=120
 
 case "$TYPE" in
 kind)
