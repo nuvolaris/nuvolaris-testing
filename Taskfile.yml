@@ -207,7 +207,9 @@ tasks:
     - |
       cd olaris
       gh pr create --title="Tentative merge for $OLARIS" --body "Merge this if all [*-$OLARIS](https://github.com/nuvolaris/nuvolaris-testing/actions) tests succeed."    
-    - task d k m e a g o
+    #- task d k m e a g o
+    - task d k m e a g
+
 
 
   tag-test-ci: |
