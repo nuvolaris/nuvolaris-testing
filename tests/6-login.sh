@@ -50,7 +50,7 @@ else
     exit 1
 fi
 
-nuv debug kube ctl CMD="wait --for=condition=ready --timeout=120s -n nuvolaris wsku/$user"
+nuv util kube waitfor FOR=condition=ready OBJ="wsku/$user" TIMEOUT=120
 
 APIURL="http://localhost:3233"
 # if type is not kind, get the APIURL from nuv debug apihost
