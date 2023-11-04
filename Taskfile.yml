@@ -33,7 +33,8 @@ includes:
   aws: ./TaskfileAWS.yml
   gcp: ./TaskfileGCloud.yml
   azure: ./TaskfileAzure.yml
-
+  test: ./TaskfileTest.yml
+  
 tasks:
   default: task --list-all
   setup: { silent: true }
