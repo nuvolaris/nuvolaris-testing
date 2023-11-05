@@ -23,6 +23,7 @@ _*
 conf/gcp
 conf/aws
 kubeconfig
+*.kubeconfig
 env-github
 .env*
 runtimes.json
