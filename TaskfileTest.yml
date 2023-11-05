@@ -1,0 +1,30 @@
+version: '3'
+
+tasks:
+
+  enter: >
+      docker run -ti --net=host
+      -v $PWD/olaris:/root/olaris
+      -v $PWD/test-olaris:/root/test-olaris
+      --mount source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind
+      test-olaris bash
+
+  build: docker build test-olaris -t test-olaris --load
+
+  run: >
+      docker run -ti --net=host
+      -v $PWD/olaris:/root/olaris
+      -v $PWD/test-olaris:/root/test-olaris
+      --mount source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind
+      test-olaris bats test-olaris
+
+  export:
+    - nuv util kube export FILE=test-olaris/aks.kubeconfig NAME=aks-nuvolaris-testing
+    - nuv util kube export FILE=test-olaris/eks.kubeconfig NAME=eks-nuvolaris-testing
+
+  all:
+    - task: build
+    - task: export
+    - task: run
+
+

@@ -1,0 +1,10 @@
+# TODO (and test)
+
+- when you switch the configuration, read back, apihost, email/tls, enabled services
+
+- test you can switch configurations and be able to use admin
+
+- test the secrets are propagated back to the users
+
+- test secrets are propagated to users
+

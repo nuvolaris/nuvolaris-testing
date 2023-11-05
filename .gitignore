@@ -1,5 +1,4 @@
 old/
-TODO.txt
 playground.txt
 attic/
 .vscode/
@@ -23,6 +22,7 @@ _*
 conf/gcp
 conf/aws
 kubeconfig
+*.kubeconfig
 env-github
 .env*
 runtimes.json
