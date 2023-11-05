@@ -55,10 +55,25 @@ tasks:
       vars:
           NAME: k3s-test
           TYPE: k3s
+          VM_TYPE: n2-standard-4
+          REGION: us-east1-d
+          IMAGE: ubuntu-minimal-2204-lts
     - task: aws:vm:config
-    - task: gcp:vm:config
     - nuv cloud gcloud vm-getip k3s-test >_ip
     - nuv cloud aws zone-update k3s.nuvtest.net --wildcard --ip=$(cat _ip)
+
+  k3s:arm:create:
+    cmds:
+    - task: "{{.CLOUD}}:vm:create"
+      vars:
+          NAME: k3s-arm-test
+          TYPE: k3s
+          VM_TYPE: t2a-standard-4
+          REGION: europe-west4-a
+          IMAGE: ubuntu-minimal-2204-lts-arm64
+    - task: aws:vm:config
+    - nuv cloud gcloud vm-getip k3s-arm-test >_ip
+    - nuv cloud aws zone-update arm.nuvtest.net --wildcard --ip=$(cat _ip)   
 
   mk8s:create:
     cmds:
@@ -77,6 +92,19 @@ tasks:
       vars:
           NAME: k3s-test
           TYPE: k3s
+          VM_TYPE: n2-standard-4
+          REGION: us-east1-d
+          IMAGE: ubuntu-minimal-2204-lts
+
+  k3s:arm:delete:
+    cmds:
+    - task: "{{.CLOUD}}:vm:delete"
+      vars:
+          NAME: k3s-arm-test
+          TYPE: k3s
+          VM_TYPE: t2a-standard-4
+          REGION: europe-west4-a
+          IMAGE: ubuntu-minimal-2204-lts-arm64   
 
   mk8s:delete:
     cmds:
