@@ -15,26 +15,25 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scripts-cm
-data:
-  locustfile.py: |
-    import time
-    from locust import HttpUser, task
+K="kubectl -n nuvolaris"
 
-    class QuickstartUser(HttpUser):
-        @task
-        def hello_world(self):
-            self.client.get("/hello")
-            self.client.get("/world")
+function force_delete {
+    ITEM=$1
+    N=0
+    while [[ $N -lt 3 ]]
+    do
+        echo $((N++)) deleting $ITEM
+        if ! $K get $ITEM 2>/dev/null
+        then echo $ITEM gone...
+             return
+        fi
+        if ! $K delete $ITEM --timeout=10s --grace-period=0
+        then $K patch $ITEM --type=merge --patch '{"metadata": {"finalizers":[] } }'
+        fi
+    done
+    exit 1
+}
 
-        @task(3)
-        def view_item(self):
-            for item_id in range(10):
-                self.client.get(f"/item?id={item_id}", name="/item")
-                time.sleep(1)
-
-        def on_start(self):
-            self.client.post("/login", json={"username":"foo", "password":"bar"})
+for i in $($K get wsku -o name) wsk/controller 
+do force_delete $i
+done

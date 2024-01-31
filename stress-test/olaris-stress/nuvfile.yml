@@ -14,27 +14,17 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-#
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: scripts-cm
-data:
-  locustfile.py: |
-    import time
-    from locust import HttpUser, task
+version: '3'
 
-    class QuickstartUser(HttpUser):
-        @task
-        def hello_world(self):
-            self.client.get("/hello")
-            self.client.get("/world")
+tasks:
+  setup:
+    desc: Install Nuvolaris
 
-        @task(3)
-        def view_item(self):
-            for item_id in range(10):
-                self.client.get(f"/item?id={item_id}", name="/item")
-                time.sleep(1)
+  status:
+    silent: true
+    desc: Status
+    cmds:
+    - nuv setup nuvolaris status
+    - if {{.__config}} ; then nuv setup status ; fi
+    - if {{.__cluster}} ; then nuv setup kubernetes status ; fi
 
-        def on_start(self):
-            self.client.post("/login", json={"username":"foo", "password":"bar"})
