@@ -101,5 +101,5 @@ nodes:
     hostPort: 8089
     protocol: TCP   
   - containerPort: 30089
-    hostPort: 8089
+    hostPort: 9089
     protocol: TCP      

@@ -30,11 +30,11 @@ tasks:
     cmds:
     - |
       if {{.__status}}
-      then nuv setup docker status
+      then nuv stress setup docker status
       elif {{.__uninstall}}
-      then nuv setup docker delete
+      then nuv stress setup docker delete
       else
-          nuv setup docker create
+          nuv stress setup docker create
           config STATUS_LAST=devcluster
           nuv setup kubernetes create
           nuv setup nuvolaris login
