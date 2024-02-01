@@ -36,7 +36,8 @@ tasks:
       else
           nuv stress setup docker create
           config STATUS_LAST=devcluster
-          nuv setup kubernetes create
+          nuv config standalone --javaopts=2 --poolmemory=6 --activation_max_payload=1048576       
+          nuv stress setup kubernetes create
           nuv setup nuvolaris login
           nuv util notify "{{.TASK}}"
       fi

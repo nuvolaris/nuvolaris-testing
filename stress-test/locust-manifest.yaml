@@ -60,11 +60,11 @@ data:
   
     def choose_random_page():
         pages = [
-            '/policies/privacy/',
-            '/contact/',
-            '/about/',
-            '/search/howsearchworks/crawling-indexing/',
-            '/search/howsearchworks/algorithms/'
+            '/api/v1/web/nuvolaris/default/echo?name=call1',
+            '/api/v1/web/nuvolaris/default/echo?name=call2',
+            '/api/v1/web/nuvolaris/default/echo?name=call3',
+            '/api/v1/web/nuvolaris/default/echo?name=call4',
+            '/api/v1/web/nuvolaris/default/echo?name=call5'
         ]
   
         return random.choice(pages)
@@ -85,7 +85,6 @@ data:
   
     from locust import HttpUser, task, between
     from lib.example_functions import choose_random_page
-  
   
     default_headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36'}
   
@@ -193,7 +192,7 @@ spec:
             mountPath: /config
         env:
           - name: LOCUST_HOST
-            value: "https://www.google.com"
+            value: "http://controller.nuvolaris:3233"
           - name: LOCUST_LOGLEVEL
             value: "INFO"
           - name: LOCUST_LOCUSTFILE
@@ -246,7 +245,7 @@ spec:
       app.kubernetes.io/name: locust
       app.kubernetes.io/instance: locust
       load_test: example
-  replicas: 1
+  replicas: 5
   strategy:
     type: RollingUpdate
   template:
@@ -288,7 +287,7 @@ spec:
             mountPath: /config
         env:
           - name: LOCUST_HOST
-            value: "https://www.google.com"
+            value: "http://controller.nuvolaris:3233"
           - name: LOCUST_MASTER_NODE_HOST
             value: "locust"
           - name: LOCUST_MASTER_NODE_PORT

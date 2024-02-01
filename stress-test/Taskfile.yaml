@@ -29,8 +29,12 @@ tasks:
     cmds:
       - echo "Deploying with host {{.F}}"
       - F={{.F}} nuv -envsubst -i script-cm.yaml -o _script-cm.yaml
-      - kubectl create -f locust-manifest.yaml -f nodeport.yaml 
+      - kubectl create -f locust-manifest.yaml -f nodeport.yaml
+      - nuv action update echo hello.js --web=true --memory 128
       
   # stress:  
+
+  undeploy:
+      - kubectl delete -f locust-manifest.yaml -f nodeport.yaml   
 
   
