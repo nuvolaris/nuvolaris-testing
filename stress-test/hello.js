@@ -15,7 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-function main(args) {
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function main(args) {
+    const msecs = Math.floor((Math.random() * 5000) + 1);
+    await sleep(msecs);
     return {
         body: `Hello ${args.name || 'World'}`
     }
