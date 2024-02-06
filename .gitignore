@@ -28,3 +28,4 @@ env-github
 runtimes.json
 .secrets
 venv
+**/stress-test/*-ingress*

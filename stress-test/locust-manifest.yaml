@@ -64,7 +64,17 @@ data:
             '/api/v1/web/nuvolaris/default/echo1?name=call2',
             '/api/v1/web/nuvolaris/default/echo2?name=call3',
             '/api/v1/web/nuvolaris/default/echo3?name=call4',
-            '/api/v1/web/nuvolaris/default/echo4?name=call5'
+            '/api/v1/web/nuvolaris/default/echo4?name=call5',
+            '/api/v1/web/nuvolaris/default/redis0',
+            '/api/v1/web/nuvolaris/default/redis1',
+            '/api/v1/web/nuvolaris/default/redis2',
+            '/api/v1/web/nuvolaris/default/redis3',
+            '/api/v1/web/nuvolaris/default/redis4',
+            '/api/v1/web/nuvolaris/default/postgres0',
+            '/api/v1/web/nuvolaris/default/postgres1',
+            '/api/v1/web/nuvolaris/default/postgres2',
+            '/api/v1/web/nuvolaris/default/postgres3',
+            '/api/v1/web/nuvolaris/default/postgres4'                        
         ]
   
         return random.choice(pages)

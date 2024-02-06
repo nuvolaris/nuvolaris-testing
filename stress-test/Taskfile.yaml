@@ -16,6 +16,9 @@
 # under the License.
 
 version: "3"
+
+env:
+  - .env
   
 tasks:
   default: task --list-all  
@@ -30,7 +33,6 @@ tasks:
       - echo "Deploying with host {{.F}}"
       - F={{.F}} nuv -envsubst -i script-cm.yaml -o _script-cm.yaml
       - kubectl create -f locust-manifest.yaml -f nodeport.yaml
-      - nuv action update echo hello.js --web=true --memory 128
       
   # stress:  
 
@@ -39,8 +41,18 @@ tasks:
 
   deploy:action:
     cmds:
-      - nuv action update echo0 hello.js --web=true --memory 128         
-      - nuv action update echo1 hello.js --web=true --memory 128               
-      - nuv action update echo2 hello.js --web=true --memory 128         
-      - nuv action update echo3 hello.js --web=true --memory 128         
-      - nuv action update echo4 hello.js --web=true --memory 128         
+      - nuv action update echo0 echo.js --web=true --memory 128         
+      - nuv action update echo1 echo.js --web=true --memory 128               
+      - nuv action update echo2 echo.js --web=true --memory 128         
+      - nuv action update echo3 echo.js --web=true --memory 128         
+      - nuv action update echo4 echo.js --web=true --memory 128
+      - nuv action update redis0 redis.js --web=true --memory 128  -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX"
+      - nuv action update redis1 redis.js --web=true --memory 128  -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX"               
+      - nuv action update redis2 redis.js --web=true --memory 128  -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX"         
+      - nuv action update redis3 redis.js --web=true --memory 128  -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX"         
+      - nuv action update redis4 redis.js --web=true --memory 128  -p redis_url "$REDIS_URL" -p redis_prefix "$REDIS_PREFIX"              
+      - nuv action update postgres0 postgres.js --web=true --memory 256 -p postgres_url "$POSTGRES_URL"
+      - nuv action update postgres1 postgres.js --web=true --memory 256 -p postgres_url "$POSTGRES_URL"
+      - nuv action update postgres2 postgres.js --web=true --memory 256 -p postgres_url "$POSTGRES_URL"
+      - nuv action update postgres3 postgres.js --web=true --memory 256 -p postgres_url "$POSTGRES_URL"
+      - nuv action update postgres4 postgres.js --web=true --memory 256 -p postgres_url "$POSTGRES_URL"
