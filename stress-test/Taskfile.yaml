@@ -35,6 +35,12 @@ tasks:
   # stress:  
 
   undeploy:
-      - kubectl delete -f locust-manifest.yaml -f nodeport.yaml   
+      - kubectl delete -f locust-manifest.yaml -f nodeport.yaml
 
-  
+  deploy:action:
+    cmds:
+      - nuv action update echo0 hello.js --web=true --memory 128         
+      - nuv action update echo1 hello.js --web=true --memory 128               
+      - nuv action update echo2 hello.js --web=true --memory 128         
+      - nuv action update echo3 hello.js --web=true --memory 128         
+      - nuv action update echo4 hello.js --web=true --memory 128         

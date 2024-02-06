@@ -20,7 +20,7 @@ function sleep(ms) {
 }
 
 async function main(args) {
-    const msecs = Math.floor((Math.random() * 5000) + 1);
+    const msecs = Math.floor((Math.random() * 2500) + 1);
     await sleep(msecs);
     return {
         body: `Hello ${args.name || 'World'}`
