@@ -37,13 +37,15 @@ async function main(args) {
 
   try {
     await client.query(createTableText)
-    const message = "Nuvolaris Postgres is up and running!"
+    const message = (Math.random() + 1).toString(36).substring(2);
     await client.query('INSERT INTO nuvolaris_table(message) VALUES($1)', [message])
-    const { rows } = await client.query('SELECT * FROM nuvolaris_table where message = $1', [message]);
-    console.log(rows)
-    // await client.query('DROP table nuvolaris_table');
-    response.body = rows;
-    await client.query('DELETE FROM nuvolaris_table WHERE id = $1', [rows[0].id]);
+    const { rows } = await client.query('SELECT id, message FROM nuvolaris_table where message = $1', [message]);
+    const { rowCount } = await client.query('DELETE FROM nuvolaris_table WHERE id = $1', [rows[0].id]);
+    response.body = {
+      rows,
+      rowCount
+    }
+
   } catch (e) {
     console.log(e);
     throw e
