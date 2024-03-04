@@ -18,7 +18,7 @@
  *
  */
 async function main(args) {
-    // connnect to the redis database
+    // connect to the redis database
     const db = require("redis").createClient({"url":args.redis_url})
     await db.connect()
     let p = args.redis_prefix
@@ -29,6 +29,7 @@ async function main(args) {
     await db.set(key, "world "+str)
     let res = await db.get(key)
     await db.del(key)
+    await db.disconnect();
 
     return ({
         "hello": res
