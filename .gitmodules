@@ -1,8 +1,8 @@
 [submodule "docs"]
 	path = docs
-	url = https://github.com/nuvolaris/nuvolaris.github.io
+	url = git@github.com:nuvolaris/nuvolaris.github.io
 	branch = main
 [submodule "olaris"]
 	path = olaris
-	url = https://github.com/nuvolaris/olaris
+	url = git@github.com:nuvolaris/olaris
 	branch = 3.0.0-testing
